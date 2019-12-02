@@ -17,6 +17,8 @@
     <script type="text/javascript" src="../_static/bizstyle.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Netcat Backup" href="netcat_backup.html" />
+    <link rel="prev" title="Develop an IT project recovery plan" href="Develop_an_IT_project_recovery_plan.html" />
     <meta name="viewport" content="width=device-width,initial-scale=1.0">
     <!--[if lt IE 9]>
     <script type="text/javascript" src="_static/css3-mediaqueries.js"></script>
@@ -28,11 +30,24 @@
         <li class="right" style="margin-right: 10px">
           <a href="../genindex.html" title="General Index"
              accesskey="I">index</a></li>
-        <li class="nav-item nav-item-0"><a href="../index.html">Enterprise Architecture  documentation</a> &#187;</li> 
+        <li class="right" >
+          <a href="netcat_backup.html" title="Netcat Backup"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="Develop_an_IT_project_recovery_plan.html" title="Develop an IT project recovery plan"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">Enterprise Architecture  documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="index.html" accesskey="U">Backup</a> &#187;</li> 
       </ul>
     </div>
       <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
         <div class="sphinxsidebarwrapper">
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="Develop_an_IT_project_recovery_plan.html"
+                        title="previous chapter">Develop an IT project recovery plan</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="netcat_backup.html"
+                        title="next chapter">Netcat Backup</a></p>
   <div role="note" aria-label="source link">
     <h3>This Page</h3>
     <ul class="this-page-menu">
@@ -60,15 +75,20 @@
             
   <div class="section" id="duplicity-backup">
 <h1>Duplicity Backup<a class="headerlink" href="#duplicity-backup" title="Permalink to this headline">¶</a></h1>
-<p>duplicity full –no-encryption /source <a class="reference external" href="file:///dest">file:///dest</a>
-duplicity incr –no-encryption /source <a class="reference external" href="file:///dest">file:///dest</a></p>
-<p>duplicity cleanup <a class="reference external" href="file:///dest">file:///dest</a></p>
-<p>#m h dom mon dow command
-0  0 * * *   /usr/bin/duplicity cleanup –no-encryption <a class="reference external" href="file:///dest">file:///dest</a>
-5  0 * * *   /usr/bin/duplicity remove-all-but-n-full 2 –force <a class="reference external" href="file:///dest">file:///dest</a>
-10 0 * * 0   /usr/bin/duplicity full –no-encryption /source <a class="reference external" href="file:///dest">file:///dest</a>
-10 0 * * 1-6 /usr/bin/duplicity incr –no-encryption /source <a class="reference external" href="file:///dest">file:///dest</a>
-—-</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">duplicity</span> <span class="n">remove</span><span class="o">-</span><span class="nb">all</span><span class="o">-</span><span class="n">but</span><span class="o">-</span><span class="n">n</span><span class="o">-</span><span class="n">full</span> <span class="mi">2</span> <span class="o">--</span><span class="n">force</span> <span class="n">file</span><span class="p">:</span><span class="o">///</span><span class="n">var</span><span class="o">/</span><span class="n">data</span><span class="o">/</span><span class="n">test</span><span class="o">/</span><span class="n">Desktop</span><span class="o">/</span>
+
+<span class="n">duplicity</span> <span class="n">full</span> <span class="o">--</span><span class="n">no</span><span class="o">-</span><span class="n">encryption</span> <span class="o">/</span><span class="n">source</span> <span class="n">file</span><span class="p">:</span><span class="o">///</span><span class="n">dest</span>
+<span class="n">duplicity</span> <span class="n">incr</span> <span class="o">--</span><span class="n">no</span><span class="o">-</span><span class="n">encryption</span> <span class="o">/</span><span class="n">source</span> <span class="n">file</span><span class="p">:</span><span class="o">///</span><span class="n">dest</span>
+
+<span class="n">duplicity</span> <span class="n">cleanup</span> <span class="n">file</span><span class="p">:</span><span class="o">///</span><span class="n">dest</span>
+
+<span class="c1">#m h dom mon dow command</span>
+<span class="mi">0</span>  <span class="mi">0</span> <span class="o">*</span> <span class="o">*</span> <span class="o">*</span>   <span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="nb">bin</span><span class="o">/</span><span class="n">duplicity</span> <span class="n">cleanup</span> <span class="o">--</span><span class="n">no</span><span class="o">-</span><span class="n">encryption</span> <span class="n">file</span><span class="p">:</span><span class="o">///</span><span class="n">dest</span>
+<span class="mi">5</span>  <span class="mi">0</span> <span class="o">*</span> <span class="o">*</span> <span class="o">*</span>   <span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="nb">bin</span><span class="o">/</span><span class="n">duplicity</span> <span class="n">remove</span><span class="o">-</span><span class="nb">all</span><span class="o">-</span><span class="n">but</span><span class="o">-</span><span class="n">n</span><span class="o">-</span><span class="n">full</span> <span class="mi">2</span> <span class="o">--</span><span class="n">force</span> <span class="n">file</span><span class="p">:</span><span class="o">///</span><span class="n">dest</span>
+<span class="mi">10</span> <span class="mi">0</span> <span class="o">*</span> <span class="o">*</span> <span class="mi">0</span>   <span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="nb">bin</span><span class="o">/</span><span class="n">duplicity</span> <span class="n">full</span> <span class="o">--</span><span class="n">no</span><span class="o">-</span><span class="n">encryption</span> <span class="o">/</span><span class="n">source</span> <span class="n">file</span><span class="p">:</span><span class="o">///</span><span class="n">dest</span>
+<span class="mi">10</span> <span class="mi">0</span> <span class="o">*</span> <span class="o">*</span> <span class="mi">1</span><span class="o">-</span><span class="mi">6</span> <span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="nb">bin</span><span class="o">/</span><span class="n">duplicity</span> <span class="n">incr</span> <span class="o">--</span><span class="n">no</span><span class="o">-</span><span class="n">encryption</span> <span class="o">/</span><span class="n">source</span> <span class="n">file</span><span class="p">:</span><span class="o">///</span><span class="n">dest</span>
+</pre></div>
+</div>
 </div>
 
 
@@ -83,7 +103,14 @@ duplicity incr –no-encryption /source <a class="reference external" href="file
         <li class="right" style="margin-right: 10px">
           <a href="../genindex.html" title="General Index"
              >index</a></li>
-        <li class="nav-item nav-item-0"><a href="../index.html">Enterprise Architecture  documentation</a> &#187;</li> 
+        <li class="right" >
+          <a href="netcat_backup.html" title="Netcat Backup"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="Develop_an_IT_project_recovery_plan.html" title="Develop an IT project recovery plan"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">Enterprise Architecture  documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="index.html" >Backup</a> &#187;</li> 
       </ul>
     </div>
     <div class="footer" role="contentinfo">

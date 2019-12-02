@@ -5,7 +5,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta charset="utf-8" />
-    <title>Netcat Backup &#8212; Enterprise Architecture  documentation</title>
+    <title>Benchmarking &#8212; Enterprise Architecture  documentation</title>
     <link rel="stylesheet" href="../_static/bizstyle.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     
@@ -17,8 +17,8 @@
     <script type="text/javascript" src="../_static/bizstyle.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="Benchmarking" href="../benchmarking/index.html" />
-    <link rel="prev" title="Duplicity Backup" href="Duplicity_Backup.html" />
+    <link rel="next" title="Ceph" href="ceph.html" />
+    <link rel="prev" title="Netcat Backup" href="../backup/netcat_backup.html" />
     <meta name="viewport" content="width=device-width,initial-scale=1.0">
     <!--[if lt IE 9]>
     <script type="text/javascript" src="_static/css3-mediaqueries.js"></script>
@@ -31,27 +31,26 @@
           <a href="../genindex.html" title="General Index"
              accesskey="I">index</a></li>
         <li class="right" >
-          <a href="../benchmarking/index.html" title="Benchmarking"
+          <a href="ceph.html" title="Ceph"
              accesskey="N">next</a> |</li>
         <li class="right" >
-          <a href="Duplicity_Backup.html" title="Duplicity Backup"
+          <a href="../backup/netcat_backup.html" title="Netcat Backup"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../index.html">Enterprise Architecture  documentation</a> &#187;</li>
-          <li class="nav-item nav-item-1"><a href="index.html" accesskey="U">Backup</a> &#187;</li> 
+        <li class="nav-item nav-item-0"><a href="../index.html">Enterprise Architecture  documentation</a> &#187;</li> 
       </ul>
     </div>
       <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
         <div class="sphinxsidebarwrapper">
   <h4>Previous topic</h4>
-  <p class="topless"><a href="Duplicity_Backup.html"
-                        title="previous chapter">Duplicity Backup</a></p>
+  <p class="topless"><a href="../backup/netcat_backup.html"
+                        title="previous chapter">Netcat Backup</a></p>
   <h4>Next topic</h4>
-  <p class="topless"><a href="../benchmarking/index.html"
-                        title="next chapter">Benchmarking</a></p>
+  <p class="topless"><a href="ceph.html"
+                        title="next chapter">Ceph</a></p>
   <div role="note" aria-label="source link">
     <h3>This Page</h3>
     <ul class="this-page-menu">
-      <li><a href="../_sources/backup/netcat_backup.rst.txt"
+      <li><a href="../_sources/benchmarking/index.rst.txt"
             rel="nofollow">Show Source</a></li>
     </ul>
    </div>
@@ -73,15 +72,25 @@
         <div class="bodywrapper">
           <div class="body" role="main">
             
-  <div class="section" id="netcat-backup">
-<h1>Netcat Backup<a class="headerlink" href="#netcat-backup" title="Permalink to this headline">¶</a></h1>
-<p>From BAD Machine to GOOD Server</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">dd</span> <span class="k">if</span><span class="o">=/</span><span class="n">dev</span><span class="o">/</span><span class="n">sda</span> <span class="o">|</span> <span class="n">gzip</span> <span class="o">|</span> <span class="n">nc</span> <span class="mf">192.139</span><span class="o">.</span><span class="mf">193.67</span> <span class="mi">9999</span>
-</pre></div>
-</div>
-<p>Good Server Side</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">nc</span> <span class="o">-</span><span class="n">l</span> <span class="o">-</span><span class="n">p</span> <span class="mi">9999</span> <span class="o">&gt;</span> <span class="n">sda</span><span class="o">.</span><span class="n">raw</span><span class="o">.</span><span class="n">gz</span>
-</pre></div>
+  <div class="section" id="benchmarking">
+<h1>Benchmarking<a class="headerlink" href="#benchmarking" title="Permalink to this headline">¶</a></h1>
+<div class="toctree-wrapper compound">
+<p class="caption"><span class="caption-text">Benchmarking:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="ceph.html">Ceph</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="ceph.html#benchmark-ceph-cluster-performance">Benchmark Ceph Cluster Performance</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ceph.html#ceph-benchmarks">Ceph benchmarks</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="postgresql.html">Postgresql</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="postgresql.html#tuning-postgresql-with-pgbench">Tuning PostgreSQL with pgbench</a></li>
+<li class="toctree-l2"><a class="reference internal" href="postgresql.html#how-to-benchmark-postgresql-performance">How to Benchmark PostgreSQL Performance</a></li>
+<li class="toctree-l2"><a class="reference internal" href="postgresql.html#pgbenchtesting">Pgbenchtesting</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="postmark.html">Postmark Benchmarking</a></li>
+<li class="toctree-l1"><a class="reference internal" href="web-frontend.html">Web Frontend testing</a></li>
+</ul>
 </div>
 </div>
 
@@ -98,13 +107,12 @@
           <a href="../genindex.html" title="General Index"
              >index</a></li>
         <li class="right" >
-          <a href="../benchmarking/index.html" title="Benchmarking"
+          <a href="ceph.html" title="Ceph"
              >next</a> |</li>
         <li class="right" >
-          <a href="Duplicity_Backup.html" title="Duplicity Backup"
+          <a href="../backup/netcat_backup.html" title="Netcat Backup"
              >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../index.html">Enterprise Architecture  documentation</a> &#187;</li>
-          <li class="nav-item nav-item-1"><a href="index.html" >Backup</a> &#187;</li> 
+        <li class="nav-item nav-item-0"><a href="../index.html">Enterprise Architecture  documentation</a> &#187;</li> 
       </ul>
     </div>
     <div class="footer" role="contentinfo">

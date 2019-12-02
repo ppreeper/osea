@@ -2,7 +2,13 @@ Netcat Backup
 =============
 
 From BAD Machine to GOOD Server
-dd if=/dev/sda | gzip | nc 192.139.193.67 9999
+
+.. code::
+
+    dd if=/dev/sda | gzip | nc 192.139.193.67 9999
 
 Good Server Side
-nc -l -p 9999 > sda.raw.gz
+
+.. code::
+
+    nc -l -p 9999 > sda.raw.gz

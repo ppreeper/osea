@@ -5,7 +5,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta charset="utf-8" />
-    <title>&lt;no title&gt; &#8212; Enterprise Architecture  documentation</title>
+    <title>Backup &#8212; Enterprise Architecture  documentation</title>
     <link rel="stylesheet" href="../_static/bizstyle.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     
@@ -17,6 +17,8 @@
     <script type="text/javascript" src="../_static/bizstyle.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="5 Levels of Disaster" href="5_levels_of_disaster.html" />
+    <link rel="prev" title="Open Source Enterprise Architecture" href="../index.html" />
     <meta name="viewport" content="width=device-width,initial-scale=1.0">
     <!--[if lt IE 9]>
     <script type="text/javascript" src="_static/css3-mediaqueries.js"></script>
@@ -28,11 +30,23 @@
         <li class="right" style="margin-right: 10px">
           <a href="../genindex.html" title="General Index"
              accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="5_levels_of_disaster.html" title="5 Levels of Disaster"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="../index.html" title="Open Source Enterprise Architecture"
+             accesskey="P">previous</a> |</li>
         <li class="nav-item nav-item-0"><a href="../index.html">Enterprise Architecture  documentation</a> &#187;</li> 
       </ul>
     </div>
       <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
         <div class="sphinxsidebarwrapper">
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="../index.html"
+                        title="previous chapter">Open Source Enterprise Architecture</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="5_levels_of_disaster.html"
+                        title="next chapter">5 Levels of Disaster</a></p>
   <div role="note" aria-label="source link">
     <h3>This Page</h3>
     <ul class="this-page-menu">
@@ -58,7 +72,75 @@
         <div class="bodywrapper">
           <div class="body" role="main">
             
-  
+  <div class="section" id="backup">
+<h1>Backup<a class="headerlink" href="#backup" title="Permalink to this headline">¶</a></h1>
+<div class="toctree-wrapper compound">
+<p class="caption"><span class="caption-text">Backup:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="5_levels_of_disaster.html">5 Levels of Disaster</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="5_levels_of_disaster.html#level-1-threat-of-disaster-without-evidence">Level 1: Threat of disaster without evidence</a></li>
+<li class="toctree-l2"><a class="reference internal" href="5_levels_of_disaster.html#level-2-actual-attack-without-data-loss">Level 2: Actual attack without data loss</a></li>
+<li class="toctree-l2"><a class="reference internal" href="5_levels_of_disaster.html#level-3-minor-data-system-loss">Level 3: Minor data/system loss</a></li>
+<li class="toctree-l2"><a class="reference internal" href="5_levels_of_disaster.html#level-4-major-data-system-loss">Level 4: Major data/system loss</a></li>
+<li class="toctree-l2"><a class="reference internal" href="5_levels_of_disaster.html#level-5-total-loss">Level 5: Total loss</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="10_common_backup_mistakes.html">10 common backup mistakes</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="10_common_backup_mistakes.html#mistake-1-not-making-system-state-backups-often-enough">Mistake 1: Not making system state backups often enough</a></li>
+<li class="toctree-l2"><a class="reference internal" href="10_common_backup_mistakes.html#mistake-2-failing-to-adequately-test-backups">Mistake 2: Failing to adequately test backups</a></li>
+<li class="toctree-l2"><a class="reference internal" href="10_common_backup_mistakes.html#mistake-3-not-using-an-application-aware-backup-application">Mistake 3: Not using an application-aware backup application</a></li>
+<li class="toctree-l2"><a class="reference internal" href="10_common_backup_mistakes.html#mistake-4-shipping-backup-tapes-offsite-too-quickly">Mistake 4: Shipping backup tapes offsite too quickly</a></li>
+<li class="toctree-l2"><a class="reference internal" href="10_common_backup_mistakes.html#mistake-5-having-a-single-point-of-failure">Mistake 5: Having a single point of failure</a></li>
+<li class="toctree-l2"><a class="reference internal" href="10_common_backup_mistakes.html#mistake-6-forgetting-to-plan-for-the-future">Mistake 6: Forgetting to plan for the future</a></li>
+<li class="toctree-l2"><a class="reference internal" href="10_common_backup_mistakes.html#mistake-7-not-considering-the-consequences-of-using-backup-security-mechanisms">Mistake 7: Not considering the consequences of using backup security mechanisms</a></li>
+<li class="toctree-l2"><a class="reference internal" href="10_common_backup_mistakes.html#mistake-8-backing-up-only-data">Mistake 8: Backing up only data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="10_common_backup_mistakes.html#mistake-9-relying-solely-on-a-disk-to-disk-backup-solution">Mistake 9: Relying solely on a disk-to-disk backup solution</a></li>
+<li class="toctree-l2"><a class="reference internal" href="10_common_backup_mistakes.html#mistake-10-using-a-tape-rotation-scheme-that-s-too-short">Mistake 10: Using a tape rotation scheme that’s too short</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="10_Issues_To_Consider_When_Developing_a_Cross-Platform_Backup_Strategy.html">10 issues to consider when developing a cross-platform backup strategy</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="10_Issues_To_Consider_When_Developing_a_Cross-Platform_Backup_Strategy.html#does-your-backup-application-support-all-of-the-necessary-platforms">1 Does your backup application support all of the necessary platforms?</a></li>
+<li class="toctree-l2"><a class="reference internal" href="10_Issues_To_Consider_When_Developing_a_Cross-Platform_Backup_Strategy.html#does-your-backup-software-support-anything-more-than-a-file-level-backup-of-other-operating-systems">2 Does your backup software support anything more than a file level backup of other operating systems?</a></li>
+<li class="toctree-l2"><a class="reference internal" href="10_Issues_To_Consider_When_Developing_a_Cross-Platform_Backup_Strategy.html#does-your-existing-storage-media-have-the-capacity-to-back-up-the-additional-servers">3 Does your existing storage media have the capacity to back up the additional servers?</a></li>
+<li class="toctree-l2"><a class="reference internal" href="10_Issues_To_Consider_When_Developing_a_Cross-Platform_Backup_Strategy.html#how-much-money-is-invested-in-your-current-backup-system">4 How much money is invested in your current backup system?</a></li>
+<li class="toctree-l2"><a class="reference internal" href="10_Issues_To_Consider_When_Developing_a_Cross-Platform_Backup_Strategy.html#if-you-end-up-replacing-your-backup-system-what-s-your-plan-for-maintaining-your-existing-archives">5 If you end up replacing your backup system, what’s your plan for maintaining your existing archives?</a></li>
+<li class="toctree-l2"><a class="reference internal" href="10_Issues_To_Consider_When_Developing_a_Cross-Platform_Backup_Strategy.html#are-you-familiar-enough-with-all-of-the-operating-systems-to-know-what-needs-to-be-backed-up">6 Are you familiar enough with all of the operating systems to know what needs to be backed up?</a></li>
+<li class="toctree-l2"><a class="reference internal" href="10_Issues_To_Consider_When_Developing_a_Cross-Platform_Backup_Strategy.html#can-you-store-data-from-multiple-platforms-on-the-same-tape">7 Can you store data from multiple platforms on the same tape?</a></li>
+<li class="toctree-l2"><a class="reference internal" href="10_Issues_To_Consider_When_Developing_a_Cross-Platform_Backup_Strategy.html#are-features-such-as-bare-metal-recovery-or-restores-to-dissimilar-hardware-supported-on-the-alternate-platforms">8 Are features such as bare metal recovery or restores to dissimilar hardware supported on the alternate platforms?</a></li>
+<li class="toctree-l2"><a class="reference internal" href="10_Issues_To_Consider_When_Developing_a_Cross-Platform_Backup_Strategy.html#does-your-proposed-solution-adhere-to-current-service-level-agreements">9 Does your proposed solution adhere to current service level agreements?</a></li>
+<li class="toctree-l2"><a class="reference internal" href="10_Issues_To_Consider_When_Developing_a_Cross-Platform_Backup_Strategy.html#does-your-proposed-solution-comply-with-federal-archival-requirements">10 Does your proposed solution comply with federal archival requirements?</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="Backup_Site.html">Backup site</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="Backup_Site.html#cold-sites">Cold Sites</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Backup_Site.html#hot-sites">Hot Sites</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Backup_Site.html#warm-sites">Warm Sites</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Backup_Site.html#alternate-sites">Alternate Sites</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Backup_Site.html#choosing">Choosing</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="BCRP.html">BCRP</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="BCRP.html#analysis">Analysis</a></li>
+<li class="toctree-l2"><a class="reference internal" href="BCRP.html#solution-design">Solution design</a></li>
+<li class="toctree-l2"><a class="reference internal" href="BCRP.html#implementation">Implementation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="BCRP.html#testing-and-organizational-acceptance">Testing and organizational acceptance</a></li>
+<li class="toctree-l2"><a class="reference internal" href="BCRP.html#maintenance">Maintenance</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="Develop_an_IT_project_recovery_plan.html">Develop an IT project recovery plan</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="Develop_an_IT_project_recovery_plan.html#assess-the-status-dispassionately">1. Assess the status dispassionately</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Develop_an_IT_project_recovery_plan.html#perform-a-limited-root-cause-analysis">2. Perform a limited “root cause” analysis</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Develop_an_IT_project_recovery_plan.html#develop-a-get-well-plan">3. Develop a “get well” plan</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Develop_an_IT_project_recovery_plan.html#execute-the-project-recovery-plan">4. Execute the project recovery plan</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Develop_an_IT_project_recovery_plan.html#bring-the-project-to-closure">5. Bring the project to closure</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="Duplicity_Backup.html">Duplicity Backup</a></li>
+<li class="toctree-l1"><a class="reference internal" href="netcat_backup.html">Netcat Backup</a></li>
+</ul>
+</div>
+</div>
+
 
           </div>
         </div>
@@ -71,6 +153,12 @@
         <li class="right" style="margin-right: 10px">
           <a href="../genindex.html" title="General Index"
              >index</a></li>
+        <li class="right" >
+          <a href="5_levels_of_disaster.html" title="5 Levels of Disaster"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="../index.html" title="Open Source Enterprise Architecture"
+             >previous</a> |</li>
         <li class="nav-item nav-item-0"><a href="../index.html">Enterprise Architecture  documentation</a> &#187;</li> 
       </ul>
     </div>

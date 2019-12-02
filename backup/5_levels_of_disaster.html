@@ -17,6 +17,8 @@
     <script type="text/javascript" src="../_static/bizstyle.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="10 common backup mistakes" href="10_common_backup_mistakes.html" />
+    <link rel="prev" title="Backup" href="index.html" />
     <meta name="viewport" content="width=device-width,initial-scale=1.0">
     <!--[if lt IE 9]>
     <script type="text/javascript" src="_static/css3-mediaqueries.js"></script>
@@ -28,11 +30,36 @@
         <li class="right" style="margin-right: 10px">
           <a href="../genindex.html" title="General Index"
              accesskey="I">index</a></li>
-        <li class="nav-item nav-item-0"><a href="../index.html">Enterprise Architecture  documentation</a> &#187;</li> 
+        <li class="right" >
+          <a href="10_common_backup_mistakes.html" title="10 common backup mistakes"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="index.html" title="Backup"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">Enterprise Architecture  documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="index.html" accesskey="U">Backup</a> &#187;</li> 
       </ul>
     </div>
       <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
         <div class="sphinxsidebarwrapper">
+  <h3><a href="../index.html">Table of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">5 Levels of Disaster</a><ul>
+<li><a class="reference internal" href="#level-1-threat-of-disaster-without-evidence">Level 1: Threat of disaster without evidence</a></li>
+<li><a class="reference internal" href="#level-2-actual-attack-without-data-loss">Level 2: Actual attack without data loss</a></li>
+<li><a class="reference internal" href="#level-3-minor-data-system-loss">Level 3: Minor data/system loss</a></li>
+<li><a class="reference internal" href="#level-4-major-data-system-loss">Level 4: Major data/system loss</a></li>
+<li><a class="reference internal" href="#level-5-total-loss">Level 5: Total loss</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="index.html"
+                        title="previous chapter">Backup</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="10_common_backup_mistakes.html"
+                        title="next chapter">10 common backup mistakes</a></p>
   <div role="note" aria-label="source link">
     <h3>This Page</h3>
     <ul class="this-page-menu">
@@ -60,29 +87,168 @@
             
   <div class="section" id="levels-of-disaster">
 <h1>5 Levels of Disaster<a class="headerlink" href="#levels-of-disaster" title="Permalink to this headline">¶</a></h1>
-<p>This information comes from a series of articles on disaster levels by Mike Talon.</p>
-<p>Nearly everyone involved in disaster recovery (DR) planning has some idea of the types of disasters that could strike, but few have concrete ideas on how to apply those concepts to the DR plan itself. This classification plan for disasters is based loosely on a British military classification system for threat levels in battle situations.</p>
-<p>== Level 1: Threat of disaster without evidence</p>
-<p>Essentially, this level encompasses everything that doesn’t do damage to your data systems or offer any proof of attack, but which could be a publicity or regulatory nightmare. Common examples are posted boasts about incursions into your network on blogs and Web forums or claims that proprietary data was compromised even though no evidence is offered.</p>
-<p>The major issue with these kinds of disasters is that you can’t prove or disprove them in many cases. Even if you have advanced security measures in place, employee collusion can easily overcome those measures without showing any weakness in the digital security itself. Since this level of threat doesn’t have any evidence associated with it, dealing with the bad publicity can be just as devastating to your organization as data loss.</p>
-<p>== Level 2: Actual attack without data loss</p>
-<p>Once an attacker has breached your security digitally and there’s evidence of his or her attack, your IT staff will need to be able to show what happened and how. In these cases, there is clear proof of the attack but not of the extent of the attack. How far did they get into your network, what did they see, what did they take? Just because they didn’t destroy anything doesn’t mean you can call this anything but a disaster.</p>
-<p>Virus attacks, intruders, and other types of Level 2 disasters are extremely difficult to deal with. Generally, you can prepare for them only by implementing proper security measures and by using penetration-testing tools, but when these disasters strike, it is”by their very nature”via the method you least expect. For virus attacks, immediate quarantine is necessary both for the infected files and for the infected server systems. Failure to move quickly to stop the spread of the infection can lead to more and more damage as the minutes tick by. This may mean suspending e-mail service, locking out file servers, or other actions that interrupt production for your users, but in the end it will mean that you will save the remainder of your data from the same fate as that which is already under attack.</p>
-<p>For network intrusions, not only do you have to quarantine the affected systems, but you also have to find the security hole that the intruder used. This must be done quickly, and a patch must be found immediately to make sure others don’t come in the same way. Since the attack was against your systems specifically, you may also want to attempt to find out who the intruder is, if you have the time and proper equipment to do so.</p>
-<p>After you have dealt with the original attack, your next steps are to salvage as much data as you can and take preventive measures to make sure the same attack doesn’t occur again. This could mean anything from running antivirus tools to performing extensive analyses to see what data was viewed by an intruder. Document everything methodically and completely, as insurance carriers and your company’s management will be looking for this information in the aftermath. Testing with variations of the same attack, changing virus protection schemes, and other strategies can help to make sure you don’t fall prey to a simple change in the same method someone used to attack you once already.</p>
-<p>Level 2 disasters often don’t cause downtime all on their own. However, the aftermath of dealing with them can cut off vital systems to save the rest of your organization. The decisions on how you will react will seriously affect your end users and therefore must be part of your disaster recovery planning well before the attack actually strikes your enterprise.</p>
-<p>== Level 3: Minor data/system loss</p>
-<p>When data systems and data are lost to natural causes, attacks, or system failures, you enter the level that most people consider disasters. Level 3 deals mostly with smaller-scale issues: The loss of noncritical systems or a single critical system that can be restored quickly. The key difference between this level and those that follow is that here we see disasters that have a high priority but not a high urgency. Your Recovery Time Objective is probably at least one business day, giving you time to react and correct.</p>
-<p>End users can continue to do their jobs without this data and/or without these systems, but your staff must still get them back up and running or find out what was lost. First, you’ll need to figure out what went wrong and ensure the damage is contained. This may require verification of backup systems for other data systems, test restorations of controlled and previously backed-up data, and the determination of what caused the system failures. Your goal is to make sure that you won’t lose data or suffer the long-term loss of a critical system. Once you’ve contained the problem, you can begin to address it. This may mean rebuilding the affected systems as quickly as possible and restoring all known-good data, running antivirus and/or other security measures to clean the systems and data, and performing other measures to bring your systems back.</p>
-<p>== Level 4: Major data/system loss</p>
-<p>Larger-scale disasters fall under Level 4. This is where multiple critical systems fail at the same time, possibly due to power loss or fire/flood in the data center. Although you can correct for these issues, it will require an immediate response from your staff, moving quickly to get business-critical systems back up and running. Systems that have a Recovery Time Objective of less than one business day fall into this category when they fail.</p>
-<p>With Level 4 disasters, you don’t have time to move methodically, but you must proceed with extreme care whenever possible. Failure to do so could result in a recurrence of whatever caused the disaster in the first place, leading to more downtime. You will be forced to immediately restore any and all data that you can ensure is not corrupt, and”if you have some form of high-availability solution”you must allow your critical data-systems to fail over and resume operation. Initially, you will be acting fast to restore as much of your data and services as quickly as you can so that end users can resume working with those systems while you find out what went wrong. In Level 4 disasters, you don’t carry out a complete investigation until after the restoration of service.</p>
-<p>That being said, you must be as careful as possible while restoring services. Moving too fast could easily result in a recurrence of the disaster due to your staff missing some critical fault and could actually compound the problem. If you rush, misconfigurations or accidents could occur that cause additional damage. Move quickly, but stay in control of the situation at all times, no matter how loudly the executives are screaming to get everything back up immediately. If you have failover systems, perform a quick check to ensure that you have a stable platform at your DR site and then restore operations. If the platform isn’t stable, you can make the changes necessary to begin the data-restoration process, preceding a return to service. Either way, this emergency calls for an acute awareness of your systems’ health as you move forward.</p>
-<p>== Level 5: Total loss</p>
-<p>The highest level in the system, a Level 5 classification is invoked only in cases where a disaster causes massive disruption in services. Hurricanes, large-scale floods and fires, and building loss are usually found here, with a twin disaster of loss of data systems and the physical plant to recover to. Due to considerations such as loss of space, loss of life, and psychological impact, recovery is an exceptionally difficult”though necessary”task.</p>
-<p>Although the largest organizations will be preparing for these disasters with availability solutions to allow them to fail over quickly to another data center outside the scope of the disaster area, most companies will find that a response to a Level 5 disaster is truly a recovery effort instead of a failover exercise. The vast majority of organizations won’t be able to afford or manage DR data centers that lie far enough away from the primary facility to be helpful in this type of disaster, so their DR systems will be affected by the same event that disrupted service at the primary site. Even if you can’t afford to keep full-fledged systems up and running at another location, can contract to keep backup tapes and other copies of your data in far-flung locations. Many companies specialize in just such recovery services, allowing you to find one that fits both your needs and your budget. This will enable you to deal with the immediate impact of the event and then recover your data to new systems from the copies warehoused off-site after they’re returned to you by the contractor.</p>
-<p>At this level of disaster, you’ll also have to deal with nontechnical issues well before your technology plant can come back online. Level 5 disasters almost always include loss of physical space and”unfortunately”loss of life as well. When your employees are no longer available to enact a DR plan, you will need to act as quickly as possible, given the situation, to find new staffers, train them, and get things up and running again. Also keep in mind the immense psychological impact of these kinds of disasters. Employees have probably just lost their homes and possibly family members and friends as well. Attempts to coerce such employees to immediately report back to work is unfair and in many cases unethical, which could leave some large gaps in your DR efforts. Temporary staff may be available in some cases for you to use in the short term, but for the majority of cases you will simply have to redefine your DR plan to take the extra recovery time into consideration.</p>
-<p>The best planning you can do for a Level 5 emergency is to prepare everyone for what they can expect and hold firm if executives try to make you commit to anything unreasonable. Set up phone chains and other alerting structures ahead of time, get your data out of the scope of potential disasters that may affect your production environment, and be ready to deal with the harsh consequences of a massive disaster. The best you can do is to prepare: Level 5 disasters will find every hole your DR plan has to offer.</p>
+<p>This information comes from a series of articles on disaster levels by Mike
+Talon.</p>
+<p>Nearly everyone involved in disaster recovery (DR) planning has some idea
+of the types of disasters that could strike, but few have concrete ideas on
+how to apply those concepts to the DR plan itself. This classification plan
+for disasters is based loosely on a British military classification system
+for threat levels in battle situations.</p>
+<div class="section" id="level-1-threat-of-disaster-without-evidence">
+<h2>Level 1: Threat of disaster without evidence<a class="headerlink" href="#level-1-threat-of-disaster-without-evidence" title="Permalink to this headline">¶</a></h2>
+<p>Essentially, this level encompasses everything that doesn’t do damage to your
+data systems or offer any proof of attack, but which could be a publicity or
+regulatory nightmare. Common examples are posted boasts about incursions
+into your network on blogs and Web forums or claims that proprietary data
+was compromised even though no evidence is offered.</p>
+<p>The major issue with these kinds of disasters is that you can’t prove or
+disprove them in many cases. Even if you have advanced security measures in
+place, employee collusion can easily overcome those measures without showing
+any weakness in the digital security itself. Since this level of threat
+doesn’t have any evidence associated with it, dealing with the bad publicity
+can be just as devastating to your organization as data loss.</p>
+</div>
+<div class="section" id="level-2-actual-attack-without-data-loss">
+<h2>Level 2: Actual attack without data loss<a class="headerlink" href="#level-2-actual-attack-without-data-loss" title="Permalink to this headline">¶</a></h2>
+<p>Once an attacker has breached your security digitally and there’s evidence
+of his or her attack, your IT staff will need to be able to show what happened
+and how. In these cases, there is clear proof of the attack but not of the
+extent of the attack. How far did they get into your network, what did they
+see, what did they take? Just because they didn’t destroy anything doesn’t
+mean you can call this anything but a disaster.</p>
+<p>Virus attacks, intruders, and other types of Level 2 disasters are extremely
+difficult to deal with. Generally, you can prepare for them only by
+implementing proper security measures and by using penetration-testing tools,
+but when these disasters strike, it is”by their very nature”via the method
+you least expect. For virus attacks, immediate quarantine is necessary both
+for the infected files and for the infected server systems. Failure to move
+quickly to stop the spread of the infection can lead to more and more damage
+as the minutes tick by. This may mean suspending e-mail service, locking out
+file servers, or other actions that interrupt production for your users, but
+in the end it will mean that you will save the remainder of your data from
+the same fate as that which is already under attack.</p>
+<p>For network intrusions, not only do you have to quarantine the affected
+systems, but you also have to find the security hole that the intruder used.
+This must be done quickly, and a patch must be found immediately to make
+sure others don’t come in the same way. Since the attack was against your
+systems specifically, you may also want to attempt to find out who the
+intruder is, if you have the time and proper equipment to do so.</p>
+<p>After you have dealt with the original attack, your next steps are to salvage
+as much data as you can and take preventive measures to make sure the same
+attack doesn’t occur again. This could mean anything from running antivirus
+tools to performing extensive analyses to see what data was viewed by an
+intruder. Document everything methodically and completely, as insurance
+carriers and your company’s management will be looking for this information
+in the aftermath. Testing with variations of the same attack, changing virus
+protection schemes, and other strategies can help to make sure you don’t fall
+prey to a simple change in the same method someone used to attack you once
+already.</p>
+<p>Level 2 disasters often don’t cause downtime all on their own. However, the
+aftermath of dealing with them can cut off vital systems to save the rest
+of your organization. The decisions on how you will react will seriously
+affect your end users and therefore must be part of your disaster recovery
+planning well before the attack actually strikes your enterprise.</p>
+</div>
+<div class="section" id="level-3-minor-data-system-loss">
+<h2>Level 3: Minor data/system loss<a class="headerlink" href="#level-3-minor-data-system-loss" title="Permalink to this headline">¶</a></h2>
+<p>When data systems and data are lost to natural causes, attacks, or system
+failures, you enter the level that most people consider disasters. Level 3
+deals mostly with smaller-scale issues: The loss of noncritical systems or
+a single critical system that can be restored quickly. The key difference
+between this level and those that follow is that here we see disasters that
+have a high priority but not a high urgency. Your Recovery Time Objective
+is probably at least one business day, giving you time to react and correct.</p>
+<p>End users can continue to do their jobs without this data and/or without
+these systems, but your staff must still get them back up and running or
+find out what was lost. First, you’ll need to figure out what went wrong
+and ensure the damage is contained. This may require verification of backup
+systems for other data systems, test restorations of controlled and
+previously backed-up data, and the determination of what caused the system
+failures. Your goal is to make sure that you won’t lose data or suffer
+the long-term loss of a critical system. Once you’ve contained the problem,
+you can begin to address it. This may mean rebuilding the affected systems
+as quickly as possible and restoring all known-good data, running antivirus
+and/or other security measures to clean the systems and data, and
+performing other measures to bring your systems back.</p>
+</div>
+<div class="section" id="level-4-major-data-system-loss">
+<h2>Level 4: Major data/system loss<a class="headerlink" href="#level-4-major-data-system-loss" title="Permalink to this headline">¶</a></h2>
+<p>Larger-scale disasters fall under Level 4. This is where multiple critical
+systems fail at the same time, possibly due to power loss or fire/flood
+in the data center. Although you can correct for these issues, it will
+require an immediate response from your staff, moving quickly to get
+business-critical systems back up and running. Systems that have a
+Recovery Time Objective of less than one business day fall into this
+category when they fail.</p>
+<p>With Level 4 disasters, you don’t have time to move methodically, but you
+must proceed with extreme care whenever possible. Failure to do so could
+result in a recurrence of whatever caused the disaster in the first place,
+leading to more downtime. You will be forced to immediately restore any and
+all data that you can ensure is not corrupt, and”if you have some form of
+high-availability solution”you must allow your critical data-systems to
+fail over and resume operation. Initially, you will be acting fast to
+restore as much of your data and services as quickly as you can so that
+end users can resume working with those systems while you find out what
+went wrong. In Level 4 disasters, you don’t carry out a complete
+investigation until after the restoration of service.</p>
+<p>That being said, you must be as careful as possible while restoring services.
+Moving too fast could easily result in a recurrence of the disaster due to
+your staff missing some critical fault and could actually compound the problem.
+If you rush, misconfigurations or accidents could occur that cause additional
+damage. Move quickly, but stay in control of the situation at all times,
+no matter how loudly the executives are screaming to get everything back
+up immediately. If you have failover systems, perform a quick check to
+ensure that you have a stable platform at your DR site and then restore
+operations. If the platform isn’t stable, you can make the changes necessary
+to begin the data-restoration process, preceding a return to service.
+Either way, this emergency calls for an acute awareness of your systems’
+health as you move forward.</p>
+</div>
+<div class="section" id="level-5-total-loss">
+<h2>Level 5: Total loss<a class="headerlink" href="#level-5-total-loss" title="Permalink to this headline">¶</a></h2>
+<p>The highest level in the system, a Level 5 classification is invoked only
+in cases where a disaster causes massive disruption in services. Hurricanes,
+large-scale floods and fires, and building loss are usually found here,
+with a twin disaster of loss of data systems and the physical plant to
+recover to. Due to considerations such as loss of space, loss of life,
+and psychological impact, recovery is an exceptionally difficult”though
+necessary”task.</p>
+<p>Although the largest organizations will be preparing for these disasters
+with availability solutions to allow them to fail over quickly to another
+data center outside the scope of the disaster area, most companies will
+find that a response to a Level 5 disaster is truly a recovery effort instead
+of a failover exercise. The vast majority of organizations won’t be able to
+afford or manage DR data centers that lie far enough away from the primary
+facility to be helpful in this type of disaster, so their DR systems will
+be affected by the same event that disrupted service at the primary site.
+Even if you can’t afford to keep full-fledged systems up and running at
+another location, can contract to keep backup tapes and other copies of your
+data in far-flung locations. Many companies specialize in just such recovery
+services, allowing you to find one that fits both your needs and your budget.
+This will enable you to deal with the immediate impact of the event and then
+recover your data to new systems from the copies warehoused off-site after
+they’re returned to you by the contractor.</p>
+<p>At this level of disaster, you’ll also have to deal with nontechnical
+issues well before your technology plant can come back online. Level 5
+disasters almost always include loss of physical space and”unfortunately”
+loss of life as well. When your employees are no longer available to enact a
+DR plan, you will need to act as quickly as possible, given the situation, to
+find new staffers, train them, and get things up and running again. Also keep
+in mind the immense psychological impact of these kinds of disasters. Employees
+have probably just lost their homes and possibly family members and friends
+as well. Attempts to coerce such employees to immediately report back to work
+is unfair and in many cases unethical, which could leave some large gaps in
+your DR efforts. Temporary staff may be available in some cases for you to
+use in the short term, but for the majority of cases you will simply have
+to redefine your DR plan to take the extra recovery time into consideration.</p>
+<p>The best planning you can do for a Level 5 emergency is to prepare everyone
+for what they can expect and hold firm if executives try to make you commit
+to anything unreasonable. Set up phone chains and other alerting structures
+ahead of time, get your data out of the scope of potential disasters that
+may affect your production environment, and be ready to deal with the harsh
+consequences of a massive disaster. The best you can do is to prepare:
+Level 5 disasters will find every hole your DR plan has to offer.</p>
+</div>
 </div>
 
 
@@ -97,7 +263,14 @@
         <li class="right" style="margin-right: 10px">
           <a href="../genindex.html" title="General Index"
              >index</a></li>
-        <li class="nav-item nav-item-0"><a href="../index.html">Enterprise Architecture  documentation</a> &#187;</li> 
+        <li class="right" >
+          <a href="10_common_backup_mistakes.html" title="10 common backup mistakes"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="index.html" title="Backup"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">Enterprise Architecture  documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="index.html" >Backup</a> &#187;</li> 
       </ul>
     </div>
     <div class="footer" role="contentinfo">
