@@ -1,0 +1,46 @@
+10 issues to consider when developing a cross-platform backup strategy 
+======================================================================
+
+Server backups are usually pretty straightforward, but things can become complex if you have a heterogeneous network consisting of multiple server platforms. Here some questions to consider when planning a cross platform backup strategy. 
+
+== 1 Does your backup application support all of the necessary platforms? 
+
+The most basic question you will need to consider is whether your current backup application will even work with the "foreign" operating systems or whether you'll have to invest in something else. 
+
+== 2 Does your backup software support anything more than a file level backup of other operating systems? 
+
+This is one of the most commonly overlooked considerations. To give you an idea of what I am talking about, think about what is involved in backing up a Windows network. Some applications (such as SQL Server and Exchange) do not support file-level backups while the application is running. As a result, backup software must be specifically designed to accommodate the needs of such applications. The same thing goes for applications running on Linux or Macintosh. Just being able to perform a file-level backup of a "foreign" server may not be enough. You may have to invest in special backup software that can accommodate the applications that are running on those servers. 
+
+== 3 Does your existing storage media have the capacity to back up the additional servers? 
+
+This is a basic consideration, but it is important nonetheless. Does your current backup infrastructure have sufficient capacity to back up the new servers that are being introduced into the network? 
+
+== 4 How much money is invested in your current backup system? 
+
+If you're asked to bring cross-platform servers into your datacenter, you may discover that for whatever reason, your current backup infrastructure just can't accommodate the new servers. When this happens, it is important to stop and consider how much money you have invested in the current system. 
+
+If you've spent a great deal of money on the current system, you're probably going to make someone unhappy if you suggest replacing it with something else, especially if the current system isn't very old. In those types of situations, it may be better to implement a secondary backup system that is specifically designed for the new platform you are introducing. 
+
+== 5 If you end up replacing your backup system, what's your plan for maintaining your existing archives? 
+
+Suppose you discover that your existing backup system won't support the new platform that is being added to the network, and you decide to simply replace it with something that's universally compatible. You probably won't be able to simply get rid of your old backup hardware and software, because it was used to create all of your archives. You need to decide how long the existing backup system will be retained and how you will go about connecting it to the network should a restoration of an older backup become necessary.
+
+== 6 Are you familiar enough with all of the operating systems to know what needs to be backed up? 
+
+In a Windows environment, there are multiple types of backups. For example, backing up a single server may require you to perform a file-level backup, an application-level backup, and a system state backup. Non-Windows operating systems may also require servers to be backed up at different levels to be fully protected. You must make sure that you are familiar enough with the operating systems on your network that you know how to back them up properly. 
+
+== 7 Can you store data from multiple platforms on the same tape? 
+
+If you plan to back up multiple servers onto a single tape, you must determine whether your backup application can write data from multiple platforms to a single tape. In most cases, this probably won't be a problem so long as the backup software uses agents to communicate with target servers, but it is still something you should check on. 
+
+== 8 Are features such as bare metal recovery or restores to dissimilar hardware supported on the alternate platforms? 
+
+If you have been using your current backup software for a while, there are probably some features (such as the ability to restore to dissimilar hardware or perform bare metal recovery) that you have begun to take for granted. However, just because a backup application supports other platforms, it doesn't mean that every feature will work with every supported platform. It is important to find out whether your backup application has any limitations in a cross-platform environment. 
+
+== 9 Does your proposed solution adhere to current service level agreements? 
+
+Most larger organizations impose service level agreements on the IT department. For example, you may be required to return the network to a functional status within a specific amount of time in the event of a failure. If you are going to begin backing up multiple platforms, make sure your intended backup strategy will still allow you to meet any required service level agreements. 
+
+== 10 Does your proposed solution comply with federal archival requirements? 
+
+Many larger organizations are required by federal legislation to retain archives for a certain amount of time. So before making any changes to your current backup solution, determine whether your intended changes will cause you to fall out of compliance with any regulations.
