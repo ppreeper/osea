@@ -1,0 +1,6 @@
+doc8==0.8.0
+flake8==3.7.9
+pylint==2.4.4
+Sphinx==2.2.1
+sphinxcontrib-ditaa==0.6
+sphinxcontrib-plantuml==0.17.1
