@@ -3,8 +3,10 @@ Open Source Enterprise Architecture
 
 .. toctree::
    :maxdepth: 2
-   :caption: Contents:
-
+   :caption: Backup:
+   :name: backup
+   
+   backup/index
 
 
 Indices and tables
