@@ -1,0 +1,539 @@
+
+
+<!doctype html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>&lt;no title&gt; &#8212; Enterprise Architecture  documentation</title>
+    <link rel="stylesheet" href="../_static/bizstyle.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/language_data.js"></script>
+    <script type="text/javascript" src="../_static/bizstyle.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="&lt;no title&gt;" href="How to create a culture where success equals more than meeting metrics.html" />
+    <link rel="prev" title="&lt;no title&gt;" href="How_to_block_SSH_access_for_specific_IP_addresses.html" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <!--[if lt IE 9]>
+    <script type="text/javascript" src="_static/css3-mediaqueries.js"></script>
+    <![endif]-->
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="How to create a culture where success equals more than meeting metrics.html" title="&lt;no title&gt;"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="How_to_block_SSH_access_for_specific_IP_addresses.html" title="&lt;no title&gt;"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">Enterprise Architecture  documentation</a> &#187;</li> 
+      </ul>
+    </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="How_to_block_SSH_access_for_specific_IP_addresses.html"
+                        title="previous chapter">&lt;no title&gt;</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="How to create a culture where success equals more than meeting metrics.html"
+                        title="next chapter">&lt;no title&gt;</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/misc/how_to_build_microservice_with_mongodb_in_golang.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <p>= How To Build Microservice With MongoDB In Golang</p>
+<p>These days Golang grows in popularity for writing RESTful microservices. Quite often these services utilize MongoDB as persistence storage. In this post we will build a simple book store microservice using both Go and MongoDB. We will connect to MongoDB with mgo driver and use curl to test the microservice.</p>
+<p>== MongoDB</p>
+<p>MongoDB took market with storm by its simplicity, high availability and document orientation. The advantages of using documents over relational tables are:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>Documents correspond to native data types in many programming languages.</p></li>
+<li><p>Embedded documents and arrays reduce need for expensive joins.</p></li>
+<li><p>Dynamic schema supports fluent polymorphism.</p></li>
+</ul>
+</div></blockquote>
+<p>=== What is a document?</p>
+<p>A document is just a data structure composed of field and value pairs. The values of fields may include other documents, arrays, and arrays of documents. MongoDB documents are similar to JSON objects, and every document is stored as a record in MongoDB collection.</p>
+<p>For example a book can be represented as the following document (json):</p>
+<p>&lt;code&gt;
+{</p>
+<blockquote>
+<div><p>“isbn”:  “0134190440”,
+“title”:  “The Go Programming Language”,
+“authors”: [“Alan A. A. Donovan”, “Brian W. Kernighan”],
+“price”:  “$34.57”</p>
+</div></blockquote>
+<p>}
+&lt;/code&gt;</p>
+<p>=== Collection</p>
+<p>MongoDB stores similar documents in the same collection. E.g., we will store books in books collection. If you are from relational background, collection is similar to table. The difference is collection does not enforce any structure, although it implies that documents stored in the same collection will be alike.</p>
+<p>=== Query</p>
+<p>If you want to fetch data from MongoDB, you have to query it first. Query is a MongoDB concept for a group of filter parameters that specify which data is requested. MongoDB uses json and bson (binary json) for writing queries. A query example to fetch a book with specified isbn could look like:</p>
+<p>&lt;code&gt;
+{</p>
+<blockquote>
+<div><p>“isbn”: “1234567”</p>
+</div></blockquote>
+<p>}
+&lt;/code&gt;</p>
+<p>== MongoDB driver for Go</p>
+<p>mgo (pronounced as mango) is a reach MongoDB driver for Golang. Its API is very simple and follows standard Go idioms. We will see how it can help with building CRUD (create, read, update, delete) operations for microservice in a second, but first let’s get familiar with session management.</p>
+<p>=== Session management</p>
+<p>Getting a session:</p>
+<p>&lt;code&gt;
+session, err := mgo.Dial(“localhost”)
+&lt;/code&gt;</p>
+<p>Single session does not allow concurrent processing, therefore multiple sessions are usually required. The quickest way to get another session is to copy an existing one. Make sure that you close it after use:</p>
+<p>&lt;code&gt;
+anotherSession := session.Copy()
+defer anotherSession.Close()
+&lt;/code&gt;</p>
+<p>=== Searching document(s)</p>
+<p>mgo goes with bson package, which simplifies writing queries.</p>
+<p>Fetching all documents in collection:</p>
+<p>&lt;code&gt;
+c := session.DB(“store”).C(“books”)</p>
+<p>var books []Book
+err := c.Find(bson.M{}).All(&amp;books)
+&lt;/code&gt;</p>
+<p>Searching a single document in collection:</p>
+<p>&lt;code&gt;
+c := session.DB(“store”).C(“books”)</p>
+<p>isbn := …
+var book Book
+err := c.Find(bson.M{“isbn”: isbn}).One(&amp;book)
+&lt;/code&gt;</p>
+<p>=== Creating a new document</p>
+<p>&lt;code&gt;
+c := session.DB(“store”).C(“books”)
+err = c.Insert(book)
+&lt;/code&gt;</p>
+<p>=== Updating a document</p>
+<p>&lt;code&gt;
+c := session.DB(“store”).C(“books”)
+err = c.Update(bson.M{“isbn”: isbn}, &amp;book)
+&lt;/code&gt;</p>
+<p>=== Deleting a document</p>
+<p>&lt;code&gt;
+c := session.DB(“store”).C(“books”)
+err := c.Remove(bson.M{“isbn”: isbn})
+&lt;/code&gt;</p>
+<p>== Microservice with MongoDB in Go</p>
+<p>Below is a fully fledged example of book store microservice written in Go and backed by MongoDB. You can download the example from [[<a class="reference external" href="https://github.com/upitau/goinbigdata/tree/master/examples">https://github.com/upitau/goinbigdata/tree/master/examples</a>/mongorest|GitHub]].</p>
+<p>&gt; This service uses Goji for routing. Have a look at [[<a class="reference external" href="http://goinbigdata.com/restful-web-service-in-go-using-goji/">http://goinbigdata.com/restful-web-service-in-go-using-goji/</a><a href="#id1"><span class="problematic" id="id2">|</span></a>How to write RESTful services with Goji]] if you never used Goji before.</p>
+<p>&lt;code&gt;
+package main</p>
+<dl>
+<dt>import (</dt><dd><p>“encoding/json”
+“fmt”
+“log”
+“net/http”</p>
+<p>“goji.io”
+“goji.io/pat”
+“gopkg.in/mgo.v2”
+“gopkg.in/mgo.v2/bson”</p>
+</dd>
+</dl>
+<p>)</p>
+<dl class="simple">
+<dt>func ErrorWithJSON(w http.ResponseWriter, message string, code int) {</dt><dd><p>w.Header().Set(“Content-Type”, “application/json; charset=utf-8”)
+w.WriteHeader(code)
+fmt.Fprintf(w, “{message: %q}”, message)</p>
+</dd>
+</dl>
+<p>}</p>
+<dl class="simple">
+<dt>func ResponseWithJSON(w http.ResponseWriter, json []byte, code int) {</dt><dd><p>w.Header().Set(“Content-Type”, “application/json; charset=utf-8”)
+w.WriteHeader(code)
+w.Write(json)</p>
+</dd>
+</dl>
+<p>}</p>
+<dl class="simple">
+<dt>type Book struct {</dt><dd><p>ISBN  string  json:”isbn”
+Title  string  json:”title”
+Authors []string json:”authors”
+Price  string  json:”price”</p>
+</dd>
+</dl>
+<p>}</p>
+<dl>
+<dt>func main() {</dt><dd><p>session, err := mgo.Dial(“localhost”)
+if err != nil {</p>
+<blockquote>
+<div><p>panic(err)</p>
+</div></blockquote>
+<p>}
+defer session.Close()</p>
+<p>session.SetMode(mgo.Monotonic, true)
+ensureIndex(session)</p>
+<p>mux := goji.NewMux()
+mux.HandleFunc(pat.Get(“/books”), allBooks(session))
+mux.HandleFunc(pat.Post(“/books”), addBook(session))
+mux.HandleFunc(pat.Get(“/books/:isbn”), bookByISBN(session))
+mux.HandleFunc(pat.Put(“/books/:isbn”), updateBook(session))
+mux.HandleFunc(pat.Delete(“/books/:isbn”), deleteBook(session))
+http.ListenAndServe(“localhost:8080”, mux)</p>
+</dd>
+</dl>
+<p>}</p>
+<dl>
+<dt>func ensureIndex(s <a href="#id3"><span class="problematic" id="id4">*</span></a>mgo.Session) {</dt><dd><p>session := s.Copy()
+defer session.Close()</p>
+<p>c := session.DB(“store”).C(“books”)</p>
+<dl class="simple">
+<dt>index := mgo.Index{</dt><dd><p>Key:    []string{“isbn”},
+Unique:   true,
+DropDups:  true,
+Background: true,
+Sparse:   true,</p>
+</dd>
+</dl>
+<p>}
+err := c.EnsureIndex(index)
+if err != nil {</p>
+<blockquote>
+<div><p>panic(err)</p>
+</div></blockquote>
+<p>}</p>
+</dd>
+</dl>
+<p>}</p>
+<dl>
+<dt>func allBooks(s <a href="#id5"><span class="problematic" id="id6">*</span></a>mgo.Session) func(w http.ResponseWriter, r <a href="#id7"><span class="problematic" id="id8">*</span></a>http.Request) {</dt><dd><dl>
+<dt>return func(w http.ResponseWriter, r <a href="#id9"><span class="problematic" id="id10">*</span></a>http.Request) {</dt><dd><p>session := s.Copy()
+defer session.Close()</p>
+<p>c := session.DB(“store”).C(“books”)</p>
+<p>var books []Book
+err := c.Find(bson.M{}).All(&amp;books)
+if err != nil {</p>
+<blockquote>
+<div><p>ErrorWithJSON(w, “Database error”, http.StatusInternalServerError)
+log.Println(“Failed get all books: “, err)
+return</p>
+</div></blockquote>
+<p>}</p>
+<p>respBody, err := json.MarshalIndent(books, “”, ” “)
+if err != nil {</p>
+<blockquote>
+<div><p>log.Fatal(err)</p>
+</div></blockquote>
+<p>}</p>
+<p>ResponseWithJSON(w, respBody, http.StatusOK)</p>
+</dd>
+</dl>
+<p>}</p>
+</dd>
+</dl>
+<p>}</p>
+<dl>
+<dt>func addBook(s <a href="#id11"><span class="problematic" id="id12">*</span></a>mgo.Session) func(w http.ResponseWriter, r <a href="#id13"><span class="problematic" id="id14">*</span></a>http.Request) {</dt><dd><dl>
+<dt>return func(w http.ResponseWriter, r <a href="#id15"><span class="problematic" id="id16">*</span></a>http.Request) {</dt><dd><p>session := s.Copy()
+defer session.Close()</p>
+<p>var book Book
+decoder := json.NewDecoder(r.Body)
+err := decoder.Decode(&amp;book)
+if err != nil {</p>
+<blockquote>
+<div><p>ErrorWithJSON(w, “Incorrect body”, http.StatusBadRequest)
+return</p>
+</div></blockquote>
+<p>}</p>
+<p>c := session.DB(“store”).C(“books”)</p>
+<p>err = c.Insert(book)
+if err != nil {</p>
+<blockquote>
+<div><dl class="simple">
+<dt>if mgo.IsDup(err) {</dt><dd><p>ErrorWithJSON(w, “Book with this ISBN already exists”, http.StatusBadRequest)
+return</p>
+</dd>
+</dl>
+<p>}</p>
+<p>ErrorWithJSON(w, “Database error”, http.StatusInternalServerError)
+log.Println(“Failed insert book: “, err)
+return</p>
+</div></blockquote>
+<p>}</p>
+<p>w.Header().Set(“Content-Type”, “application/json”)
+w.Header().Set(“Location”, r.URL.Path+”/”+book.ISBN)
+w.WriteHeader(http.StatusCreated)</p>
+</dd>
+</dl>
+<p>}</p>
+</dd>
+</dl>
+<p>}</p>
+<dl>
+<dt>func bookByISBN(s <a href="#id17"><span class="problematic" id="id18">*</span></a>mgo.Session) func(w http.ResponseWriter, r <a href="#id19"><span class="problematic" id="id20">*</span></a>http.Request) {</dt><dd><dl>
+<dt>return func(w http.ResponseWriter, r <a href="#id21"><span class="problematic" id="id22">*</span></a>http.Request) {</dt><dd><p>session := s.Copy()
+defer session.Close()</p>
+<p>isbn := pat.Param(r, “isbn”)</p>
+<p>c := session.DB(“store”).C(“books”)</p>
+<p>var book Book
+err := c.Find(bson.M{“isbn”: isbn}).One(&amp;book)
+if err != nil {</p>
+<blockquote>
+<div><p>ErrorWithJSON(w, “Database error”, http.StatusInternalServerError)
+log.Println(“Failed find book: “, err)
+return</p>
+</div></blockquote>
+<p>}</p>
+<dl class="simple">
+<dt>if book.ISBN == “” {</dt><dd><p>ErrorWithJSON(w, “Book not found”, http.StatusNotFound)
+return</p>
+</dd>
+</dl>
+<p>}</p>
+<p>respBody, err := json.MarshalIndent(book, “”, ” “)
+if err != nil {</p>
+<blockquote>
+<div><p>log.Fatal(err)</p>
+</div></blockquote>
+<p>}</p>
+<p>ResponseWithJSON(w, respBody, http.StatusOK)</p>
+</dd>
+</dl>
+<p>}</p>
+</dd>
+</dl>
+<p>}</p>
+<dl>
+<dt>func updateBook(s <a href="#id23"><span class="problematic" id="id24">*</span></a>mgo.Session) func(w http.ResponseWriter, r <a href="#id25"><span class="problematic" id="id26">*</span></a>http.Request) {</dt><dd><dl>
+<dt>return func(w http.ResponseWriter, r <a href="#id27"><span class="problematic" id="id28">*</span></a>http.Request) {</dt><dd><p>session := s.Copy()
+defer session.Close()</p>
+<p>isbn := pat.Param(r, “isbn”)</p>
+<p>var book Book
+decoder := json.NewDecoder(r.Body)
+err := decoder.Decode(&amp;book)
+if err != nil {</p>
+<blockquote>
+<div><p>ErrorWithJSON(w, “Incorrect body”, http.StatusBadRequest)
+return</p>
+</div></blockquote>
+<p>}</p>
+<p>c := session.DB(“store”).C(“books”)</p>
+<p>err = c.Update(bson.M{“isbn”: isbn}, &amp;book)
+if err != nil {</p>
+<blockquote>
+<div><p>switch err {
+default:</p>
+<blockquote>
+<div><p>ErrorWithJSON(w, “Database error”, http.StatusInternalServerError)
+log.Println(“Failed update book: “, err)
+return</p>
+</div></blockquote>
+<dl class="simple">
+<dt>case mgo.ErrNotFound:</dt><dd><p>ErrorWithJSON(w, “Book not found”, http.StatusNotFound)
+return</p>
+</dd>
+</dl>
+<p>}</p>
+</div></blockquote>
+<p>}</p>
+<p>w.WriteHeader(http.StatusNoContent)</p>
+</dd>
+</dl>
+<p>}</p>
+</dd>
+</dl>
+<p>}</p>
+<dl>
+<dt>func deleteBook(s <a href="#id29"><span class="problematic" id="id30">*</span></a>mgo.Session) func(w http.ResponseWriter, r <a href="#id31"><span class="problematic" id="id32">*</span></a>http.Request) {</dt><dd><dl>
+<dt>return func(w http.ResponseWriter, r <a href="#id33"><span class="problematic" id="id34">*</span></a>http.Request) {</dt><dd><p>session := s.Copy()
+defer session.Close()</p>
+<p>isbn := pat.Param(r, “isbn”)</p>
+<p>c := session.DB(“store”).C(“books”)</p>
+<p>err := c.Remove(bson.M{“isbn”: isbn})
+if err != nil {</p>
+<blockquote>
+<div><p>switch err {
+default:</p>
+<blockquote>
+<div><p>ErrorWithJSON(w, “Database error”, http.StatusInternalServerError)
+log.Println(“Failed delete book: “, err)
+return</p>
+</div></blockquote>
+<dl class="simple">
+<dt>case mgo.ErrNotFound:</dt><dd><p>ErrorWithJSON(w, “Book not found”, http.StatusNotFound)
+return</p>
+</dd>
+</dl>
+<p>}</p>
+</div></blockquote>
+<p>}</p>
+<p>w.WriteHeader(http.StatusNoContent)</p>
+</dd>
+</dl>
+<p>}</p>
+</dd>
+</dl>
+<p>}
+&lt;/code&gt;</p>
+<p>== Testing with curl</p>
+<p>curl is an indispensable tool for building and testing RESTful microservices. Also curl commands often used in RESTful API documentation to provide examples of API invocation.</p>
+<p>=== Adding a new book</p>
+<p>Sample request:</p>
+<p>&lt;code&gt;
+curl -X POST -H “Content-Type: application/json” -d &#64;body.json <a class="reference external" href="http://localhost:8080/books">http://localhost:8080/books</a></p>
+<p>body.json:
+{</p>
+<blockquote>
+<div><p>“isbn”:  “0134190440”,
+“title”:  “The Go Programming Language”,
+“authors”: [“Alan A. A. Donovan”, “Brian W. Kernighan”],
+“price”:  “$34.57”</p>
+</div></blockquote>
+<p>}
+&lt;/code&gt;</p>
+<p>Sample response:</p>
+<p>&lt;code&gt;
+201 Created
+&lt;/code&gt;</p>
+<p>=== Getting all books</p>
+<p>Sample request:</p>
+<p>&lt;code&gt;
+curl -H “Content-Type: application/json” <a class="reference external" href="http://localhost:8080/books">http://localhost:8080/books</a>
+&lt;/code&gt;</p>
+<p>Sample response:</p>
+<p>&lt;code&gt;
+200 OK
+[</p>
+<blockquote>
+<div><dl>
+<dt>{</dt><dd><p>“ISBN”: “0134190440”,
+“Title”: “The Go Programming Language”,
+“Authors”: [</p>
+<blockquote>
+<div><p>“Alan A. A. Donovan”,
+“Brian W. Kernighan”</p>
+</div></blockquote>
+<p>],
+“Price”: “$34.57”</p>
+</dd>
+</dl>
+<p>},
+{</p>
+<blockquote>
+<div><p>“ISBN”: “0321774639”,
+“Title”: “Programming in Go: Creating Applications for the 21st Century (Developer’s Library)”,
+“Authors”: [</p>
+<blockquote>
+<div><p>“Mark Summerfield”</p>
+</div></blockquote>
+<p>],
+“Price”: “$31.20”</p>
+</div></blockquote>
+<p>}</p>
+</div></blockquote>
+<p>]
+&lt;/code&gt;</p>
+<p>=== Getting a book</p>
+<p>Sample request:</p>
+<p>&lt;code&gt;
+curl -H “Content-Type: application/json” <a class="reference external" href="http://localhost:8080/books/0134190440">http://localhost:8080/books/0134190440</a>
+&lt;/code&gt;</p>
+<p>Sample response:</p>
+<p>&lt;code&gt;
+200 OK
+{</p>
+<blockquote>
+<div><p>“ISBN”: “0134190440”,
+“Title”: “The Go Programming Language”,
+“Authors”: [</p>
+<blockquote>
+<div><p>“Alan A. A. Donovan”,
+“Brian W. Kernighan”</p>
+</div></blockquote>
+<p>],
+“Price”: “$34.57”</p>
+</div></blockquote>
+<p>}
+&lt;/code&gt;</p>
+<p>=== Updating a book</p>
+<p>Sample request:</p>
+<p>&lt;code&gt;
+curl -X PUT -H “Content-Type: application/json” -d &#64;body.json <a class="reference external" href="http://localhost:8080/books/0134190440">http://localhost:8080/books/0134190440</a></p>
+<p>body.json:
+{</p>
+<blockquote>
+<div><p>“isbn”:  “0134190440”,
+“title”:  “The Go Programming Language”,
+“authors”: [“Alan A. A. Donovan”, “Brian W. Kernighan”],
+“price”:  “$20.00”</p>
+</div></blockquote>
+<p>}
+&lt;/code&gt;</p>
+<p>Sample response:</p>
+<p>&lt;code&gt;
+204 No Content
+&lt;/code&gt;</p>
+<p>=== Deleting a book</p>
+<p>Sample request:</p>
+<p>&lt;code&gt;
+curl -X DELETE -H “Content-Type: application/json” -d &#64;body.json <a class="reference external" href="http://localhost:8080/books/0134190440">http://localhost:8080/books/0134190440</a>
+&lt;/code&gt;</p>
+<p>Sample response:</p>
+<p>&lt;code&gt;
+204 No Content
+&lt;/code&gt;</p>
+<p>== The bottom line</p>
+<p>MongoDB is a very popular backend for writing microservices with Go. MongoDB driver for Go (mgo) is idiomatic and very easy to use. Don’t overlook curl if you are building, testing or documenting RESTful services.</p>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="How to create a culture where success equals more than meeting metrics.html" title="&lt;no title&gt;"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="How_to_block_SSH_access_for_specific_IP_addresses.html" title="&lt;no title&gt;"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">Enterprise Architecture  documentation</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2019, Peter Preeper.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.2.1.
+    </div>
+  </body>
+</html>

@@ -1,0 +1,180 @@
+
+
+<!doctype html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>&lt;no title&gt; &#8212; Enterprise Architecture  documentation</title>
+    <link rel="stylesheet" href="../_static/bizstyle.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/language_data.js"></script>
+    <script type="text/javascript" src="../_static/bizstyle.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="&lt;no title&gt;" href="essentials_to_take_when_visiting_a_data_center.html" />
+    <link rel="prev" title="&lt;no title&gt;" href="effective_methods.html" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <!--[if lt IE 9]>
+    <script type="text/javascript" src="_static/css3-mediaqueries.js"></script>
+    <![endif]-->
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="essentials_to_take_when_visiting_a_data_center.html" title="&lt;no title&gt;"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="effective_methods.html" title="&lt;no title&gt;"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">Enterprise Architecture  documentation</a> &#187;</li> 
+      </ul>
+    </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="effective_methods.html"
+                        title="previous chapter">&lt;no title&gt;</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="essentials_to_take_when_visiting_a_data_center.html"
+                        title="next chapter">&lt;no title&gt;</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/misc/efficient_metrics_be_careful_what_you_measure.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <p>= Efficient metrics: Be careful what you measure</p>
+<ul class="simple">
+<li><p>March 7, 2011</p></li>
+<li><p>By Alan Norton</p></li>
+</ul>
+<p>Every company larger than the mom-and-pop store on the corner has them—dozens upon dozens of reports, charts, and performance metrics. How accurately they tell the story of a department’s performance and the company’s overall performance is critical to everyday decision making and to those all-important course corrections on the road to success. Unfortunately, metrics can be misleading—especially at the department level. In this white paper, I will identify where and why metrics can present bad or ambiguous information and what can be done to minimize this problem.</p>
+<p>== Performance metrics at the department level</p>
+<p>The theory of departmental reporting is simple. Each department meets its own goals and shows improvement month to month, and these improvements roll up to a better bottom line for the company. But that is not how the real world works.</p>
+<p>It is common for each department to have its own set of metrics that it reports on. What is measured may be chosen by the department managers; they know their business best, right? Worse yet, the data is most likely collected and compiled by their own staff.</p>
+<p>Reporting metrics in this manner has its own set of inherent problems:</p>
+<ul class="simple">
+<li><p>Cost inefficiencies—Reporting costs may exceed actual or potential savings</p></li>
+<li><p>Self serving interests—Managers tailor the data and statistics to best show their performance</p></li>
+<li><p>Tunnel vision—Managers may report and make decisions based on their narrow set of metrics, occasionally at the expense of another department or their own unmeasured metrics</p></li>
+<li><p>Conflicts of interest—What is best for the department is not always best for the company</p></li>
+<li><p>Information overload —There may be a tendency to measure everything to get that warm and fuzzy feeling</p></li>
+</ul>
+<p>Good managers will do whatever it takes to make their numbers look good, especially if incentives are tied to those numbers. Unfortunately, that may come at the expense of other company functions or employee morale. Eventually, this type of reporting negatively affects the corporate bottom line—and that is certainly not the intent of a good set of metrics.</p>
+<p>The following scenarios show how the best intentions of managers and their metrics can go awry when viewed from a higher perspective.</p>
+<p>== Case study: Corporation XYZ</p>
+<p><strong>What</strong>: XYZ produces and supplies electrical sub-assemblies for Aerospace companies</p>
+<p><strong>Who</strong>: Receiving/Inspection/Test (RIT) and production departments</p>
+<p>=== Scenario 1</p>
+<p>RIT is responsible for pre-tinning electrical components used in production. RIT’s cost per item tinned is carefully tracked. To save money and lower their cost of tinning, the manager of RIT works with purchasing to order pre-tinned components directly from the suppliers. RIT’s cost per item tinned drops dramatically, and the RIT manager is rewarded for his improved metrics.</p>
+<p>However, production has experienced increasing problems with the quality of the tinned leads of the electrical components. Production rework is a closely watched metric and upper management wants to know why their rework and resultant manpower costs are on the rise.</p>
+<p>Production points fingers at RIT for shoddy pre-tinning. RIT notes the money they are saving.</p>
+<p>The costs incurred by production’s rework far exceed the savings realized by the purchase of pre-tinned components. Should the RIT manager be reprimanded for improving the metrics he was charged to improve? This and other unintended consequences are possible when costs are measured at the department level and not in the aggregate.</p>
+<p>=== Scenario 2</p>
+<p>Production is at risk of failing to produce the required 30 AV-103-B sub-assemblies due to a lack of critical components from suppliers. Failure to produce and deliver the 30 sub-assemblies by the end of the month would trigger a $150,000 penalty. There are seven days left in the production month. The critical components holding back the completion of the remaining AV-103-Bs are due in Friday afternoon.</p>
+<p>RIT has been made aware of the incoming consignment and has committed to delivering the components to production by start of business on Monday. Supervisors have scrambled to line up the necessary manpower needed over the weekend to receive, inspect, test, and tin the critical components.</p>
+<p>RIT managers are paid quarterly bonuses for bringing their labor costs in under budget. The additional overtime expenses mean that there will be no bonuses this quarter. The RIT managers have made the right decision. Avoiding the $150,000 penalty is best for the corporate bottom line, but is it fair to penalize the RIT managers for doing the right thing?</p>
+<p>Be careful before you tie incentives to departmental metrics. Bonuses tied to metrics collected at the departmental level can become disincentives—exactly the opposite of what was intended.</p>
+<p>== Exception reporting</p>
+<p>Following an exception reporting strategy at lower, more discrete levels in the company can reduce the number of charts and reports a manager must review to efficiently run his or her department.</p>
+<ul class="simple">
+<li><p>Identify problems and potential problems in advance.</p></li>
+<li><p>Minimize the information a manager must routinely review.</p></li>
+<li><p>Measure quality, cost, and time but report only exceptions.</p></li>
+<li><p>Set reasonable exception parameters—not too wide to generate hundreds of exceptions and not too tight to miss potential problems.</p></li>
+</ul>
+<p>Figure 1: Focus on exception reporting at the discrete level and performance reporting at the aggregate level.</p>
+<p>Figure 2: Production Metrics—It makes more sense to track the handful of parts and raw materials that currently are or may in the future affect production by using exception reports. Use performance reports predominantly at higher levels of production.</p>
+<p>== What about financial metrics?</p>
+<p>Clearly, traditional financial metrics are critical to keeping costs in line. Several strategies can be employed to help a manager wade through all those pages of financial numbers:</p>
+<ul class="simple">
+<li><p>Add charts—Charts can be added; for example, a pie chart can be added to show the labor cost overages by product line.</p></li>
+<li><p>Exception reporting can be used to show only those financial metrics outside predetermined parameters</p></li>
+<li><p>Highlighting can be used to quickly identify problems, possible problems, and exceptional performance:</p></li>
+</ul>
+<p>&gt; * Red highlighting for overages falling outside predetermined thresholds
+&gt; * Yellow highlighting for costs that are in danger of reaching problem levels
+&gt; * Green highlighting for budget under-runs</p>
+<p>It is important to remember that financial metrics don’t tell the whole story and, by themselves, they too can be misleading.</p>
+<p>== Metrics should be customer-centric</p>
+<p>Some of the so-called IT industry standard metrics have the wrong focus. For example, system uptime is
+commonly used to measure the performance of critical IT systems. But what does 99.72% uptime mean to a
+customer? Two hours of system downtime on Monday morning from 8:00 to 10:00 AM is very different from
+downtime from 5:00 to 7:00 AM on a Sunday morning. A single uptime number is data, not information. From a
+customer’s point of view, they want to know how well their systems performed during working hours. Even
+more information can be provided by breaking the downtime into scheduled and non-scheduled downtime. The
+metrics used by IT and all other departments should be customer-centric and not department-centric.</p>
+<p>== Efficient metrics</p>
+<p>Here are some guidelines that can be used to reduce the amount of misleading information you generate and to improve the overall efficiency of your metrics:</p>
+<ul class="simple">
+<li><p>Measure performance at the aggregate higher levels.</p></li>
+<li><p>Measure exceptions at lower levels.</p></li>
+<li><p>Follow SMART techniques—metrics should be <a href="#id1"><span class="problematic" id="id2">**</span></a>S**pecific, <a href="#id3"><span class="problematic" id="id4">**</span></a>M**easureable, <a href="#id5"><span class="problematic" id="id6">**</span></a>A**ttainable, <a href="#id7"><span class="problematic" id="id8">**</span></a>R**elevant ,and <a href="#id9"><span class="problematic" id="id10">**</span></a>T**imely.</p></li>
+<li><p>Determine the cost of metrics and throw out reports that cost more than they save or might save.</p></li>
+<li><p>Manual data collection is expensive—automate, replace with a substitute, or eliminate altogether.</p></li>
+<li><p>Use departmental reports as guidelines only.</p></li>
+<li><p>Tie incentives to division or corporate bottom line not departmental metrics.</p></li>
+<li><p>Verify accuracy—no information is better than bad information.</p></li>
+<li><p>Avoid misleading or ambiguous information—bad decisions based on this kind of information can be difficult to identify and costly to correct.</p></li>
+<li><p>Use a third party to prepare metrics—if that is not optimal, create a division/corporate-level position that collects and reports metrics.</p></li>
+</ul>
+<p>== In summary</p>
+<p>The time-honored story of the blind men and an elephant is a good metaphor for how metrics can be misused. Each blind man felt a different part of the elephant and each came to a different conclusion as to what an elephant was like. The story warns us that seeing only part of the picture can be misleading. The elephant when viewed from one foot can be deceiving, just as the performance and health of a corporation when measured from lower levels can be misleading. Such metrics are only a snapshot of one small slice of the corporate picture. When viewed from far enough away, the elephant quickly becomes recognizable, just as the primary exception, a long trunk, immediately distinguishes the elephant from other animals.</p>
+<p>As important as metrics are to an organization, all too often insufficient thought has gone into the development of a good, comprehensive metrics package. Investing a little time to improve what is reported and how it is reported will quickly pay dividends for any organization at all levels. Choose your metrics wisely—what you measure is what you get.</p>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="essentials_to_take_when_visiting_a_data_center.html" title="&lt;no title&gt;"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="effective_methods.html" title="&lt;no title&gt;"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">Enterprise Architecture  documentation</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2019, Peter Preeper.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.2.1.
+    </div>
+  </body>
+</html>

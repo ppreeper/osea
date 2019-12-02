@@ -1,0 +1,201 @@
+
+
+<!doctype html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>&lt;no title&gt; &#8212; Enterprise Architecture  documentation</title>
+    <link rel="stylesheet" href="../_static/bizstyle.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/language_data.js"></script>
+    <script type="text/javascript" src="../_static/bizstyle.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="[source,bash]" href="How to install Nextcloud on Ubuntu Server 16.04 with snap.html" />
+    <link rel="prev" title="[source,bash]" href="How to harden Ubuntu Server 16.04 security in five steps.html" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <!--[if lt IE 9]>
+    <script type="text/javascript" src="_static/css3-mediaqueries.js"></script>
+    <![endif]-->
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="How to install Nextcloud on Ubuntu Server 16.04 with snap.html" title="[source,bash]"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="How to harden Ubuntu Server 16.04 security in five steps.html" title="[source,bash]"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">Enterprise Architecture  documentation</a> &#187;</li> 
+      </ul>
+    </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="How to harden Ubuntu Server 16.04 security in five steps.html"
+                        title="previous chapter">[source,bash]</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="How to install Nextcloud on Ubuntu Server 16.04 with snap.html"
+                        title="next chapter">[source,bash]</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/misc/how_to_install_hyperledger_fabric_on_ubuntu.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <p>#How to install Hyperledger Fabric on Ubuntu</p>
+<p>This how-to walks you through the process of installing the blockchain framework, Hyperledger Fabric, on Ubuntu 16.04.</p>
+<p>By Jack Wallen | May 8, 2018, 7:49 AM PST</p>
+<p>Hyperledger Fabric is a blockchain framework implementation that you can use as a foundation for developing applications or solutions with a modular architecture. It’s quite a challenge to install, but once you have it up and running (and have started developing applications that make use of the blockchain framework) it will be well worth your time. The good news is that it’s all open source and runs on open source platforms, so there is no software cost investment. There is of course a time investment. But this will be time worth spent.</p>
+<p>I want to walk you through the process of installing Hyperledger Fabric v 1.0 on Ubuntu Server 16.04. This is handled completely through the command line. I will assume you already have your Ubuntu Server 16.04 up and running. You will also need an account with sudo rights.</p>
+<p>With that said, let’s install.</p>
+<p>##Installing the Go language</p>
+<p>Hyperledger Fabric depends upon the Go language. The minimum required version is 1.7. Although version 1.10.2 is available, it will not compile and install with this method, so we’ll be going with 1.7. Here are the necessary steps:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>Change into your home directory with the command cd ~/</p></li>
+<li><p>Download the tar file with the command wget <a class="reference external" href="https://storage.googleapis.com/golang/go1.7.1.lin">https://storage.googleapis.com/golang/go1.7.1.lin</a>…</p></li>
+<li><p>Unpack the file with the command tar xvzf go1*.tar.gz</p></li>
+</ul>
+</div></blockquote>
+<p>Now we need to set GOPATH and GOROOT with the following commands:</p>
+<p>&lt;code bash&gt;
+mkdir $HOME/gopath
+export GOPATH=$HOME/gopath
+export GOROOT=$HOME/go
+export PATH=$PATH:$GOROOT/bin
+&lt;/code&gt;</p>
+<p>Check to make sure golang is working by issuing the command go version. You should see the version of go you just installed (in our case, 1.10.2).</p>
+<p>##Install dependencies</p>
+<p>Next we have a few dependencies to install. The first is libltdl-dev. This can be done with the single command:</p>
+<p>&lt;code bash&gt;
+sudo apt install libltdl-dev
+&lt;/code&gt;</p>
+<p>Docker is our next dependencies. We’ll install Docker from a downloadable .deb file, with the commands:</p>
+<p>&lt;code bash&gt;
+wget <a class="reference external" href="https://download.docker.com/linux/ubuntu/dists/xenial/pool/stable/amd64/docker-ce_18.03.1~ce-0~ubuntu_amd64.deb">https://download.docker.com/linux/ubuntu/dists/xenial/pool/stable/amd64/docker-ce_18.03.1~ce-0~ubuntu_amd64.deb</a>
+sudo dpkg -i docker*.deb
+sudo apt install -f
+&lt;/code&gt;</p>
+<p>Add our user to the docker group with the command:</p>
+<p>&lt;code bash&gt;
+sudo usermod -aG docker USERNAME
+&lt;/code&gt;</p>
+<p>Where USERNAME is the actual name of the user.</p>
+<p>Log out and log back in. Verify that Docker is working with the command:</p>
+<p>&lt;code bash&gt;
+docker run hello-world
+&lt;/code&gt;</p>
+<p>If you see “Hello from Docker!” you’re good to continue on.</p>
+<p>Next we must install Pip. Do this with the following command:</p>
+<p>&lt;code bash&gt;
+sudo apt install python-pip
+&lt;/code&gt;</p>
+<p>Verify pip has been installed with the command pip —version.</p>
+<p>Now we need to add Docker Compose. We will install this, by way of Pip, with the command:</p>
+<p>&lt;code bash&gt;
+sudo pip install docker-compose
+&lt;/code&gt;</p>
+<p>Verify Docker Compose was installed with the command docker-compose —version.</p>
+<p>Now we install git and curl with the command:</p>
+<p>&lt;code bash&gt;
+sudo apt install git curl
+&lt;/code&gt;</p>
+<p>##Installing Hyperledger Fabric</p>
+<p>Now we install Hyperledger Fabric. Create a new directory with the command:</p>
+<p>&lt;code bash&gt;
+mkdir -p $GOPATH/src/github.com/hyperledger/
+&lt;/code&gt;</p>
+<p>Change into that newly created directory with the command:</p>
+<p>&lt;code bash&gt;
+cd $GOPATH/src/github.com/hyperledger/
+&lt;/code&gt;</p>
+<p>Download fabric with the command:</p>
+<p>&lt;code bash&gt;
+git clone <a class="reference external" href="https://github.com/hyperledger/fabric.git">https://github.com/hyperledger/fabric.git</a>
+&lt;/code&gt;</p>
+<p>Change into the fabric directory with the command cd fabric and reset the fabric commit level with the command:</p>
+<p>&lt;code bash&gt;
+git reset –hard c257bb31867b14029c3a6afe1db35b131757d2bf
+&lt;/code&gt;</p>
+<p>Make and install fabric with the command make. This will take some time to complete. When the installation completes, issue the following commands (so our test network will succeed):</p>
+<p>&lt;code bash&gt;
+git checkout fa3d88cde177750804c7175ae000e0923199735c
+sh examples/e2e_cli/download-dockerimages.sh
+&lt;/code&gt;</p>
+<p>You can now run a fabric example by changing into the examples directory with the command cd examples/e2e_cli/ and then first issuing the command to create a test channel:</p>
+<p>&lt;code bash&gt;
+./generateArtifacts.sh TESTCHANNEL
+&lt;/code&gt;</p>
+<p>Where TESTCHANNEL is the name of a channel (such as testchannel). Next, issue the command:</p>
+<p>&lt;code bash&gt;
+./network_setup.sh up TESTCHANNEL 10000 couchdb
+&lt;/code&gt;</p>
+<p>Where TESTCHANNEL is the name of your test channel. Near the end of the above command, you should see END-E2E drawn out in ascii (<strong>Figure A</strong>).</p>
+<p>###Figure A</p>
+<p>{{<a class="reference external" href="https://tr1.cbsistatic.com/hub/i/2018/05/08/7d26a1a1-7193-446c-b65f-35008b85cf72/fd71baeb1e9b0b97eeabbe1649a21d28/hyperledgera">https://tr1.cbsistatic.com/hub/i/2018/05/08/7d26a1a1-7193-446c-b65f-35008b85cf72/fd71baeb1e9b0b97eeabbe1649a21d28/hyperledgera</a>.jpg|A successful run of an included example}}</p>
+<p>You might wind up with errors regarding docker images hyperledger/fabric-tools. To fix this, you must pull down the latest images from Docker Hub and then retag them. This done with the following commands:</p>
+<p>&lt;code bash&gt;
+docker pull hyperledger/fabric-tools:x86_64-1.1.0
+docker tag hyperledger/fabric-tools:x86_64-1.1.0 hyperledger/fabric-tools:latest
+&lt;/code&gt;</p>
+<p>Once you’ve issued the above commands, rerun the ./network_setup.sh up command.</p>
+<p>##Hyperledger Fabric is up and running</p>
+<p>Congratulations! You now have Hyperledger Fabric up and running. You can now begin the process of developing for this blockchain framework.</p>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="How to install Nextcloud on Ubuntu Server 16.04 with snap.html" title="[source,bash]"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="How to harden Ubuntu Server 16.04 security in five steps.html" title="[source,bash]"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">Enterprise Architecture  documentation</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2019, Peter Preeper.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.2.1.
+    </div>
+  </body>
+</html>

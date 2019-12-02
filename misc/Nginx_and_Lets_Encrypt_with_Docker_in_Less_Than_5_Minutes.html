@@ -1,0 +1,223 @@
+
+
+<!doctype html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>With Compose, you use a YAML file to configure your application’s services. Then, with a single command, you create and start all the services from your configuration &#8212; Enterprise Architecture  documentation</title>
+    <link rel="stylesheet" href="../_static/bizstyle.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/language_data.js"></script>
+    <script type="text/javascript" src="../_static/bizstyle.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="&lt;no title&gt;" href="osTicket.html" />
+    <link rel="prev" title="&lt;no title&gt;" href="netmon-setup.html" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <!--[if lt IE 9]>
+    <script type="text/javascript" src="_static/css3-mediaqueries.js"></script>
+    <![endif]-->
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="osTicket.html" title="&lt;no title&gt;"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="netmon-setup.html" title="&lt;no title&gt;"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">Enterprise Architecture  documentation</a> &#187;</li> 
+      </ul>
+    </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="../index.html">Table of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">With Compose, you use a YAML file to configure your application’s services. Then, with a single command, you create and start all the services from your configuration</a><ul>
+<li><a class="reference internal" href="#id1">}</a></li>
+<li><a class="reference internal" href="#id2">}</a><ul>
+<li><a class="reference internal" href="#curl-l-https-raw-githubusercontent-com-wmnnd-nginx-certbot-master-init-letsencrypt-sh-init-letsencrypt-sh">curl -L https://raw.githubusercontent.com/wmnnd/nginx-certbot/master/init-letsencrypt.sh &gt; init-letsencrypt.sh</a></li>
+<li><a class="reference internal" href="#entrypoint-bin-sh-c-trap-exit-term-while-do-certbot-renew-sleep-12h-wait-done">entrypoint: “/bin/sh -c ‘trap exit TERM; while :; do certbot renew; sleep 12h &amp; wait $${!}; done;’”</a></li>
+<li><a class="reference internal" href="#command-bin-sh-c-while-do-sleep-6h-wait-nginx-s-reload-done-nginx-g-daemon-off">command: “/bin/sh -c ‘while :; do sleep 6h &amp; wait $${!}; nginx -s reload; done &amp; nginx -g “daemon off;”’”</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="netmon-setup.html"
+                        title="previous chapter">&lt;no title&gt;</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="osTicket.html"
+                        title="next chapter">&lt;no title&gt;</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/misc/Nginx_and_Lets_Encrypt_with_Docker_in_Less_Than_5_Minutes.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <p>= Nginx and Let’s Encrypt with Docker in Less Than 5 Minutes
+Getting Nginx to run with Let’s Encrypt in a docker-compose environment is trickier than you’d think …</p>
+<p>The other day, I wanted to _quickly_ launch an nginx server with Let’s Encrypt certificates. I expected the task to be easy and straightforward. Turns out: I was wrong, it took a significant amount of time and it’s quite a bit more complicated.</p>
+<p>Of course, in the grand scheme of things, it is pretty straightforward. But there are a couple of details you need to be aware of. The goal of this guide is to help you build a docker-compose setup that runs nginx in one container and a service for obtaining and renewing HTTPS certificates in another. <strong>Whether you’re using nginx as a proxy for your web app or just for serving static files, this guide is for you.</strong></p>
+<p>&gt; TL;DR: The full code from this guide is link:https://github.com/wmnnd/nginx-certbot[available on link GitHub].</p>
+<p>== Quick Reminder: What is docker-compose?</p>
+<p>_docker-<a href="#id3"><span class="problematic" id="id4">compose_</span></a> is a tool for defining containers and running them. It’s a great choice when you have multiple interdependent containers but you don’t need a full-blown container cluster like Kubernetes.</p>
+<p>The official documentation puts it like this:</p>
+<div class="section" id="with-compose-you-use-a-yaml-file-to-configure-your-applications-services-then-with-a-single-command-you-create-and-start-all-the-services-from-your-configuration">
+<h1>With Compose, you use a YAML file to configure your application’s services. Then, with a single command, you create and start all the services from your configuration<a class="headerlink" href="#with-compose-you-use-a-yaml-file-to-configure-your-applications-services-then-with-a-single-command-you-create-and-start-all-the-services-from-your-configuration" title="Permalink to this headline">¶</a></h1>
+<p>This guide requires docker-compose. If you don’t have it yet, take a look at the installation instructions and get it.</p>
+<p>Hint: If you’re installing docker-compose on CoreOS, it needs to go into /opt/bin instead of /usr/local/bin.</p>
+<p>== The Setup</p>
+<p>Official images of nginx and an automated build of certbot, the EFF’s tool for obtaining Let’s Encrypt certificates, are available in the Docker library.</p>
+<p>Let’s begin with a basic <cite>docker-compose.yml</cite> configuration file that defines containers for both images:</p>
+<blockquote>
+<div><dl>
+<dt>nginx:</dt><dd><p>image: nginx:1.15-alpine
+ports:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>“80:80”</p></li>
+<li><p>“443:443”</p></li>
+</ul>
+</div></blockquote>
+<dl class="simple">
+<dt>volumes:</dt><dd><ul class="simple">
+<li><p>./data/nginx:/etc/nginx/conf.d</p></li>
+</ul>
+</dd>
+</dl>
+</dd>
+<dt>certbot:</dt><dd><p>image: certbot/certbot</p>
+</dd>
+</dl>
+</div></blockquote>
+<hr class="docutils" />
+<p>Here is a simple nginx configuration that redirects all requests to HTTPS. The second <cite>server</cite> definition sets up a proxy to _example.org_ for demonstration purposes. This is where you would add your own configuration for proxying requests to your app or serving local files.</p>
+<p>Save this file as <cite>data/nginx/app.conf</cite> alongside <cite>docker-compose.yml</cite>. <strong>Change `example.org` in both occurrences of `server_name` to your domain name.</strong></p>
+<blockquote>
+<div><p>server_name example.org;</p>
+<dl class="simple">
+<dt>location / {</dt><dd><p>return 301 <a class="reference external" href="https://$host$request_uri">https://$host$request_uri</a>;</p>
+</dd>
+</dl>
+<p>}</p>
+</div></blockquote>
+<p>}</p>
+<dl>
+<dt>server {</dt><dd><p>listen 443 ssl;
+server_name example.org;</p>
+<dl class="simple">
+<dt>location / {</dt><dd><p>proxy_pass <a class="reference external" href="http://example.org">http://example.org</a>; #for demo purposes</p>
+</dd>
+</dl>
+<p>}</p>
+</dd>
+</dl>
+<div class="section" id="id1">
+<h2>}<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h2>
+<p>If you would try to run <cite>docker-compose up</cite> now, nginx would fail to start because there is no certificate. We need to make some adjustments.</p>
+<p>== Linking up nginx and certbot</p>
+<p>Let’s Encrypt performs domain validation by requesting a well-known URL from a domain. If it receives a certain response (the “challenge”), the domain is considered validated. This is similar to how Google Search Console establishes ownership of a website. The response data is provided by certbot, so we need a way for the nginx container to serve files from certbot.</p>
+<p>First of all, we need two shared Docker volumes. One for the validation challenges, the other for the actual certificates.</p>
+<p>Add this to the <cite>volumes</cite> list of the <cite>nginx</cite> section in <cite>docker-compose.yml</cite>.</p>
+<hr class="docutils" />
+<p>And this is the counterpart that needs to go in the <cite>certbot</cite> section:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>./data/certbot/www:/var/www/certbot</p></li>
+</ul>
+</div></blockquote>
+<hr class="docutils" />
+<p>Now we can make nginx serve the challenge files from certbot! Add this to the first (port 80) section of our nginx configuration (<cite>data/nginx/app.conf</cite>):</p>
+</div>
+<div class="section" id="id2">
+<h2>}<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h2>
+<p>After that, we need to reference the HTTPS certificates. Add the soon-to-be-created certificate and its private key to the second <cite>server</cite> section (port 443). <strong>Make sure to once again replace `example.org` with your domain name.</strong></p>
+<hr class="docutils" />
+<p>And while we’re at it: The folks at Let’s Encrypt maintain best-practice HTTPS configurations for nginx. Let’s also add them to our config file. This will score you a straight A in the link:https://www.ssllabs.com/index.html[SSL Labs test]!</p>
+<hr class="docutils" />
+<p>== The Chicken or the Egg?</p>
+<p>Now for the tricky part. We need nginx to perform the Let’s Encrypt validation But nginx won’t start if the certificates are missing.</p>
+<p>So what do we do? Create a dummy certificate, start nginx, delete the dummy and request the real certificates.</p>
+<p>Luckily, you don’t have to do all this manually, I have created a convenient script for this.</p>
+<p>Download the script to your working directory as <cite>init-letsencrypt.sh</cite>:</p>
+<div class="section" id="curl-l-https-raw-githubusercontent-com-wmnnd-nginx-certbot-master-init-letsencrypt-sh-init-letsencrypt-sh">
+<h3>curl -L <a class="reference external" href="https://raw.githubusercontent.com/wmnnd/nginx-certbot/master/init-letsencrypt.sh">https://raw.githubusercontent.com/wmnnd/nginx-certbot/master/init-letsencrypt.sh</a> &gt; init-letsencrypt.sh<a class="headerlink" href="#curl-l-https-raw-githubusercontent-com-wmnnd-nginx-certbot-master-init-letsencrypt-sh-init-letsencrypt-sh" title="Permalink to this headline">¶</a></h3>
+<p><strong>Edit the script to add in your domain(s) and your email address.</strong> If you’ve changed the directories of the shared Docker volumes, make sure you also adjust the <cite>data_path</cite> variable as well.</p>
+<p>Then run <cite>chmod +x init-letsencrypt.sh</cite> and <cite>sudo ./init-letsencrypt.sh</cite>.</p>
+<p>== Automatic Certificate Renewal</p>
+<p>Last but not least, we need to make sure our certificate is renewed when it’s about to expire. The certbot image doesn’t do that automatically but we can change that!</p>
+<p>Add the following to the <cite>certbot</cite> section of docker-compose.yml:</p>
+</div>
+<div class="section" id="entrypoint-bin-sh-c-trap-exit-term-while-do-certbot-renew-sleep-12h-wait-done">
+<h3>entrypoint: “/bin/sh -c ‘trap exit TERM; while :; do certbot renew; sleep 12h &amp; wait $${!}; done;’”<a class="headerlink" href="#entrypoint-bin-sh-c-trap-exit-term-while-do-certbot-renew-sleep-12h-wait-done" title="Permalink to this headline">¶</a></h3>
+<p>This will check if your certificate is up for renewal every 12 hours as recommended by Let’s Encrypt.</p>
+<p>In the <cite>nginx</cite> section, you need to make sure that nginx reloads the newly obtained certificates:</p>
+</div>
+<div class="section" id="command-bin-sh-c-while-do-sleep-6h-wait-nginx-s-reload-done-nginx-g-daemon-off">
+<h3>command: “/bin/sh -c ‘while :; do sleep 6h &amp; wait $${!}; nginx -s reload; done &amp; nginx -g “daemon off;”’”<a class="headerlink" href="#command-bin-sh-c-while-do-sleep-6h-wait-nginx-s-reload-done-nginx-g-daemon-off" title="Permalink to this headline">¶</a></h3>
+<p>This makes nginx reload its configuration (and certificates) every six hours in the background and launches nginx in the foreground.</p>
+<p>== Docker-compose Me Up!</p>
+<p>Everything is in place now. The initial certificates have been obtained and our containers are ready to launch. Simply run <cite>docker-compose up</cite> and enjoy your HTTPS-secured website or app.</p>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="osTicket.html" title="&lt;no title&gt;"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="netmon-setup.html" title="&lt;no title&gt;"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">Enterprise Architecture  documentation</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2019, Peter Preeper.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.2.1.
+    </div>
+  </body>
+</html>

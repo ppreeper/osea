@@ -1,0 +1,138 @@
+
+
+<!doctype html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>&lt;no title&gt; &#8212; Enterprise Architecture  documentation</title>
+    <link rel="stylesheet" href="../_static/bizstyle.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/language_data.js"></script>
+    <script type="text/javascript" src="../_static/bizstyle.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="&lt;no title&gt;" href="how_to_build_microservice_with_mongodb_in_golang.html" />
+    <link rel="prev" title="&lt;no title&gt;" href="how_to_avoid_big_data_project_failures.html" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <!--[if lt IE 9]>
+    <script type="text/javascript" src="_static/css3-mediaqueries.js"></script>
+    <![endif]-->
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="how_to_build_microservice_with_mongodb_in_golang.html" title="&lt;no title&gt;"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="how_to_avoid_big_data_project_failures.html" title="&lt;no title&gt;"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">Enterprise Architecture  documentation</a> &#187;</li> 
+      </ul>
+    </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="how_to_avoid_big_data_project_failures.html"
+                        title="previous chapter">&lt;no title&gt;</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="how_to_build_microservice_with_mongodb_in_golang.html"
+                        title="next chapter">&lt;no title&gt;</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/misc/How_to_block_SSH_access_for_specific_IP_addresses.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <p>= How to block SSH access for specific IP addresses
+By Jack Wallen | February 1, 2018, 11:00 AM PST</p>
+<p>Take every precaution necessary to make sure secure shell is protected. Jack Wallen shows you how to easily block specific IP addresses from gaining access to your Linux server.</p>
+<p>If you work with Linux, chances are secure shell (SSH) is a part of your daily routine. In fact, remotely administering a Linux server can be a challenge without this often vaunted tool. And although SSH, by design, is quite secure, it’s not perfect. If you have an SSH daemon running on a server, especially one that is accessible to the outside world, chances are it’s getting hit by regular attacks. Eventually one of those attacks will brute force its way into your server and have at your data. To that end, you need to take every precaution necessary to make sure SSH is protected.</p>
+<p>Say, for instance, while checking your log files, you discover a particular, unwanted, IP address has attempted to log into your server, via SSH. Although they may have failed this time, that might not stop them from trying a second, third, or fourth time to brute force their way in. What do you do? Since you’re using Linux, you already have all the tools necessary to take care of this.</p>
+<p>I’m going to show you two different ways you can block a specific IP address or range of addresses using built-in tools. The two tools in question are Uncomplicated Firewall (UFW) and TCP Wrappers. I’ll be demonstrating on Ubuntu Server 16.04, but the process is the same on most distributions.</p>
+<p>NOTE: If your distribution doesn’t make use of UFW, you’ll need to adjust this process, based on the firewall used.</p>
+<p>== Uncomplicated Firewall</p>
+<p>Our first method is the most complicated—simply because it makes use of iptables, by way of UFW. Let’s say the offending IP address you want to block is 192.168.1.162. We’re going to block this using UFW, with a single command:</p>
+<p><cite>sudo ufw deny from 192.168.1.162 port 22</cite></p>
+<p>Check to see if UWF is running and enabled with the command <cite>sudo uwf status</cite>. If you see that UFW is active and the new rule listed (<em>Figure A</em>), you’re good to go.</p>
+<p>=== Figure A</p>
+<p>image:https://tr3.cbsistatic.com/hub/i/2018/02/01/4d2ae634-179e-44db-8250-84e424b6d270/ea1c92ad498f10c76fdd98bcf6e34a1e/sshdenya.jpg[SSH is officially denied for IP address 192.168.1.162.]</p>
+<p>If UFW is listed as inactive, issue the command sudo ufw enable and it will start and load your newly written rule to block the offending IP address.</p>
+<p>To delete that rule, you would issue the command:</p>
+<p><cite>sudo ufw delete 1</cite></p>
+<p>Since our SSH blocking rule is the only rule, its associated number will be 1. If you have more than one rule, you’ll have to make sure to delete the rule according to its correct number.</p>
+<p>If you need to block a range of addresses, the command would be:</p>
+<p><cite>sudo ufw deny from 192.168.1.162/24 port 22</cite></p>
+<p>You can block whatever range you need using CIDR Notation.</p>
+<p>== TCP Wrappers</p>
+<p>Now let’s work with the simpler method of blocking an IP address from gaining access to your server via ssh. That method is TCP Wrappers. Again, this is built into Linux, so there’s nothing to install.</p>
+<p>To block the same IP address as we did with UFW, open up the hosts.deny file with the command <cite>sudo nano /etc/hosts.deny</cite>. In that file, add the following line:</p>
+<p><cite>sshd 192.168.1.162</cite></p>
+<p>Save and close the file.</p>
+<p>Restart the SSH daemon with the command:</p>
+<p><cite>sudo systemctl restart sshd</cite></p>
+<p>At this point, when the offending IP address attempts to login, they’ll see the error, shown in <em>Figure B</em>.</p>
+<p>=== Figure B</p>
+<p>image:https://tr4.cbsistatic.com/hub/i/2018/02/01/11525d54-8b9e-4019-ab24-43d73a004d33/123d1ce4e382fbbe322ada27ad23d8e2/sshdenyb.jpg[TCP Wrappers doing its thing.]</p>
+<p>If you want to block a range of addresses, the entry would look like:</p>
+<p><cite>sshd 192.168.1.*</cite></p>
+<p>If you want to block certain IP addresses, they could be listed as such:</p>
+<p><cite>sshd 192.168.1.101, 192.168.1.102, 192.168.1.103</cite></p>
+<p>== Two simple methods</p>
+<p>There you have it. Two very simple ways of blocking specific IP addresses from gaining access to SSH on your Linux server. Don’t be fooled, there are better yet more complicated methods of doing this, but when you want something fast and simple, you can’t go wrong with a quick UFW rule or a TCP Wrapper addition.</p>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="how_to_build_microservice_with_mongodb_in_golang.html" title="&lt;no title&gt;"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="how_to_avoid_big_data_project_failures.html" title="&lt;no title&gt;"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">Enterprise Architecture  documentation</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2019, Peter Preeper.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.2.1.
+    </div>
+  </body>
+</html>

@@ -1,0 +1,163 @@
+
+
+<!doctype html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>Create a .pfx/.p12 certificate file using OpenSSL &#8212; Enterprise Architecture  documentation</title>
+    <link rel="stylesheet" href="../_static/bizstyle.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/language_data.js"></script>
+    <script type="text/javascript" src="../_static/bizstyle.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Elliptic Curve CA Guide" href="Elliptic Curve CA Guide.html" />
+    <link rel="prev" title="Certificate Authority" href="ca.html" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <!--[if lt IE 9]>
+    <script type="text/javascript" src="_static/css3-mediaqueries.js"></script>
+    <![endif]-->
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="Elliptic Curve CA Guide.html" title="Elliptic Curve CA Guide"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="ca.html" title="Certificate Authority"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">Enterprise Architecture  documentation</a> &#187;</li> 
+      </ul>
+    </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="../index.html">Table of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Create a .pfx/.p12 certificate file using OpenSSL</a><ul>
+<li><a class="reference internal" href="#pem-pem-crt-cer-to-pfx">PEM (.pem, .crt, .cer) to PFX</a></li>
+<li><a class="reference internal" href="#pkcs-7-p7b-p7b-p7c-to-pfx">PKCS#7/P7B (.p7b, .p7c) to PFX</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="ca.html"
+                        title="previous chapter">Certificate Authority</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="Elliptic Curve CA Guide.html"
+                        title="next chapter">Elliptic Curve CA Guide</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/doc/Create-a-pfx-p12-certificate-file-using-OpenSSL.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="create-a-pfx-p12-certificate-file-using-openssl">
+<h1>Create a .pfx/.p12 certificate file using OpenSSL<a class="headerlink" href="#create-a-pfx-p12-certificate-file-using-openssl" title="Permalink to this headline">¶</a></h1>
+<p>The PKCS#12 or PFX format is a binary format for storing the server
+certificate, any intermediate certificates, and the private key into a single
+encryptable file. PFX files are usually found with the extensions .pfx
+and .p12. PFX files are typically used on Windows machines to import and
+export certificates and private keys.</p>
+<p><em>Requirements:</em></p>
+<ul class="simple">
+<li><p>The original private key used for the certificate</p></li>
+<li><p>A PEM (.pem, .crt, .cer) or PKCS#7/P7B (.p7b, .p7c) File</p></li>
+<li><p>OpenSSL</p></li>
+</ul>
+<p>The commands below demonstrate examples of how to create a .pfx/.p12 file in
+the command line using OpenSSL.</p>
+<div class="section" id="pem-pem-crt-cer-to-pfx">
+<h2>PEM (.pem, .crt, .cer) to PFX<a class="headerlink" href="#pem-pem-crt-cer-to-pfx" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>openssl pkcs12 -export -out certificate.pfx -inkey privateKey.key -in certificate.crt -certfile more.crt
+</pre></div>
+</div>
+<p>Breaking down the command:</p>
+<ul class="simple">
+<li><p>openssl – the command for executing OpenSSL</p></li>
+<li><p>pkcs12 – the file utility for PKCS#12 files in OpenSSL</p></li>
+<li><p>-export -out certificate.pfx – export and save the PFX file as
+certificate.pfx</p></li>
+<li><p>-inkey privateKey.key – use the private key file privateKey.key
+as the private key to combine with the certificate.</p></li>
+<li><p>-in certificate.crt – use certificate.crt as the certificate the
+private key will be combined with.</p></li>
+<li><p>-certfile more.crt – This is optional, this is if you have any
+additional certificates you would like to include in the PFX file.</p></li>
+</ul>
+</div>
+<div class="section" id="pkcs-7-p7b-p7b-p7c-to-pfx">
+<h2>PKCS#7/P7B (.p7b, .p7c) to PFX<a class="headerlink" href="#pkcs-7-p7b-p7b-p7c-to-pfx" title="Permalink to this headline">¶</a></h2>
+<p>P7B files cannot be used to directly create a PFX file. P7B files must be
+converted to PEM. Once converted to PEM, follow the above steps to create a
+PFX file from a PEM file.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>openssl pkcs7 -print_certs -in certificate.p7b -out certificate.crt
+</pre></div>
+</div>
+<p>Breaking down the command:</p>
+<ul class="simple">
+<li><p>openssl – the command for executing OpenSSL</p></li>
+<li><p>pkcs7 – the file utility for PKCS#7 files in OpenSSL</p></li>
+<li><p>-print_certs -in certificate.p7b – prints out any certificates or CRLs
+contained in the file.</p></li>
+<li><p>-out certificate.crt – output the file as certificate.crt</p></li>
+</ul>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="Elliptic Curve CA Guide.html" title="Elliptic Curve CA Guide"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="ca.html" title="Certificate Authority"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">Enterprise Architecture  documentation</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2019, Peter Preeper.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.2.1.
+    </div>
+  </body>
+</html>

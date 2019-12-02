@@ -1,0 +1,262 @@
+
+
+<!doctype html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>&lt;no title&gt; &#8212; Enterprise Architecture  documentation</title>
+    <link rel="stylesheet" href="../_static/bizstyle.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/language_data.js"></script>
+    <script type="text/javascript" src="../_static/bizstyle.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="&lt;no title&gt;" href="how_to_install_the_gns3_network_emulator_on_ubuntu.html" />
+    <link rel="prev" title="&lt;no title&gt;" href="how_to_install_racktables_on_centos_7.html" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <!--[if lt IE 9]>
+    <script type="text/javascript" src="_static/css3-mediaqueries.js"></script>
+    <![endif]-->
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="how_to_install_the_gns3_network_emulator_on_ubuntu.html" title="&lt;no title&gt;"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="how_to_install_racktables_on_centos_7.html" title="&lt;no title&gt;"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">Enterprise Architecture  documentation</a> &#187;</li> 
+      </ul>
+    </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="how_to_install_racktables_on_centos_7.html"
+                        title="previous chapter">&lt;no title&gt;</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="how_to_install_the_gns3_network_emulator_on_ubuntu.html"
+                        title="next chapter">&lt;no title&gt;</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/misc/how_to_install_the_asset_manager_snipe-it_on_ubuntu_server.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <p>#How to install the asset manager Snipe-IT on Ubuntu Server</p>
+<p>If you’re in need of a powerful IT asset manager, Jack Wallen shows you how to install the open source Snipe-IT system.</p>
+<p>By Jack Wallen | May 10, 2018, 9:25 AM PST</p>
+<p>Your company IT assets continue to pile up, so much so, that you can no longer keep track of what you own, how something has been deployed, who is working with what desktop, and the details of every server in your data center. To that end, you need the right tool to keep track of all this. But which tool is the right one? There are so many asset management options available. If you happen to be fan of open source software, and you have a Ubuntu Server machine (or VM) at the ready, you can give [[<a class="reference external" href="https://snipeitapp.com/">https://snipeitapp.com/</a><a href="#id1"><span class="problematic" id="id2">|</span></a>Snipe-IT]] Asset Manager a go.</p>
+<p>Snipe-IT is a bit of a challenge to install, but the end results are definitely worth the work. You’ll have an asset management tool that includes:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>Ability to see which assets are assigned (as well as to whom and their physical location)</p></li>
+<li><p>One-click check in for assets</p></li>
+<li><p>Asset Models allow you to group common features</p></li>
+<li><p>Require End-User EULAs/Terms of Service on Checkout</p></li>
+<li><p>Email alerts for expiring warranties and licenses</p></li>
+<li><p>Integrates with most handheld barcode scanners and QR code reader apps</p></li>
+<li><p>Quick and easy asset auditing</p></li>
+<li><p>Add custom fields for additional asset attributes</p></li>
+<li><p>Import and export assets</p></li>
+<li><p>Generate QR code labels for asset tagging</p></li>
+<li><p>Assets can be marked as requestable by users</p></li>
+<li><p>Full history retention (including checkouts, checkins and maintenance)</p></li>
+<li><p>Optional digital signatures on asset acceptance</p></li>
+</ul>
+</div></blockquote>
+<p>Let’s install Snipe-IT on Ubuntu Server 16.04.</p>
+<p>##Installation</p>
+<p>###Apache</p>
+<p>The first thing we must do is install the necessary dependencies. There are a few, so open up a terminal and let’s type. The first is Apache. Install the web server with the command:</p>
+<p>&lt;code bash&gt;
+sudo apt install apache2
+&lt;/code&gt;</p>
+<p>Once that completes, start and enable the server with the commands:</p>
+<p>&lt;code bash&gt;
+sudo systemctl start apache2
+sudo systemctl enable apache2
+&lt;/code&gt;</p>
+<p>###PHP and modules</p>
+<p>Next we’re going to install PHP and it’s various modules:</p>
+<p>&lt;code bash&gt;
+sudo apt install php php-pdo php-mbstring php-tokenizer php-curl php-mysql php-ldap php-zip php-fileinfo php-gd php-dom php-mcrypt php-bcmath php-gd
+&lt;/code&gt;</p>
+<p>###MariaDB</p>
+<p>Now it’s time to install our database. Do this with the commands:</p>
+<p>&lt;code bash&gt;
+sudo apt install mariadb-server
+sudo systemctl start mysql
+sudo systemctl enable mysql
+&lt;/code&gt;</p>
+<p>Set up a root user password and secure MariaDB with the command:</p>
+<p>&lt;code bash&gt;
+sudo mysql_secure_installation
+&lt;/code&gt;</p>
+<p>With our db server installed, let’s create a database and a snipe-it user. First launch the MariaDB console by changing to the root user with the command sudo -s. Now issue the command:</p>
+<p>&lt;code bash&gt;
+mysql -r root -p
+&lt;/code&gt;</p>
+<p>Create the database, the user, and give the user proper permissions with the commands:</p>
+<p>&lt;code sql&gt;
+CREATE DATABASE snipeit_data;
+CREATE USER <a class="reference external" href="mailto:'snipeit_user'&#37;&#52;&#48;'localhost">‘snipeit_user’<span>&#64;</span>’localhost</a>’ IDENTIFIED BY ‘PASSWORD’;
+GRANT ALL PRIVILEGES ON snipeit_data.* TO <a class="reference external" href="mailto:'snipeit_user'&#37;&#52;&#48;'localhost">‘snipeit_user’<span>&#64;</span>’localhost</a>’;
+FLUSH PRIVILEGES;
+EXIT;
+&lt;/code&gt;</p>
+<p>Where PASSWORD is a strong password.</p>
+<p>###Composer</p>
+<p>Composer is required for the installation. Install this with the following commands:</p>
+<p>&lt;code bash&gt;
+cd ~curl -sS <a class="reference external" href="https://getcomposer.org/installer">https://getcomposer.org/installer</a> | phpsudo mv composer.phar /usr/local/bin/composer
+&lt;/code&gt;</p>
+<p>###Snipe-IT</p>
+<p>It’s time to install Snipe-IT. First install git with the command:</p>
+<p>&lt;code bash&gt;
+sudo apt install git
+&lt;/code&gt;</p>
+<p>Change into the Apache document root with the command cd /var/www. Clone Snipe-IT with the command:</p>
+<p>&lt;code bash&gt;
+sudo git clone <a class="reference external" href="https://github.com/snipe/snipe-it">https://github.com/snipe/snipe-it</a> snipe-it
+&lt;/code&gt;</p>
+<p>Create a new .env file (the configuration file) with the commands:</p>
+<p>&lt;code bash&gt;
+cd /var/www/snipe-it
+sudo cp .env.example .env
+&lt;/code&gt;</p>
+<p>Edit the .env file with the command:</p>
+<p>&lt;code bash&gt;
+sudo nano .env
+&lt;/code&gt;</p>
+<p>Within the .env file, you need to edit the following lines:</p>
+<p>&lt;code bash&gt;
+APP_URL=SERVER_IP
+APP_TIMEZONE=’TIME_ZONE’</p>
+<p>DB_DATABASE=snipeit_data
+DB_USERNAME=snipeit_user
+DB_PASSWORD=PASSWORD
+&lt;/code&gt;</p>
+<p>Where:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>SERVER_IP is the IP address of your server.</p></li>
+<li><p>TIME_ZONE is the time zone for your location.</p></li>
+<li><p>PASSWORD is the password you created for the db user.</p></li>
+</ul>
+</div></blockquote>
+<p>Now we have to give the proper permissions for the Snipe-IT folders. This is done with the following commands:</p>
+<p>&lt;code bash&gt;
+sudo chown -R www-data:www-data storage public/uploads
+sudo chmod -R 755 storage
+sudo chmod -R 755 public/uploads
+&lt;/code&gt;</p>
+<p>The final Apache configuration is the virtual host. Create the new .conf file with the command:</p>
+<p>&lt;code bash&gt;
+sudo nano /etc/apache2/sites-available/snipeit.conf
+&lt;code&gt;</p>
+<p>The contents of that file should be:</p>
+<p>&lt;code&gt;
+&lt;VirtualHost <a href="#id3"><span class="problematic" id="id4">*</span></a>:80&gt;</p>
+<blockquote>
+<div><p>ServerName snipeit.example.com
+DocumentRoot /var/www/snipe-it/public
+&lt;Directory /var/www/snipe-it/public&gt;</p>
+<blockquote>
+<div><p>Options Indexes FollowSymLinks MultiViews
+AllowOverride All
+Order allow,deny
+allow from all</p>
+</div></blockquote>
+<p>&lt;/Directory&gt;</p>
+</div></blockquote>
+<p>&lt;/VirtualHost&gt;
+&lt;/code&gt;</p>
+<p>Enable the newly configured site and activate mod_rewrite with the following commands:</p>
+<p>&lt;code bash&gt;
+sudo a2ensite snipeit.conf
+sudo a2enmod rewrite
+&lt;/code&gt;</p>
+<p>Restart Apache with the command:</p>
+<p>&lt;code bash&gt;
+sudo systemctl restart apache2
+&lt;/code&gt;</p>
+<p>###Final PHP dependencies</p>
+<p>We now have to finish up the remaining Snipe-IT PHP dependencies. This is done with the composer command, like so:</p>
+<p>&lt;code bash&gt;
+sudo composer install –no-dev –prefer-source
+&lt;/code&gt;</p>
+<p>Finally, we generate the necessary APP_Key with the command:</p>
+<p>&lt;code bash&gt;
+sudo php artisan key:generate
+&lt;/code&gt;</p>
+<p>##Finish the setup</p>
+<p>Open up a browser and point it to <a class="reference external" href="http://SERVER_IP">http://SERVER_IP</a>. You should be greeted by the pre-flight checklist, where you can click the Next button and continue with the installation (<strong>Figure A</strong>).</p>
+<p>###Figure A</p>
+<p>{{<a class="reference external" href="https://tr2.cbsistatic.com/hub/i/2018/05/10/2ea302e2-8c97-42f4-803a-379e039992a7/6dcbb50d4fff9d56e81b035e4bf38259/snipeita-800x600">https://tr2.cbsistatic.com/hub/i/2018/05/10/2ea302e2-8c97-42f4-803a-379e039992a7/6dcbb50d4fff9d56e81b035e4bf38259/snipeita-800x600</a>.jpg|The Snipe-IT pre-flight checklist.}}</p>
+<p>At this point, everything is self-explanatory. There is, however, one caveat. If you do happen to see the Apache welcome page (instead of the Snipe-IT pre-flight page), move the index.html file with the command:</p>
+<p>&lt;code bash&gt;
+sudo mv /var/www/html/index.html /var/www/html/index_old.html
+&lt;/code&gt;</p>
+<p>Make sure to restart Apache with the command:</p>
+<p>&lt;code bash&gt;
+sudo systemctl restart apache2
+&lt;/code&gt;</p>
+<p>That should do it. You can now start working with your Snipe-IT Asset Management system.</p>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="how_to_install_the_gns3_network_emulator_on_ubuntu.html" title="&lt;no title&gt;"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="how_to_install_racktables_on_centos_7.html" title="&lt;no title&gt;"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">Enterprise Architecture  documentation</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2019, Peter Preeper.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.2.1.
+    </div>
+  </body>
+</html>

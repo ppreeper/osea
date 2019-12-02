@@ -1,0 +1,279 @@
+
+
+<!doctype html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>[source,go] &#8212; Enterprise Architecture  documentation</title>
+    <link rel="stylesheet" href="../_static/bizstyle.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/language_data.js"></script>
+    <script type="text/javascript" src="../_static/bizstyle.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="&lt;no title&gt;" href="golang_http_server_for_pro.html" />
+    <link rel="prev" title="[source,bash]" href="freeswitch.html" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <!--[if lt IE 9]>
+    <script type="text/javascript" src="_static/css3-mediaqueries.js"></script>
+    <![endif]-->
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="golang_http_server_for_pro.html" title="&lt;no title&gt;"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="freeswitch.html" title="[source,bash]"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">Enterprise Architecture  documentation</a> &#187;</li> 
+      </ul>
+    </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="../index.html">Table of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">[source,go]</a></li>
+<li><a class="reference internal" href="#id3">}</a></li>
+<li><a class="reference internal" href="#id4">[source,go]</a></li>
+<li><a class="reference internal" href="#id5">}</a><ul>
+<li><a class="reference internal" href="#alice-provides-a-convenient-way-to-chain-your-http-middleware-functions-and-the-app-handler">Alice provides a convenient way to chain your HTTP middleware functions and the app handler.</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#id6">[source,go]</a></li>
+<li><a class="reference internal" href="#middleware1-middleware2-middleware3-app">Middleware1(Middleware2(Middleware3(App)))</a></li>
+<li><a class="reference internal" href="#id7">[source,go]</a></li>
+<li><a class="reference internal" href="#alice-new-middleware1-middleware2-middleware3-then-app">alice.New(Middleware1, Middleware2, Middleware3).Then(App)</a></li>
+<li><a class="reference internal" href="#id8">[source,go]</a></li>
+<li><a class="reference internal" href="#id9">}</a></li>
+<li><a class="reference internal" href="#id10">[source,go]</a></li>
+<li><a class="reference internal" href="#id13">}</a></li>
+<li><a class="reference internal" href="#id14">[source,go]</a></li>
+<li><a class="reference internal" href="#id17">}</a></li>
+<li><a class="reference internal" href="#id18">[source,go]</a></li>
+<li><a class="reference internal" href="#err-server-listenandservetls-if-err-nil-log-fatal-listenandserve-err">err := server.ListenAndServeTLS(“”, “”) if err != nil {         log.Fatal(“ListenAndServe: “, err) }</a></li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="freeswitch.html"
+                        title="previous chapter">[source,bash]</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="golang_http_server_for_pro.html"
+                        title="next chapter">&lt;no title&gt;</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/misc/Golang HTTP server for pro.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <p>= Golang HTTP server for pro</p>
+<p>How to start a new web project with Go, using Routing, Middleware and Let’s Encrypt certification.</p>
+<p>Golang have a great http server package: net/http As always, it’s simple and very powerful. Define the function that handle a route, and let’s listen to port 80.</p>
+<div class="section" id="source-go">
+<h1>[source,go]<a class="headerlink" href="#source-go" title="Permalink to this headline">¶</a></h1>
+<p>package main</p>
+<dl class="simple">
+<dt>import (</dt><dd><p>“io”
+“net/http”</p>
+</dd>
+</dl>
+<p>)</p>
+<dl class="simple">
+<dt>func main() {</dt><dd><p>http.HandleFunc(“/”, helloWorldHandler)
+http.ListenAndServe(“:80”, nil)</p>
+</dd>
+</dl>
+<p>}</p>
+<dl class="simple">
+<dt>func helloWorldHandler(w http.ResponseWriter, r <a href="#id1"><span class="problematic" id="id2">*</span></a>http.Request) {</dt><dd><p>io.WriteString(w, “Hello world!”)</p>
+</dd>
+</dl>
+</div>
+<div class="section" id="id3">
+<h1>}<a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h1>
+<p>Nice, but let’s use a more powerfull router like the Gorilla package: ‘’gorilla/mux’’ link:http://www.gorillatoolkit.org/pkg/mux[]</p>
+<p>It implements a request router and a dispatcher. It allows you to create routes with named parameters, restricted on http verb and host/domain management.</p>
+<p>Updating the previous exemple with this package allow us to manage easily many routes with simples configurations:</p>
+</div>
+<div class="section" id="id4">
+<h1>[source,go]<a class="headerlink" href="#id4" title="Permalink to this headline">¶</a></h1>
+<dl class="simple">
+<dt>func main() {</dt><dd><p>r := mux.NewRouter()
+r.HandleFunc(“/products/{key}”, ProductHandler)
+r.HandleFunc(“/articles/{category}/”, ArticlesCategoryHandler)
+r.HandleFunc(“/articles/{category}/{id:[0-9]+}”, ArticleHandler)
+http.Handle(“/”, r)</p>
+</dd>
+</dl>
+</div>
+<div class="section" id="id5">
+<h1>}<a class="headerlink" href="#id5" title="Permalink to this headline">¶</a></h1>
+<p>== Use alice to manage our middleware</p>
+<p>link:https://en.wikipedia.org/wiki/Middleware[Middleware pattern] is very common if you use the webserver package. If you don’t have seen it yet, you should watch this video from Mat Ryer at the Golang UK Conference 2015 about the power of middleware. (link:https://medium.com/&#64;matryer/writing-middleware-in-golang-and-how-go-makes-it-so-much-fun-4375c1246e81[Full blog post here])</p>
+<p>And another great article about the middleware patterns link:http://www.alexedwards.net/blog/making-and-using-middleware[]</p>
+<p>As described by it author (link:https://github.com/justinas/alice[Github]):</p>
+<div class="section" id="alice-provides-a-convenient-way-to-chain-your-http-middleware-functions-and-the-app-handler">
+<h2>Alice provides a convenient way to chain your HTTP middleware functions and the app handler.<a class="headerlink" href="#alice-provides-a-convenient-way-to-chain-your-http-middleware-functions-and-the-app-handler" title="Permalink to this headline">¶</a></h2>
+<p>In short, it transforms</p>
+</div>
+</div>
+<div class="section" id="id6">
+<h1>[source,go]<a class="headerlink" href="#id6" title="Permalink to this headline">¶</a></h1>
+</div>
+<div class="section" id="middleware1-middleware2-middleware3-app">
+<h1>Middleware1(Middleware2(Middleware3(App)))<a class="headerlink" href="#middleware1-middleware2-middleware3-app" title="Permalink to this headline">¶</a></h1>
+<p>to</p>
+</div>
+<div class="section" id="id7">
+<h1>[source,go]<a class="headerlink" href="#id7" title="Permalink to this headline">¶</a></h1>
+</div>
+<div class="section" id="alice-new-middleware1-middleware2-middleware3-then-app">
+<h1>alice.New(Middleware1, Middleware2, Middleware3).Then(App)<a class="headerlink" href="#alice-new-middleware1-middleware2-middleware3-then-app" title="Permalink to this headline">¶</a></h1>
+<p>Here’s our first exemple, updated with Alice’s usage:</p>
+</div>
+<div class="section" id="id8">
+<h1>[source,go]<a class="headerlink" href="#id8" title="Permalink to this headline">¶</a></h1>
+<dl class="simple">
+<dt>func main() {</dt><dd><p>errorChain := alice.New(loggerHandler, recoverHandler)</p>
+</dd>
+<dt>r := mux.NewRouter()</dt><dd><p>r.HandleFunc(“/products/{key}”, ProductHandler)
+r.HandleFunc(“/articles/{category}/”, ArticlesCategoryHandler)
+r.HandleFunc(“/articles/{category}/{id:[0-9]+}”, ArticleHandler)
+http.Handle(“/”, errorChain.then(r))</p>
+</dd>
+</dl>
+</div>
+<div class="section" id="id9">
+<h1>}<a class="headerlink" href="#id9" title="Permalink to this headline">¶</a></h1>
+<p>You can chain many handler, but here are the two described:</p>
+</div>
+<div class="section" id="id10">
+<h1>[source,go]<a class="headerlink" href="#id10" title="Permalink to this headline">¶</a></h1>
+<p>func loggerHandler(h http.Handler) http.Handler {</p>
+<blockquote>
+<div><dl class="simple">
+<dt>return http.HandlerFunc(func(w http.ResponseWriter, r <a href="#id11"><span class="problematic" id="id12">*</span></a>http.Request) {</dt><dd><p>start := time.Now()
+h.ServeHTTP(w, r)
+log.Printf(“&lt;&lt; %s %s %v”, r.Method, r.URL.Path, time.Since(start))</p>
+</dd>
+</dl>
+<p>})</p>
+</div></blockquote>
+</div>
+<div class="section" id="id13">
+<h1>}<a class="headerlink" href="#id13" title="Permalink to this headline">¶</a></h1>
+<p>The loggerHandler, and the recoverHandler:</p>
+</div>
+<div class="section" id="id14">
+<h1>[source,go]<a class="headerlink" href="#id14" title="Permalink to this headline">¶</a></h1>
+<dl>
+<dt>func recoverHandler(next http.Handler) http.Handler {</dt><dd><dl>
+<dt>fn := func(w http.ResponseWriter, r <a href="#id15"><span class="problematic" id="id16">*</span></a>http.Request) {</dt><dd><dl>
+<dt>defer func() {</dt><dd><dl class="simple">
+<dt>if err := recover(); err != nil {</dt><dd><p>log.Printf(“panic: %+v”, err)
+http.Error(w, http.StatusText(500), 500)</p>
+</dd>
+</dl>
+<p>}</p>
+</dd>
+</dl>
+<p>}()</p>
+</dd>
+</dl>
+</dd>
+<dt>next.ServeHTTP(w, r)</dt><dd><p>}</p>
+</dd>
+</dl>
+<p>return http.HandlerFunc(fn)
+}
+—-</p>
+<p>At this point, we have a HTTP server, with a powerful routing package. You can also manage middleware with ease, to extend quickly the functionalities of your application.</p>
+<p>== HTTP server is nice, HTTPS server is better!</p>
+<p>Easy and fast way to create a secure HTTP server, it to use Let’s Encrypt service. Let’s Encrypt uses the link:https://en.wikipedia.org/wiki/Automated_Certificate_Management_Environment[ACME protocol] to verify that you control a given domain name and to issue you a certificate. It’s called a certification, and yes, there’s a Auto-Certification package: link:https://godoc.org/golang.org/x/crypto/acme/autocert[acme/autocert]</p>
+<p>[source,go]
+m := autocert.Manager{</p>
+<blockquote>
+<div><p>Prompt:     autocert.AcceptTOS,
+HostPolicy: autocert.HostWhitelist(“www.checknu.de”),
+Cache:      autocert.DirCache(“/home/letsencrypt/”),</p>
+</div></blockquote>
+</div>
+<div class="section" id="id17">
+<h1>}<a class="headerlink" href="#id17" title="Permalink to this headline">¶</a></h1>
+<p>Create the http.server using tls:</p>
+</div>
+<div class="section" id="id18">
+<h1>[source,go]<a class="headerlink" href="#id18" title="Permalink to this headline">¶</a></h1>
+<dl>
+<dt>server := &amp;http.Server{</dt><dd><p>Addr: “:443”,
+TLSConfig: &amp;tls.Config{</p>
+<blockquote>
+<div><p>GetCertificate: m.GetCertificate,</p>
+</div></blockquote>
+<p>},</p>
+</dd>
+</dl>
+<p>}</p>
+</div>
+<div class="section" id="err-server-listenandservetls-if-err-nil-log-fatal-listenandserve-err">
+<h1>err := server.ListenAndServeTLS(“”, “”) if err != nil {         log.Fatal(“ListenAndServe: “, err) }<a class="headerlink" href="#err-server-listenandservetls-if-err-nil-log-fatal-listenandserve-err" title="Permalink to this headline">¶</a></h1>
+<p>image:https://cdn-images-1.medium.com/max/800/1*Wn9uFSeup0blHnxweTFdoQ.png[And now it’s done!]</p>
+<p>You can find this HTTP server here: link:https://github.com/ScullWM/go-bootstrap[ScullWM/go-bootstrap]</p>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="golang_http_server_for_pro.html" title="&lt;no title&gt;"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="freeswitch.html" title="[source,bash]"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">Enterprise Architecture  documentation</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2019, Peter Preeper.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.2.1.
+    </div>
+  </body>
+</html>

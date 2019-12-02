@@ -1,0 +1,253 @@
+
+
+<!doctype html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>[source,bash] &#8212; Enterprise Architecture  documentation</title>
+    <link rel="stylesheet" href="../_static/bizstyle.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/language_data.js"></script>
+    <script type="text/javascript" src="../_static/bizstyle.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="&lt;no title&gt;" href="how_to_install_packetfence_on_centos_7.html" />
+    <link rel="prev" title="[source,bash]" href="How to install Nextcloud on Ubuntu Server 16.04 with snap.html" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <!--[if lt IE 9]>
+    <script type="text/javascript" src="_static/css3-mediaqueries.js"></script>
+    <![endif]-->
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="how_to_install_packetfence_on_centos_7.html" title="&lt;no title&gt;"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="How to install Nextcloud on Ubuntu Server 16.04 with snap.html" title="[source,bash]"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">Enterprise Architecture  documentation</a> &#187;</li> 
+      </ul>
+    </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="../index.html">Table of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">[source,bash]</a></li>
+<li><a class="reference internal" href="#id1">[source,bash]</a></li>
+<li><a class="reference internal" href="#sudo-apt-install-slapd-ldap-utils">sudo apt install slapd ldap-utils</a></li>
+<li><a class="reference internal" href="#id2">[source,bash]</a></li>
+<li><a class="reference internal" href="#sudo-dpkg-reconfigure-slapd">sudo dpkg-reconfigure slapd</a></li>
+<li><a class="reference internal" href="#id3">[source,bash]</a></li>
+<li><a class="reference internal" href="#base-dc-domain-dc-com">BASE dc=DOMAIN, dc=COM</a></li>
+<li><a class="reference internal" href="#id4">[source,bash]</a></li>
+<li><a class="reference internal" href="#base-dc-subdomain-dc-domain-cd-com">BASE dc=SUBDOMAIN, dc=DOMAIN, cd=COM</a></li>
+<li><a class="reference internal" href="#id5">[source,bash]</a></li>
+<li><a class="reference internal" href="#sudo-apt-install-phpldapadmin">sudo apt install phpldapadmin</a></li>
+<li><a class="reference internal" href="#id6">[source,bash]</a></li>
+<li><a class="reference internal" href="#config-custom-appearance-hide-template-warning-false">// $config-&gt;custom-&gt;appearance[‘hide_template_warning’] = false;</a></li>
+<li><a class="reference internal" href="#id7">[source,bash]</a></li>
+<li><a class="reference internal" href="#config-custom-appearance-hide-template-warning-true">$config-&gt;custom-&gt;appearance[‘hide_template_warning’] = true;</a></li>
+<li><a class="reference internal" href="#id8">[source,bash]</a></li>
+<li><a class="reference internal" href="#servers-setvalue-server-base-array-dc-example-dc-com">$servers-&gt;setValue(‘server’,’base’,array(‘dc=example,dc=com’));</a></li>
+<li><a class="reference internal" href="#id9">[source,bash]</a></li>
+<li><a class="reference internal" href="#servers-setvalue-server-base-array">$servers-&gt;setValue(‘server’,’base’,array());</a></li>
+<li><a class="reference internal" href="#id10">[source,bash]</a></li>
+<li><a class="reference internal" href="#servers-setvalue-login-anon-bind-true">// $servers-&gt;setValue(‘login’,’anon_bind’,true);</a></li>
+<li><a class="reference internal" href="#id11">[source,bash]</a></li>
+<li><a class="reference internal" href="#servers-setvalue-login-anon-bind-false">$servers-&gt;setValue(‘login’,’anon_bind’,false);</a></li>
+<li><a class="reference internal" href="#id12">[source,bash]</a></li>
+<li><a class="reference internal" href="#login-dn-cn-admin-dc-domain-dc-com">Login DN-cn=admin,dc=DOMAIN,dc=COM</a></li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="How to install Nextcloud on Ubuntu Server 16.04 with snap.html"
+                        title="previous chapter">[source,bash]</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="how_to_install_packetfence_on_centos_7.html"
+                        title="next chapter">&lt;no title&gt;</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/misc/How to install OpenLDAP and phpLDAPadmin on Ubuntu 16.04.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <p>= How to install OpenLDAP and phpLDAPadmin on Ubuntu 16.04
+By Jack Wallen | December 21, 2017, 4:00 AM PST</p>
+<p>If you’re looking to use OpenLDAP for your organization, Jack Wallen shows you how to easy install it and the web-based phpLDAPadmin tool.</p>
+<p>OpenLDAP is an open source directory server that can be used for a number of cases like storing organization information and to serve as a centralized repository of user accounts. One of the best tools for administering OpenLDAP is the phpLDAPadmin web-based GUI. I am going to walk you through the process of installing both of these tools to make your LDAP administration considerably easier.</p>
+<p>I’ll be demonstrating these steps on Ubuntu Server 16.04. The installation of both tools will be done through the command line, so prepare to type.</p>
+<p>With that said, let’s install.</p>
+<p>== Installing OpenLDAP</p>
+<p>The first thing that must be installed is OpenLDAP. Before we do this, let’s make sure the server up to date with the commands:</p>
+<div class="section" id="source-bash">
+<h1>[source,bash]<a class="headerlink" href="#source-bash" title="Permalink to this headline">¶</a></h1>
+<p>sudo apt update
+sudo apt upgrade
+—-</p>
+<p>Do note: If the server’s kernel upgrades you’ll need to reboot. Because of this, you might want to consider running the upgrade command when a server reboot is possible.</p>
+<p>When the upgrade completes, you can then install OpenLDAP with the command:</p>
+</div>
+<div class="section" id="id1">
+<h1>[source,bash]<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h1>
+</div>
+<div class="section" id="sudo-apt-install-slapd-ldap-utils">
+<h1>sudo apt install slapd ldap-utils<a class="headerlink" href="#sudo-apt-install-slapd-ldap-utils" title="Permalink to this headline">¶</a></h1>
+<p>The above command will pick up the necessary dependencies. During the installation, you will be prompted to create a password for the LDAP admin user (<em>Figure A</em>). Type and confirm that password.</p>
+<p>=== Figure A</p>
+<p>image:https://tr2.cbsistatic.com/hub/i/2017/11/30/84bf8d34-6961-4051-a758-3c0a8597c7b3/f7e1047c8926c7df2f950e122db476fe/ldapa.jpg[Creating an LDAP admin password.]</p>
+<p>When the installation completes, you’ll need to configure LDAP. To do this, issue the command:</p>
+</div>
+<div class="section" id="id2">
+<h1>[source,bash]<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h1>
+</div>
+<div class="section" id="sudo-dpkg-reconfigure-slapd">
+<h1>sudo dpkg-reconfigure slapd<a class="headerlink" href="#sudo-dpkg-reconfigure-slapd" title="Permalink to this headline">¶</a></h1>
+<p>The above command will open an ncurses window where you’ll need to answer the following questions:</p>
+<ul class="simple">
+<li><p>Omit OpenLDAP server configuration—answer No</p></li>
+<li><p>DNS domain name—enter your correct A record for your domain name (or a subdomain)</p></li>
+<li><p>Organization Name—enter the name of your organization (such as company or division)</p></li>
+<li><p>Administrator password—enter the same password you used during the installation</p></li>
+<li><p>Database backend—select MDB</p></li>
+<li><p>Remove database—select No</p></li>
+<li><p>Move old database—select Yes</p></li>
+</ul>
+<p>Now we need to configure the ldap.conf file. Issue the command <cite>sudo nano /etc/ldap/ldap.conf</cite>. In this file you need to uncomment out the BASE line by removing the # character and modify it to reflect your LDAP configuration. The configuration will look like:</p>
+</div>
+<div class="section" id="id3">
+<h1>[source,bash]<a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h1>
+</div>
+<div class="section" id="base-dc-domain-dc-com">
+<h1>BASE dc=DOMAIN, dc=COM<a class="headerlink" href="#base-dc-domain-dc-com" title="Permalink to this headline">¶</a></h1>
+<p>Where DOMAIN and COM are your domain. If you’re using a subdomain, that line would look like:</p>
+</div>
+<div class="section" id="id4">
+<h1>[source,bash]<a class="headerlink" href="#id4" title="Permalink to this headline">¶</a></h1>
+</div>
+<div class="section" id="base-dc-subdomain-dc-domain-cd-com">
+<h1>BASE dc=SUBDOMAIN, dc=DOMAIN, cd=COM<a class="headerlink" href="#base-dc-subdomain-dc-domain-cd-com" title="Permalink to this headline">¶</a></h1>
+<p>Where SUBDOMAIN is the subdomain and DOMAIN and COM are your domain name.</p>
+<p>Save and close that file.</p>
+<p>Restart slapd with the command <cite>sudo systemctl restart slapd</cite>.</p>
+<p>Before we move on, the configuration should be tested. Issue the command ldapsearch -x and you should see your configuration information displayed. You are ready to install phpLDAPadmin.</p>
+<p>== Installing phpLDAPadmin</p>
+<p>This handy tool can be installed with a single command. If your server doesn’t already have Apache installed, the command will pick it up as a dependency. The command to install phpLDAPadmin is:</p>
+</div>
+<div class="section" id="id5">
+<h1>[source,bash]<a class="headerlink" href="#id5" title="Permalink to this headline">¶</a></h1>
+</div>
+<div class="section" id="sudo-apt-install-phpldapadmin">
+<h1>sudo apt install phpldapadmin<a class="headerlink" href="#sudo-apt-install-phpldapadmin" title="Permalink to this headline">¶</a></h1>
+<p>Once the installation is complete, there are a few configuration options that must be taken care of. To do this, open the phpldapadmin config file with the command <cite>sudo nano /etc/phpldapadmin/config.php</cite>. The following changes must be made.</p>
+<p>First we need to disable template warnings. Locate the line:</p>
+</div>
+<div class="section" id="id6">
+<h1>[source,bash]<a class="headerlink" href="#id6" title="Permalink to this headline">¶</a></h1>
+</div>
+<div class="section" id="config-custom-appearance-hide-template-warning-false">
+<h1>// $config-&gt;custom-&gt;appearance[‘hide_template_warning’] = false;<a class="headerlink" href="#config-custom-appearance-hide-template-warning-false" title="Permalink to this headline">¶</a></h1>
+<p>Uncomment it out (by removing the // characters) and change it to:</p>
+</div>
+<div class="section" id="id7">
+<h1>[source,bash]<a class="headerlink" href="#id7" title="Permalink to this headline">¶</a></h1>
+</div>
+<div class="section" id="config-custom-appearance-hide-template-warning-true">
+<h1>$config-&gt;custom-&gt;appearance[‘hide_template_warning’] = true;<a class="headerlink" href="#config-custom-appearance-hide-template-warning-true" title="Permalink to this headline">¶</a></h1>
+<p>Next we need to allow phpLDAPadmin to automatically detect the base DN of your OpenLDAP server and disable anonymous login. Locate the line:</p>
+</div>
+<div class="section" id="id8">
+<h1>[source,bash]<a class="headerlink" href="#id8" title="Permalink to this headline">¶</a></h1>
+</div>
+<div class="section" id="servers-setvalue-server-base-array-dc-example-dc-com">
+<h1>$servers-&gt;setValue(‘server’,’base’,array(‘dc=example,dc=com’));<a class="headerlink" href="#servers-setvalue-server-base-array-dc-example-dc-com" title="Permalink to this headline">¶</a></h1>
+<p>Change the above to:</p>
+</div>
+<div class="section" id="id9">
+<h1>[source,bash]<a class="headerlink" href="#id9" title="Permalink to this headline">¶</a></h1>
+</div>
+<div class="section" id="servers-setvalue-server-base-array">
+<h1>$servers-&gt;setValue(‘server’,’base’,array());<a class="headerlink" href="#servers-setvalue-server-base-array" title="Permalink to this headline">¶</a></h1>
+<p>Locate the line:</p>
+</div>
+<div class="section" id="id10">
+<h1>[source,bash]<a class="headerlink" href="#id10" title="Permalink to this headline">¶</a></h1>
+</div>
+<div class="section" id="servers-setvalue-login-anon-bind-true">
+<h1>// $servers-&gt;setValue(‘login’,’anon_bind’,true);<a class="headerlink" href="#servers-setvalue-login-anon-bind-true" title="Permalink to this headline">¶</a></h1>
+<p>Uncomment out the above line (by removing the // characters) and then change it to:</p>
+</div>
+<div class="section" id="id11">
+<h1>[source,bash]<a class="headerlink" href="#id11" title="Permalink to this headline">¶</a></h1>
+</div>
+<div class="section" id="servers-setvalue-login-anon-bind-false">
+<h1>$servers-&gt;setValue(‘login’,’anon_bind’,false);<a class="headerlink" href="#servers-setvalue-login-anon-bind-false" title="Permalink to this headline">¶</a></h1>
+<p>Save and close that file. You are now ready to access your newly installed web admin tool by pointing a browser to <a class="reference external" href="http://SERVER_IP/phpldapadmin">http://SERVER_IP/phpldapadmin</a>. You will then log in with the following:</p>
+</div>
+<div class="section" id="id12">
+<h1>[source,bash]<a class="headerlink" href="#id12" title="Permalink to this headline">¶</a></h1>
+</div>
+<div class="section" id="login-dn-cn-admin-dc-domain-dc-com">
+<h1>Login DN-cn=admin,dc=DOMAIN,dc=COM<a class="headerlink" href="#login-dn-cn-admin-dc-domain-dc-com" title="Permalink to this headline">¶</a></h1>
+<p>Where DOMAIN and COM combine to make the domain name you configured for LDAP. Use the password you created during LDAP configuration. Click Authenticate and you’ll find yourself in the LDAP administration window for phpLDAPadmin ready to work.</p>
+<p>LDAP has never been so easy.</p>
+<p>== Keep it going</p>
+<p>You can now start to add new entries to your LDAP server. Click Create new entry here and keep the LDAP fun going!</p>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="how_to_install_packetfence_on_centos_7.html" title="&lt;no title&gt;"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="How to install Nextcloud on Ubuntu Server 16.04 with snap.html" title="[source,bash]"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">Enterprise Architecture  documentation</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2019, Peter Preeper.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.2.1.
+    </div>
+  </body>
+</html>

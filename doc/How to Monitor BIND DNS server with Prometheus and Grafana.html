@@ -1,0 +1,307 @@
+
+
+<!doctype html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>How to Monitor BIND DNS server with Prometheus and Grafana &#8212; Enterprise Architecture  documentation</title>
+    <link rel="stylesheet" href="../_static/bizstyle.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/language_data.js"></script>
+    <script type="text/javascript" src="../_static/bizstyle.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="How to Monitor Linux Server Performance with Prometheus and Grafana in 5 minutes" href="How to Monitor Linux Server Performance with Prometheus and Grafana in 5 minutes.html" />
+    <link rel="prev" title="How to Monitor Apache Web Server with Prometheus and Grafana in 5 minutes" href="How to Monitor Apache Web Server with Prometheus and Grafana in 5 minutes.html" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <!--[if lt IE 9]>
+    <script type="text/javascript" src="_static/css3-mediaqueries.js"></script>
+    <![endif]-->
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="How to Monitor Linux Server Performance with Prometheus and Grafana in 5 minutes.html" title="How to Monitor Linux Server Performance with Prometheus and Grafana in 5 minutes"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="How to Monitor Apache Web Server with Prometheus and Grafana in 5 minutes.html" title="How to Monitor Apache Web Server with Prometheus and Grafana in 5 minutes"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">Enterprise Architecture  documentation</a> &#187;</li> 
+      </ul>
+    </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="How to Monitor Apache Web Server with Prometheus and Grafana in 5 minutes.html"
+                        title="previous chapter">How to Monitor Apache Web Server with Prometheus and Grafana in 5 minutes</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="How to Monitor Linux Server Performance with Prometheus and Grafana in 5 minutes.html"
+                        title="next chapter">How to Monitor Linux Server Performance with Prometheus and Grafana in 5 minutes</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/doc/How to Monitor BIND DNS server with Prometheus and Grafana.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="how-to-monitor-bind-dns-server-with-prometheus-and-grafana">
+<h1>How to Monitor BIND DNS server with Prometheus and Grafana<a class="headerlink" href="#how-to-monitor-bind-dns-server-with-prometheus-and-grafana" title="Permalink to this headline">¶</a></h1>
+<p><a class="reference external" href="https://computingforgeeks.com/how-to-monitor-bind-dns-server-with-prometheus-and-grafana/">https://computingforgeeks.com/how-to-monitor-bind-dns-server-with-prometheus-and-grafana/</a></p>
+<p>(Last Updated On: September 18, 2018)</p>
+<p>In this blog post, we will cover the steps to set up monitoring for BIND DNS
+server using Prometheus Server and Grafana to visualize Bind metrics. BIND
+which stands for “Berkeley Internet Name Domain” is an open-source Domain
+Name server that allows you to publish your DNS information on the Internet
+and allow network users to do DNS queries.</p>
+<p>The number of tools that can be used to monitor BIND DNS server is limited,
+and personally, I like Prometheus Bind exporter with Grafana. LibreNMS has
+<a class="reference external" href="https://docs.librenms.org/#Extensions/Applications">https://docs.librenms.org/#Extensions/Applications</a>/#bind9-aka-named
+BIND application monitoring that I was planning to give it a try.</p>
+<p>## Setup Pre-requisites</p>
+<ol class="arabic simple">
+<li><p>Installed and configured BIND DNS server</p></li>
+<li><p>BIND need to have been build with libxml2 support. This can be confirmed
+using</p></li>
+</ol>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># named -V | grep libxml2.</span>
+<span class="n">using</span> <span class="n">libxml2</span> <span class="n">version</span><span class="p">:</span> <span class="mf">2.9</span><span class="o">.</span><span class="mi">1</span>
+</pre></div>
+</div>
+<ol class="arabic simple" start="3">
+<li><p>Installed Prometheus Server</p></li>
+</ol>
+<p>## Step 1: Install Bind Prometheus Exporter</p>
+<p>Install git</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">sudo</span> <span class="n">yum</span> <span class="n">install</span> <span class="n">git</span>
+</pre></div>
+</div>
+<p>For Ubuntu run:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">sudo</span> <span class="n">apt</span> <span class="n">install</span> <span class="n">wget</span>
+</pre></div>
+</div>
+<p>### Install Go</p>
+<p>You need to have Go installed on your server to build bind_exporter</p>
+<p>How to Install latest Go on CentOS 7 / Ubuntu 18.04</p>
+<p>Once you have git and Go installed, download <cite>bind_exporter</cite></p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>go get github.com/digitalocean/bind_exporter
+cd $GOPATH/src/github.com/digitalocean/bind_exporter
+</pre></div>
+</div>
+<p>Generate binary file using.make</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span># make
+&gt;&gt; formatting code
+&gt;&gt; building binaries
+&gt;   bind_exporter
+&gt;&gt; running tests
+ok          github.com/digitalocean/bind_exporter   0.099s
+?           github.com/digitalocean/bind_exporter/bind      [no test files]
+?           github.com/digitalocean/bind_exporter/bind/auto [no test files]
+?           github.com/digitalocean/bind_exporter/bind/v2   [no test files]
+?           github.com/digitalocean/bind_exporter/bind/v3   [no test files]
+</pre></div>
+</div>
+<p><cite>bind_exporter</cite> binary will be generated. Copy the binary file to
+<cite>/usr/local/bin</cite></p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">chmod</span>  <span class="o">+</span><span class="n">x</span> <span class="n">bind_exporter</span>
+<span class="n">sudo</span> <span class="n">mv</span> <span class="n">bind_exporter</span>  <span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="n">local</span><span class="o">/</span><span class="nb">bin</span><span class="o">/</span>
+<span class="p">[</span><span class="n">source</span><span class="p">,</span><span class="n">bash</span><span class="p">]</span>
+</pre></div>
+</div>
+<p>You can print command options using <cite>bind_exporter –help</cite></p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># ./bind_exporter --help</span>
+<span class="n">Usage</span> <span class="n">of</span> <span class="o">./</span><span class="n">bind_exporter</span><span class="p">:</span>
+<span class="o">-</span><span class="n">bind</span><span class="o">.</span><span class="n">pid</span><span class="o">-</span><span class="n">file</span> <span class="n">string</span>
+        <span class="n">Path</span> <span class="n">to</span> <span class="n">Bind</span><span class="s1">&#39;s pid file to export process information.</span>
+<span class="o">-</span><span class="n">bind</span><span class="o">.</span><span class="n">stats</span><span class="o">-</span><span class="n">groups</span> <span class="n">value</span>
+        <span class="n">Comma</span><span class="o">-</span><span class="n">separated</span> <span class="nb">list</span> <span class="n">of</span> <span class="n">statistics</span> <span class="n">to</span> <span class="n">collect</span><span class="o">.</span> <span class="n">Available</span><span class="p">:</span> <span class="p">[</span><span class="n">server</span><span class="p">,</span> <span class="n">view</span><span class="p">,</span> <span class="n">tasks</span><span class="p">]</span> <span class="p">(</span><span class="n">default</span> <span class="s2">&quot;server,view&quot;</span><span class="p">)</span>
+<span class="o">-</span><span class="n">bind</span><span class="o">.</span><span class="n">stats</span><span class="o">-</span><span class="n">url</span> <span class="n">string</span>
+        <span class="n">HTTP</span> <span class="n">XML</span> <span class="n">API</span> <span class="n">address</span> <span class="n">of</span> <span class="n">an</span> <span class="n">Bind</span> <span class="n">server</span><span class="o">.</span> <span class="p">(</span><span class="n">default</span> <span class="s2">&quot;http://localhost:8053/&quot;</span><span class="p">)</span>
+<span class="o">-</span><span class="n">bind</span><span class="o">.</span><span class="n">stats</span><span class="o">-</span><span class="n">version</span> <span class="n">string</span>
+        <span class="n">BIND</span> <span class="n">statistics</span> <span class="n">version</span><span class="o">.</span> <span class="n">Can</span> <span class="n">be</span> <span class="n">detected</span> <span class="n">automatically</span><span class="o">.</span> <span class="n">Available</span><span class="p">:</span> <span class="p">[</span><span class="n">xml</span><span class="o">.</span><span class="n">v2</span><span class="p">,</span> <span class="n">xml</span><span class="o">.</span><span class="n">v3</span><span class="p">,</span> <span class="n">auto</span><span class="p">]</span> <span class="p">(</span><span class="n">default</span> <span class="s2">&quot;auto&quot;</span><span class="p">)</span>
+<span class="o">-</span><span class="n">bind</span><span class="o">.</span><span class="n">timeout</span> <span class="n">duration</span>
+        <span class="n">Timeout</span> <span class="k">for</span> <span class="n">trying</span> <span class="n">to</span> <span class="n">get</span> <span class="n">stats</span> <span class="kn">from</span> <span class="nn">Bind.</span> <span class="p">(</span><span class="n">default</span> <span class="mi">10</span><span class="n">s</span><span class="p">)</span>
+<span class="o">-</span><span class="n">log</span><span class="o">.</span><span class="n">format</span> <span class="n">value</span>
+        <span class="n">Set</span> <span class="n">the</span> <span class="n">log</span> <span class="n">target</span> <span class="ow">and</span> <span class="nb">format</span><span class="o">.</span> <span class="n">Example</span><span class="p">:</span> <span class="s2">&quot;logger:syslog?appname=bob&amp;local=7&quot;</span> <span class="ow">or</span> <span class="s2">&quot;logger:stdout?json=true&quot;</span> <span class="p">(</span><span class="n">default</span> <span class="s2">&quot;logger:stderr&quot;</span><span class="p">)</span>
+<span class="o">-</span><span class="n">log</span><span class="o">.</span><span class="n">level</span> <span class="n">value</span>
+        <span class="n">Only</span> <span class="n">log</span> <span class="n">messages</span> <span class="k">with</span> <span class="n">the</span> <span class="n">given</span> <span class="n">severity</span> <span class="ow">or</span> <span class="n">above</span><span class="o">.</span> <span class="n">Valid</span> <span class="n">levels</span><span class="p">:</span> <span class="p">[</span><span class="n">debug</span><span class="p">,</span> <span class="n">info</span><span class="p">,</span> <span class="n">warn</span><span class="p">,</span> <span class="n">error</span><span class="p">,</span> <span class="n">fatal</span><span class="p">]</span> <span class="p">(</span><span class="n">default</span> <span class="s2">&quot;info&quot;</span><span class="p">)</span>
+<span class="o">-</span><span class="n">version</span>
+        <span class="n">Print</span> <span class="n">version</span> <span class="n">information</span><span class="o">.</span>
+<span class="o">-</span><span class="n">web</span><span class="o">.</span><span class="n">listen</span><span class="o">-</span><span class="n">address</span> <span class="n">string</span>
+        <span class="n">Address</span> <span class="n">to</span> <span class="n">listen</span> <span class="n">on</span> <span class="k">for</span> <span class="n">web</span> <span class="n">interface</span> <span class="ow">and</span> <span class="n">telemetry</span><span class="o">.</span> <span class="p">(</span><span class="n">default</span> <span class="s2">&quot;:9119&quot;</span><span class="p">)</span>
+<span class="o">-</span><span class="n">web</span><span class="o">.</span><span class="n">telemetry</span><span class="o">-</span><span class="n">path</span> <span class="n">string</span>
+        <span class="n">Path</span> <span class="n">under</span> <span class="n">which</span> <span class="n">to</span> <span class="n">expose</span> <span class="n">metrics</span><span class="o">.</span> <span class="p">(</span><span class="n">default</span> <span class="s2">&quot;/metrics&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>## Step 2: Configure BIND DNS server</p>
+<p>You need to configure BIND to open a statistics channel. Since the exporter
+and BIND are on the same host, the port is opened locally.</p>
+<p>For CentOS ISC BIND DNS server, edit the file <cite>/etc/named.conf</cite> to add.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">statistics</span><span class="o">-</span><span class="n">channels</span> <span class="p">{</span>
+  <span class="n">inet</span> <span class="mf">127.0</span><span class="o">.</span><span class="mf">0.1</span> <span class="n">port</span> <span class="mi">8053</span> <span class="n">allow</span> <span class="p">{</span> <span class="mf">127.0</span><span class="o">.</span><span class="mf">0.1</span><span class="p">;</span> <span class="p">};</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+<p>For Ubuntu / Debian ISC BIND DNS server, edit the file
+<cite>/etc/bind/named.conf.options</cite></p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">statistics</span><span class="o">-</span><span class="n">channels</span> <span class="p">{</span>
+    <span class="n">inet</span> <span class="mf">127.0</span><span class="o">.</span><span class="mf">0.1</span> <span class="n">port</span> <span class="mi">8053</span> <span class="n">allow</span> <span class="p">{</span> <span class="mf">127.0</span><span class="o">.</span><span class="mf">0.1</span><span class="p">;</span> <span class="p">};</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+<p>Restart bind for the changes to be effected</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">sudo</span> <span class="n">systemctl</span> <span class="n">restart</span> <span class="n">named</span>
+</pre></div>
+</div>
+<p>## Step 3: Create Bind Exporter systemd service</p>
+<p>The next part is to create systemd service used to start the collector with
+access to the bind(named) pid file and enable the view stats group:</p>
+<p>Add Prometheus system user account</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">sudo</span> <span class="n">groupadd</span> <span class="o">--</span><span class="n">system</span> <span class="n">prometheus</span>
+<span class="n">sudo</span> <span class="n">useradd</span> <span class="o">-</span><span class="n">s</span> <span class="o">/</span><span class="n">sbin</span><span class="o">/</span><span class="n">nologin</span> <span class="o">--</span><span class="n">system</span> <span class="o">-</span><span class="n">g</span> <span class="n">prometheus</span> <span class="n">prometheus</span>
+</pre></div>
+</div>
+<p>This user will manage the exporter service.</p>
+<p>Once the user account has been added, create a systemd service unit file</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">sudo</span> <span class="n">vim</span> <span class="o">/</span><span class="n">etc</span><span class="o">/</span><span class="n">systemd</span><span class="o">/</span><span class="n">system</span><span class="o">/</span><span class="n">bind_exporter</span><span class="o">.</span><span class="n">service</span>
+</pre></div>
+</div>
+<p>Add below content:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>[Unit]
+Description=Prometheus
+Documentation=https://github.com/digitalocean/bind_exporter
+Wants=network-online.target
+After=network-online.target
+
+[Service]
+Type=simple
+User=prometheus
+Group=prometheus
+ExecReload=/bin/kill -HUP $MAINPID
+ExecStart=/usr/local/bin/bind_exporter \
+--bind.pid-file=/var/run/named/named.pid \
+--bind.timeout=20s \
+--web.listen-address=0.0.0.0:9153 \
+--web.telemetry-path=/metrics \
+--bind.stats-url=http://localhost:8053/ \
+--bind.stats-groups=server,view,tasks
+
+SyslogIdentifier=prometheus
+Restart=always
+
+[Install]
+WantedBy=multi-user.target
+</pre></div>
+</div>
+<p>Reload <cite>systemd</cite> and start <cite>bind_exporter</cite> service</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">sudo</span> <span class="n">systemctl</span> <span class="n">daemon</span><span class="o">-</span><span class="n">reload</span>
+<span class="n">sudo</span> <span class="n">systemctl</span> <span class="n">restart</span> <span class="n">bind_exporter</span><span class="o">.</span><span class="n">service</span>
+</pre></div>
+</div>
+<p>Enable the service to start on boot</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ sudo systemctl enable bind_exporter.service
+Created symlink from /etc/systemd/system/multi-user.target.wants/bind_exporter.service to /etc/systemd/system/bind_exporter.service.
+</pre></div>
+</div>
+<p>Confirm that the service is listening on port <cite>9153</cite> as configured</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># ss -tunelp | grep 9153</span>
+<span class="n">tcp</span>    <span class="n">LISTEN</span>     <span class="mi">0</span>      <span class="mi">128</span>      <span class="p">:::</span><span class="mi">9153</span>                 <span class="p">:::</span><span class="o">*</span>                   <span class="n">users</span><span class="p">:((</span><span class="s2">&quot;bind_exporter&quot;</span><span class="p">,</span><span class="n">pid</span><span class="o">=</span><span class="mi">23266</span><span class="p">,</span><span class="n">fd</span><span class="o">=</span><span class="mi">3</span><span class="p">))</span> <span class="n">uid</span><span class="p">:</span><span class="mi">997</span> <span class="n">ino</span><span class="p">:</span><span class="mi">113951</span> <span class="n">sk</span><span class="p">:</span><span class="n">ffff8d17fab19980</span> <span class="n">v6only</span><span class="p">:</span><span class="mi">0</span> <span class="o">&lt;-&gt;</span>
+</pre></div>
+</div>
+<p>Open the port on the firewall if you have <cite>firewalld</cite> running</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">sudo</span> <span class="n">firewall</span><span class="o">-</span><span class="n">cmd</span> <span class="o">--</span><span class="n">add</span><span class="o">-</span><span class="n">port</span><span class="o">=</span><span class="mi">9153</span><span class="o">/</span><span class="n">tcp</span> <span class="o">--</span><span class="n">permanent</span>
+<span class="n">sudo</span> <span class="n">firewall</span><span class="o">-</span><span class="n">cmd</span> <span class="o">--</span><span class="n">reload</span>
+</pre></div>
+</div>
+<p>## Step 4: Configure Prometheus Server</p>
+<p>If you don’t have a running Prometheus server, refer to our previous guide on
+how to Install Prometheus Server on CentOS 7 and Ubuntu 18.04. Below is a
+definition of my two jobs</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">-</span> <span class="n">job_name</span><span class="p">:</span> <span class="n">dns</span><span class="o">-</span><span class="n">master</span>
+    <span class="n">static_configs</span><span class="p">:</span>
+    <span class="o">-</span> <span class="n">targets</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;10.1.5.3:9153&#39;</span><span class="p">]</span>
+        <span class="n">labels</span><span class="p">:</span>
+        <span class="n">alias</span><span class="p">:</span> <span class="n">dns</span><span class="o">-</span><span class="n">master</span>
+
+<span class="o">-</span> <span class="n">job_name</span><span class="p">:</span> <span class="n">dns</span><span class="o">-</span><span class="n">slave1</span>
+    <span class="n">static_configs</span><span class="p">:</span>
+    <span class="o">-</span> <span class="n">targets</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;10.1.5.4:9153&#39;</span><span class="p">]</span>
+        <span class="n">labels</span><span class="p">:</span>
+        <span class="n">alias</span><span class="p">:</span> <span class="n">dns</span><span class="o">-</span><span class="n">slave</span>
+</pre></div>
+</div>
+<p>Restart <cite>prometheus</cite> server</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">sudo</span> <span class="n">systemctl</span> <span class="n">restart</span> <span class="n">prometheus</span>
+</pre></div>
+</div>
+<p>## Step 5: Add Grafana Dashboard</p>
+<p>We’re going to use already created Grafana dashboard by
+<a class="reference external" href="https://grafana.com/orgs/cristicalin">https://grafana.com/orgs/cristicalin</a> Cristian Calin . Dashboard ID is <cite>1666</cite>.
+Login to Grafana and <a class="reference external" href="https://prometheus.io/docs/visualization/grafana/">https://prometheus.io/docs/visualization/grafana/</a>
+Add Prometheus data source if you haven’t.</p>
+<p>When Prometheus data source has been added, import Bind Grafana Dashboard by
+navigating to <em>Dashboard &gt; Import</em>. Use <em>1666</em> for Grafana Dashboard ID.</p>
+<p>image:https://computingforgeeks.com/wp-content/uploads/2018/09/grafana-add-prometheus-dns-dashboard-min-696x385.png[]</p>
+<p>Give it a descriptive name and choose Prometheus data source added
+earlier.</p>
+<p>image:https://computingforgeeks.com/wp-content/uploads/2018/09/grafana-add-prometheus-dns-dashboard-02-min-696x243.png[]</p>
+<p>Click “<em>Import</em>” button to start using the dashboard. After a few minutes,
+the metrics should start showing.</p>
+<p>image:https://computingforgeeks.com/wp-content/uploads/2018/09/grafana-dashboards-min-696x203.png[]</p>
+<p>Stay tuned for more monitoring guides with Prometheus and Grafana.</p>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="How to Monitor Linux Server Performance with Prometheus and Grafana in 5 minutes.html" title="How to Monitor Linux Server Performance with Prometheus and Grafana in 5 minutes"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="How to Monitor Apache Web Server with Prometheus and Grafana in 5 minutes.html" title="How to Monitor Apache Web Server with Prometheus and Grafana in 5 minutes"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">Enterprise Architecture  documentation</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2019, Peter Preeper.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.2.1.
+    </div>
+  </body>
+</html>

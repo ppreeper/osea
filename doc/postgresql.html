@@ -1,0 +1,952 @@
+
+
+<!doctype html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>Postgresql &#8212; Enterprise Architecture  documentation</title>
+    <link rel="stylesheet" href="../_static/bizstyle.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/language_data.js"></script>
+    <script type="text/javascript" src="../_static/bizstyle.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Postmark Benchmarking" href="postmark.html" />
+    <link rel="prev" title="Ceph" href="ceph.html" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <!--[if lt IE 9]>
+    <script type="text/javascript" src="_static/css3-mediaqueries.js"></script>
+    <![endif]-->
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="postmark.html" title="Postmark Benchmarking"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="ceph.html" title="Ceph"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">Enterprise Architecture  documentation</a> &#187;</li> 
+      </ul>
+    </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="../index.html">Table of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Postgresql</a><ul>
+<li><a class="reference internal" href="#tuning-postgresql-with-pgbench">Tuning PostgreSQL with pgbench</a><ul>
+<li><a class="reference internal" href="#setting-up-a-postgresql-instance">Setting Up a PostgreSQL Instance</a><ul>
+<li><a class="reference internal" href="#installing-with-apt-get">Installing with <cite>apt-get</cite></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a class="reference internal" href="#how-to-benchmark-postgresql-performance">How to Benchmark PostgreSQL Performance</a><ul>
+<li><a class="reference internal" href="#how-to-benchmark-postgresql">How to benchmark PostgreSQL</a></li>
+<li><a class="reference internal" href="#what-are-the-key-performance-factors-in-postgresql">What are the key performance factors in PostgreSQL</a></li>
+<li><a class="reference internal" href="#what-are-tips-and-best-practices">What are tips and best practices</a></li>
+<li><a class="reference internal" href="#what-are-common-mistakes-people-make">What are common mistakes people make</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#pgbenchtesting">Pgbenchtesting</a><ul>
+<li><a class="reference internal" href="#testing-for-performance-regression-with-pgbench-9-0">Testing for Performance Regression with pgBench 9.0</a></li>
+<li><a class="reference internal" href="#memory-vs-disk-performance">Memory vs. Disk Performance</a></li>
+<li><a class="reference internal" href="#read-vs-write-performance">Read vs. Write Performance</a></li>
+<li><a class="reference internal" href="#connections-and-contention">Connections and Contention</a></li>
+<li><a class="reference internal" href="#prepared-vs-ah-hoc-queries">Prepared vs. Ah-hoc Queries</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="ceph.html"
+                        title="previous chapter">Ceph</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="postmark.html"
+                        title="next chapter">Postmark Benchmarking</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/doc/postgresql.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="postgresql">
+<h1>Postgresql<a class="headerlink" href="#postgresql" title="Permalink to this headline">¶</a></h1>
+<ul class="simple">
+<li><p>postgresql-contrib</p></li>
+<li><p>pgbench</p></li>
+</ul>
+<p><a class="reference external" href="https://blog.codeship.com/tuning-postgresql-with-pgbench/">https://blog.codeship.com/tuning-postgresql-with-pgbench/</a></p>
+<div class="section" id="tuning-postgresql-with-pgbench">
+<h2>Tuning PostgreSQL with pgbench<a class="headerlink" href="#tuning-postgresql-with-pgbench" title="Permalink to this headline">¶</a></h2>
+<p>Last updated: 2017-05-08</p>
+<p>by Ben Cane | 4 Comments</p>
+<p>Reading Time: 10 minutes</p>
+<p>When it comes to performance tuning an environment, often the first place to
+start is with the database. The reason for this is that most applications
+rely very heavily on a database of some sort.</p>
+<p>Unfortunately, databases can be one of the most complex areas to tune. The
+reason I say that is because tuning a database service properly often involves
+tuning more than the database service itself; it often requires making
+hardware, OS, or even application modifications.</p>
+<p>On top of requiring a diverse skill set, one of the biggest challenges with
+tuning a database is creating enough simulated database traffic to stress
+the database service. Which is why today’s article will explore <cite>pgbench</cite>,
+a benchmarking tool used to measure performance of a PostgreSQL instance.</p>
+<p>PostgreSQL is a highly popular open-source relational database. One of the
+nice things about PostgreSQL is that there are quite a few tools that have
+been created to assist with the management of PostgreSQL; <cite>pgbench</cite> is one
+such tool.</p>
+<p>While exploring pgbench, we will also use it to measure the performance
+gains/loss for a common PostgreSQL tunable.</p>
+<div class="section" id="setting-up-a-postgresql-instance">
+<h3>Setting Up a PostgreSQL Instance<a class="headerlink" href="#setting-up-a-postgresql-instance" title="Permalink to this headline">¶</a></h3>
+<p>Before we can use <cite>pgbench</cite> to tune a database service, we must first stand
+up that database service. The below steps will outline how to set up a basic
+PostgreSQL instance on an Ubuntu 16.04 server.</p>
+<div class="section" id="installing-with-apt-get">
+<h4>Installing with <cite>apt-get</cite><a class="headerlink" href="#installing-with-apt-get" title="Permalink to this headline">¶</a></h4>
+<p>Installing PostgreSQL on an Ubuntu system is fairly easy. The bulk of the
+work is accomplished by simply running the <cite>apt-get</cite> command.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">apt</span><span class="o">-</span><span class="n">get</span> <span class="n">install</span> <span class="n">postgresql</span> <span class="n">postgresql</span><span class="o">-</span><span class="n">contrib</span>
+</pre></div>
+</div>
+<p>The above <cite>apt-get</cite> command installs both the <cite>postgresql</cite> and
+<cite>postgresql-contrib</cite> packages. The postgresql package installs the base
+PostgreSQL service.</p>
+<p>The <cite>postgresql-contrib</cite> package installs additional contributions to
+PostgreSQL. These contributions have not yet been added to the official
+package but often provide quite a bit of functionality.</p>
+<p>With the packages installed, we now have a running PostgreSQL instance.
+We can verify this by using the <cite>systemctl</cite> command to check the status
+of PostgreSQL.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span> &gt; systemctl status postgresql
+● postgresql.service - PostgreSQL RDBMS
+   Loaded: loaded (/lib/systemd/system/postgresql.service; enabled; vendor preset: enabled)
+   Active: active (exited) since Mon 2017-01-02 21:14:36 UTC; 7h ago
+Process: 16075 ExecStart=/bin/true (code=exited, status=0/SUCCESS)
+Main PID: 16075 (code=exited, status=0/SUCCESS)
+
+Jan 02 21:14:36 ubuntu-xenial systemd[1]: Starting PostgreSQL RDBMS...
+Jan 02 21:14:36 ubuntu-xenial systemd[1]: Started PostgreSQL RDBMS.
+</pre></div>
+</div>
+<p>The above indicates our instance started without any issues. We can now move
+on to our next step, creating a database.</p>
+<p>==== Creating a database</p>
+<p>When we installed the <cite>postgresql</cite> package, this package included the creation
+of a user named <cite>postgres</cite>. This user is used as the owner of the running
+instance. It also serves as the admin user for the PostgreSQL service.</p>
+<p>In order to create a database, we will need to login to this user, which is
+accomplished by executing the <cite>su</cite> command.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">su</span> <span class="o">-</span> <span class="n">postgres</span>
+</pre></div>
+</div>
+<p>Once switched to the <cite>postgres</cite> user, we can log in to the running instance
+by using the PostgreSQL client, <cite>psql</cite>.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span> $ psql
+psql (9.5.5)
+Type &quot;help&quot; for help.
+
+postgres=#
+</pre></div>
+</div>
+<p>After executing the <cite>psql</cite> command, we were dropped into PostgreSQL’s command
+line environment. From here, we can issue <em>SQL</em> statements or use special
+client commands to perform actions.</p>
+<p>As an example, we can list the current databases by issuing the <cite>list</cite>
+command.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span> <span class="n">postgres</span><span class="o">-</span><span class="c1"># \list</span>
+                                 <span class="n">List</span> <span class="n">of</span> <span class="n">databases</span>
+   <span class="n">Name</span>    <span class="o">|</span>  <span class="n">Owner</span>   <span class="o">|</span> <span class="n">Encoding</span> <span class="o">|</span>   <span class="n">Collate</span>   <span class="o">|</span>    <span class="n">Ctype</span>    <span class="o">|</span>   <span class="n">Access</span> <span class="n">privileges</span>
+<span class="o">-----------+----------+----------+-------------+-------------+-----------------------</span>
+<span class="n">postgres</span>  <span class="o">|</span> <span class="n">postgres</span> <span class="o">|</span> <span class="n">UTF8</span>     <span class="o">|</span> <span class="n">en_US</span><span class="o">.</span><span class="n">UTF</span><span class="o">-</span><span class="mi">8</span> <span class="o">|</span> <span class="n">en_US</span><span class="o">.</span><span class="n">UTF</span><span class="o">-</span><span class="mi">8</span> <span class="o">|</span>
+<span class="n">template0</span> <span class="o">|</span> <span class="n">postgres</span> <span class="o">|</span> <span class="n">UTF8</span>     <span class="o">|</span> <span class="n">en_US</span><span class="o">.</span><span class="n">UTF</span><span class="o">-</span><span class="mi">8</span> <span class="o">|</span> <span class="n">en_US</span><span class="o">.</span><span class="n">UTF</span><span class="o">-</span><span class="mi">8</span> <span class="o">|</span> <span class="o">=</span><span class="n">c</span><span class="o">/</span><span class="n">postgres</span>          <span class="o">+</span>
+         <span class="o">|</span>          <span class="o">|</span>          <span class="o">|</span>             <span class="o">|</span>             <span class="o">|</span> <span class="n">postgres</span><span class="o">=</span><span class="n">CTc</span><span class="o">/</span><span class="n">postgres</span>
+<span class="n">template1</span> <span class="o">|</span> <span class="n">postgres</span> <span class="o">|</span> <span class="n">UTF8</span>     <span class="o">|</span> <span class="n">en_US</span><span class="o">.</span><span class="n">UTF</span><span class="o">-</span><span class="mi">8</span> <span class="o">|</span> <span class="n">en_US</span><span class="o">.</span><span class="n">UTF</span><span class="o">-</span><span class="mi">8</span> <span class="o">|</span> <span class="o">=</span><span class="n">c</span><span class="o">/</span><span class="n">postgres</span>          <span class="o">+</span>
+         <span class="o">|</span>          <span class="o">|</span>          <span class="o">|</span>             <span class="o">|</span>             <span class="o">|</span> <span class="n">postgres</span><span class="o">=</span><span class="n">CTc</span><span class="o">/</span><span class="n">postgres</span>
+<span class="p">(</span><span class="mi">3</span> <span class="n">rows</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>After issuing the <cite>list</cite> command, three databases were returned. These are
+default databases that were set up during the initial installation process.</p>
+<p>For our testing today, we will be creating a new database. Let’s go ahead and
+create that database, naming it example. We can do so by issuing the following
+SQL statement:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">CREATE</span> <span class="n">DATABASE</span> <span class="n">example</span><span class="p">;</span>
+</pre></div>
+</div>
+<p>Once executed, we can validate that the database has been created by issuing
+the <cite>list</cite> command again.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span> <span class="n">postgres</span><span class="o">=</span><span class="c1"># \list</span>
+                                 <span class="n">List</span> <span class="n">of</span> <span class="n">databases</span>
+   <span class="n">Name</span>    <span class="o">|</span>  <span class="n">Owner</span>   <span class="o">|</span> <span class="n">Encoding</span> <span class="o">|</span>   <span class="n">Collate</span>   <span class="o">|</span>    <span class="n">Ctype</span>    <span class="o">|</span>   <span class="n">Access</span> <span class="n">privileges</span>
+<span class="o">-----------+----------+----------+-------------+-------------+-----------------------</span>
+<span class="n">example</span>   <span class="o">|</span> <span class="n">postgres</span> <span class="o">|</span> <span class="n">UTF8</span>     <span class="o">|</span> <span class="n">en_US</span><span class="o">.</span><span class="n">UTF</span><span class="o">-</span><span class="mi">8</span> <span class="o">|</span> <span class="n">en_US</span><span class="o">.</span><span class="n">UTF</span><span class="o">-</span><span class="mi">8</span> <span class="o">|</span>
+<span class="n">postgres</span>  <span class="o">|</span> <span class="n">postgres</span> <span class="o">|</span> <span class="n">UTF8</span>     <span class="o">|</span> <span class="n">en_US</span><span class="o">.</span><span class="n">UTF</span><span class="o">-</span><span class="mi">8</span> <span class="o">|</span> <span class="n">en_US</span><span class="o">.</span><span class="n">UTF</span><span class="o">-</span><span class="mi">8</span> <span class="o">|</span>
+<span class="n">template0</span> <span class="o">|</span> <span class="n">postgres</span> <span class="o">|</span> <span class="n">UTF8</span>     <span class="o">|</span> <span class="n">en_US</span><span class="o">.</span><span class="n">UTF</span><span class="o">-</span><span class="mi">8</span> <span class="o">|</span> <span class="n">en_US</span><span class="o">.</span><span class="n">UTF</span><span class="o">-</span><span class="mi">8</span> <span class="o">|</span> <span class="o">=</span><span class="n">c</span><span class="o">/</span><span class="n">postgres</span>          <span class="o">+</span>
+         <span class="o">|</span>          <span class="o">|</span>          <span class="o">|</span>             <span class="o">|</span>             <span class="o">|</span> <span class="n">postgres</span><span class="o">=</span><span class="n">CTc</span><span class="o">/</span><span class="n">postgres</span>
+<span class="n">template1</span> <span class="o">|</span> <span class="n">postgres</span> <span class="o">|</span> <span class="n">UTF8</span>     <span class="o">|</span> <span class="n">en_US</span><span class="o">.</span><span class="n">UTF</span><span class="o">-</span><span class="mi">8</span> <span class="o">|</span> <span class="n">en_US</span><span class="o">.</span><span class="n">UTF</span><span class="o">-</span><span class="mi">8</span> <span class="o">|</span> <span class="o">=</span><span class="n">c</span><span class="o">/</span><span class="n">postgres</span>          <span class="o">+</span>
+         <span class="o">|</span>          <span class="o">|</span>          <span class="o">|</span>             <span class="o">|</span>             <span class="o">|</span> <span class="n">postgres</span><span class="o">=</span><span class="n">CTc</span><span class="o">/</span><span class="n">postgres</span>
+<span class="p">(</span><span class="mi">4</span> <span class="n">rows</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>At this point, we now have an empty database named example. From this point, we
+will need to return to our <cite>bash</cite> shell to execute <cite>pgbench</cite> commands. We can do
+this by issuing the <cite>q</cite> (quit) command.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">postgres</span><span class="o">-</span><span class="c1"># \q</span>
+</pre></div>
+</div>
+<p>Once logged out of the PostgreSQL command line environment, we can get started
+using <cite>pgbench</cite> to benchmark our database instance’s performance.</p>
+<p>=== Using pgbench to Measure Performance</p>
+<p>One of the most difficult things in measuring database performance is
+generating enough load. A popular option is to simply bombard test instances
+of the target application/s with test transactions. While this is a useful
+test that provides DB performance in relation to the application, it can be
+problematic sometimes as application bottlenecks can limit database testing.</p>
+<p>For situations such as this, tools like <cite>pgbench</cite> come in handy. With
+<cite>pgbench</cite>, you can either use a sample database provided with <cite>pgbench</cite>
+or have <cite>pgbench</cite> run custom queries against an application database.</p>
+<p>In this article, we will be using the example database that comes with
+<cite>pgbench</cite>.</p>
+<p>==== Setting up the pgbench sample database</p>
+<p>The set up of the sample database is quite easy and fairly quick. We can start
+this process by executing <cite>pgbench</cite> with the <cite>-i</cite> (initialize) option.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span> $ pgbench -i -s 50 example
+creating tables...
+5000000 of 5000000 tuples (100%) done (elapsed 5.33 s, remaining 0.00 s)
+vacuum...
+set primary keys...
+done.
+</pre></div>
+</div>
+<p>In the command above, we executed pgbench with the <cite>-i</cite> option and the <cite>-s</cite>
+option followed by the database name (<cite>example</cite>).</p>
+<p>The <cite>-i</cite> (initialize) option will tell <cite>pgbench</cite> to initialize the database
+specified. What this means is that <cite>pgbench</cite> will create the following tables
+within the example database.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span> <span class="n">table</span>                   <span class="c1"># of rows</span>
+<span class="n">pgbench_branches</span>        <span class="mi">1</span>
+<span class="n">pgbench_tellers</span>         <span class="mi">10</span>
+<span class="n">pgbench_accounts</span>        <span class="mi">100000</span>
+<span class="n">pgbench_history</span>         <span class="mi">0</span>
+</pre></div>
+</div>
+<p>By default, <cite>pgbench</cite> will create the tables above with the number of rows
+shown above. This creates a simple 16MB database.</p>
+<p>Since we will be using <cite>pgbench</cite> to measure changes in performance, a small
+16MB database will not be enough to stress our instance. This is where the
+<cite>-s</cite> (scaling) option comes into play.</p>
+<p>The <cite>-s</cite> option is used to multiply the number of rows entered into each table.
+In the command above, we entered a “scaling” option of <cite>50</cite>. This told
+<cite>pgbench</cite> to create a database with 50 times the default size.</p>
+<p>What this means is our <cite>pgbench_accounts</cite> table now has <cite>5,000,000</cite> records.
+It also means our database size is now 800MB (50 x 16MB).</p>
+<p>To verify that our tables have been created successfully, let’s go ahead
+and run the <cite>psql</cite> client again.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span> $ psql -d example
+psql (9.5.5)
+Type &quot;help&quot; for help.
+
+example=#
+</pre></div>
+</div>
+<p>In the command above, we used the <cite>-d</cite> (database) flag to tell <cite>psql</cite> to
+not only connect to the PostgreSQL service but to also switch to the
+_example_ database.</p>
+<p>Since we are currently using the example database, we can issue the <cite>dt</cite>
+command to list the tables available within that database.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span> <span class="n">example</span><span class="o">=</span><span class="c1"># \dt</span>
+            <span class="n">List</span> <span class="n">of</span> <span class="n">relations</span>
+<span class="n">Schema</span> <span class="o">|</span>       <span class="n">Name</span>       <span class="o">|</span> <span class="n">Type</span>  <span class="o">|</span>  <span class="n">Owner</span>
+<span class="o">--------+------------------+-------+----------</span>
+<span class="n">public</span> <span class="o">|</span> <span class="n">pgbench_accounts</span> <span class="o">|</span> <span class="n">table</span> <span class="o">|</span> <span class="n">postgres</span>
+<span class="n">public</span> <span class="o">|</span> <span class="n">pgbench_branches</span> <span class="o">|</span> <span class="n">table</span> <span class="o">|</span> <span class="n">postgres</span>
+<span class="n">public</span> <span class="o">|</span> <span class="n">pgbench_history</span>  <span class="o">|</span> <span class="n">table</span> <span class="o">|</span> <span class="n">postgres</span>
+<span class="n">public</span> <span class="o">|</span> <span class="n">pgbench_tellers</span>  <span class="o">|</span> <span class="n">table</span> <span class="o">|</span> <span class="n">postgres</span>
+<span class="p">(</span><span class="mi">4</span> <span class="n">rows</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>From the table above, we can see that <cite>pgbench</cite> created the four expected
+tables. This means our database is now populated and ready to be used to
+measure our database instance’s performance.</p>
+<p>==== Establishing a baseline</p>
+<p>When doing any sort of performance tuning, it is best to first establish a
+baseline performance. This baseline will serve as a measurement as to whether
+or not the changes you have performed have increased or decreased performance.</p>
+<p>Let’s go ahead and call <cite>pgbench</cite> to establish the baseline for our “out of
+the box” PostgreSQL instance.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span> $ pgbench -c 10 -j 2 -t 10000 example
+starting vacuum...end.
+transaction type: TPC-B (sort of)
+scaling factor: 50
+query mode: simple
+number of clients: 10
+number of threads: 2
+number of transactions per client: 10000
+number of transactions actually processed: 100000/100000
+latency average: 4.176 ms
+tps = 2394.718707 (including connections establishing)
+tps = 2394.874350 (excluding connections establishing)
+</pre></div>
+</div>
+<p>When calling <cite>pgbench</cite>, we add quite a few options to the command. The
+first is <cite>-c</cite> (clients), which is used to define the number of clients to
+connect with. For this testing, I used <cite>10</cite> to tell <cite>pgbench</cite> to execute
+with 10 clients.</p>
+<p>What this means is that when <cite>pgbench</cite> is executing tests, it opens 10
+different sessions.</p>
+<p>The next option is the <cite>-j</cite> (threads) flag. This flag is used to define
+the number of worker processes for <cite>pgbench</cite>. In the above command, I
+specified the value of <cite>2</cite>. This will tell <cite>pgbench</cite> to start two worker
+processes during the benchmarking.</p>
+<p>The third option used is <cite>-t</cite> (transactions), which is used to specify
+the number of transactions to execute. In the command above, I provided
+the value of <cite>10,000</cite>. However this doesn’t mean that only 10,000
+transactions will be executed against our database service. What it means
+is that each client session will execute 10,000 transactions.</p>
+<p>To summarize, the baseline test run was two <cite>pgbench</cite> worker processes
+simulating <cite>10,000</cite> transactions from <cite>10</cite> clients for a total of
+<cite>100,000</cite> transactions.</p>
+<p>With that understanding, let’s take a look at the results of this first
+test.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span> $ pgbench -c 10 -j 2 -t 10000 example
+starting vacuum...end.
+transaction type: TPC-B (sort of)
+scaling factor: 50
+query mode: simple
+number of clients: 10
+number of threads: 2
+number of transactions per client: 10000
+number of transactions actually processed: 100000/100000
+latency average: 4.176 ms
+tps = 2394.718707 (including connections establishing)
+tps = 2394.874350 (excluding connections establishing)
+</pre></div>
+</div>
+<p>The output of <cite>pgbench</cite> has quite a bit of information. Most of it describes
+the test scenarios being executed. The part that we are most interested in is
+the following:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span> <span class="n">tps</span> <span class="o">=</span> <span class="mf">2394.718707</span> <span class="p">(</span><span class="n">including</span> <span class="n">connections</span> <span class="n">establishing</span><span class="p">)</span>
+<span class="n">tps</span> <span class="o">=</span> <span class="mf">2394.874350</span> <span class="p">(</span><span class="n">excluding</span> <span class="n">connections</span> <span class="n">establishing</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>From these results, it seems our baseline is <cite>2,394</cite> database transactions
+per second. Let’s go ahead and see if we can increase this number by modifying
+a simple configuration parameter within PostgreSQL.</p>
+<p>=== Adding More Cache</p>
+<p>One of the go-to parameters for anyone tuning PostgreSQL is the
+<cite>shared_buffers</cite> parameter. This parameter is used to specify the amount
+of memory the PostgreSQL service can utilize for caching. This caching
+mechanism is used to store the
+contents of tables and indexes in memory.</p>
+<p>To show how we can use <cite>pgbench</cite> for performance tuning, we will be adjusting
+this value to test performance gains/losses.</p>
+<p>By default, the <cite>shared_buffers</cite> value is set to <cite>128MB</cite>, a fairly low value
+considering the amount of available memory on most servers today. We can see
+this setting for ourselves by looking at the contents of the
+<cite>/etc/postgresql/9.5/main/postgresql.conf</cite> file. Within this file, we should
+see the following.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span> <span class="c1"># - Memory -</span>
+
+<span class="n">shared_buffers</span> <span class="o">=</span> <span class="mi">128</span><span class="n">MB</span>                 <span class="c1"># min 128kB</span>
+                                       <span class="c1"># (change requires restart)</span>
+</pre></div>
+</div>
+<p>Let’s go ahead and switch this value to <cite>256MB</cite>, effectively doubling our
+available cache space.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># - Memory -</span>
+
+<span class="n">shared_buffers</span> <span class="o">=</span> <span class="mi">256</span><span class="n">MB</span>                  <span class="c1"># min 128kB</span>
+                                        <span class="c1"># (change requires restart)</span>
+</pre></div>
+</div>
+<p>Once completed, we will need to restart the PostgreSQL service. We can do
+so by executing the <cite>systemctl</cite> command with the restart option.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">systemctl</span> <span class="n">restart</span> <span class="n">postgresql</span>
+</pre></div>
+</div>
+<p>Once the service is fully up and running, we can once again use <cite>pgbench</cite>
+to measure our performance.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ pgbench -c 10 -j 2 -t 10000 example
+starting vacuum...end.
+transaction type: TPC-B (sort of)
+scaling factor: 50
+query mode: simple
+number of clients: 10
+number of threads: 2
+number of transactions per client: 10000
+number of transactions actually processed: 100000/100000
+latency average: 3.921 ms
+tps = 2550.313477 (including connections establishing)
+tps = 2550.480149 (excluding connections establishing)
+</pre></div>
+</div>
+<p>In our earlier baseline test, we were able to hit a rate of <cite>2,394</cite>
+transactions per second. In this last run, after updating the <cite>shared_buffers</cite>
+parameter, we were able to achieve <cite>2,550</cite> transactions per second, an increase
+of <cite>156</cite>. While this is not a bad start, we can still go further.</p>
+<p>While the <cite>shared_buffers</cite> parameter might start off at <cite>128MB</cite>, the
+recommended value for this parameter is one-fourth the system memory. Our test
+system has <cite>2GB</cite> of system memory, a value we can verify with the <cite>free</cite> command.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ free -m
+              total        used        free      shared  buff/cache   available
+Mem:           2000          54         109         548        1836        1223
+Swap:             0           0           0
+</pre></div>
+</div>
+<p>In the output above, we can see that the <cite>total</cite> column shows a value of
+<cite>2000MB</cite> on the row for memory. This column shows the total physical memory
+<cite>available</cite> to the system. We can also see in the available column that <cite>1223MB</cite>
+is showing available. This means we have up to <cite>1.2</cite> GB of free memory we can
+use for our tuning purposes.</p>
+<p>If we change our <cite>shared_buffers</cite> parameter to the recommended value of
+one-fourth system memory, we would need to change it to <cite>512MB</cite>. Let’s go ahead
+and make this change and rerun our <cite>pgbench</cite> test.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># - Memory -</span>
+
+   <span class="n">shared_buffers</span> <span class="o">=</span> <span class="mi">512</span><span class="n">MB</span>                  <span class="c1"># min 128kB</span>
+                                          <span class="c1"># (change requires restart)</span>
+</pre></div>
+</div>
+<p>With the shared_buffers value updated in the
+<cite>/etc/postgresql/9.5/main/postgresql.conf</cite>, we can go ahead and restart the
+PostgreSQL service.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">systemctl</span> <span class="n">restart</span> <span class="n">postgresql</span>
+</pre></div>
+</div>
+<p>After restarting, let’s rerun our test.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ pgbench -c 10 -j 2 -t 10000 example
+starting vacuum...end.
+transaction type: TPC-B (sort of)
+scaling factor: 50
+query mode: simple
+number of clients: 10
+number of threads: 2
+number of transactions per client: 10000
+number of transactions actually processed: 100000/100000
+latency average: 3.756 ms
+tps = 2662.750932 (including connections establishing)
+tps = 2663.066421 (excluding connections establishing)
+</pre></div>
+</div>
+<p>This time, our system was able to reach <cite>2,662</cite> transactions per second, an
+additional increase of <cite>112</cite> transactions per second. Since our transactions
+per second increased by at least <cite>100</cite> both times, let’s go a step further
+and see what happens when changing this value to <cite>1GB</cite>.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">=</span> <span class="o">-</span> <span class="n">Memory</span> <span class="o">-</span>
+
+<span class="n">shared_buffers</span> <span class="o">=</span> <span class="mi">1024</span><span class="n">MB</span>                 <span class="c1"># min 128kB</span>
+                                        <span class="c1"># (change requires restart)</span>
+</pre></div>
+</div>
+<p>After updating the value, we will need to once again restart the PostgreSQL
+service.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">=</span> <span class="n">systemctl</span> <span class="n">restart</span> <span class="n">postgresql</span>
+</pre></div>
+</div>
+<p>With the service restarted, we can now rerun our test.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ pgbench -c 10 -j 2 -t 10000 example
+starting vacuum...end.
+transaction type: TPC-B (sort of)
+scaling factor: 50
+query mode: simple
+number of clients: 10
+number of threads: 2
+number of transactions per client: 10000
+number of transactions actually processed: 100000/100000
+latency average: 3.744 ms
+tps = 2670.791865 (including connections establishing)
+tps = 2671.079076 (excluding connections establishing)
+</pre></div>
+</div>
+<p>This time, our transactions per second went from <cite>2,662</cite> to <cite>2,671</cite> and
+increase of <cite>9</cite> transactions per second. This is a situation where we are
+hitting diminishing returns.</p>
+<p>While it is feasible for many environments to increase the <cite>shared_buffers</cite>
+value beyond the one-fourth guideline, doing so does not return the same
+results for this test database.</p>
+<p>=== Summary</p>
+<p>Based on the results of our testing, we can see that changing the value of
+the <cite>shared_buffers</cite> from <cite>128MB</cite> to <cite>512MB</cite> on our test system resulted in
+a <cite>268</cite> transactions per second increase in performance. Based on our
+baseline results, that is a <em>10 percent</em> increase in performance.</p>
+<p>We did this all on a base PostgreSQL instance using <cite>pgbench</cite>‘s sample
+database. Meaning, we did not have to load our application to get a baseline
+metric on how well PostgreSQL performs.</p>
+<p>While we were able to increase our throughput by modifying the <cite>shared_buffers</cite>
+parameter within PostgreSQL, there are many more tuning parameters available.
+For anyone looking to tune a PostgreSQL instance, I would highly recommend
+checking out PostgreSQL’s wiki.</p>
+<p>link:https://severalnines.com/blog/benchmarking-postgresql-performance[</p>
+</div>
+</div>
+</div>
+<div class="section" id="how-to-benchmark-postgresql-performance">
+<h2>How to Benchmark PostgreSQL Performance<a class="headerlink" href="#how-to-benchmark-postgresql-performance" title="Permalink to this headline">¶</a></h2>
+<p>The purpose of benchmarking a database is not only to check capability of
+database, but also the behavior of a particular database against your
+application. Different hardwares provide different results based on the
+benchmarking plan that you set. It is very important to isolate the server
+(the actual one being benchmarked) from other elements like the servers
+driving the load, or the servers used to collect and store performance
+metrics. As part of the benchmarking exercise, you must get the application
+characteristics like a) Is the application is read or write intensive? or
+b) what is the read/write split (e.g. 80:20)? or c) How large is the
+dataset?, is the data and structure representative of the actual production
+database, etc.</p>
+<p>PostgreSQL is world’s most advanced open source database. If any enterprise
+RDBMS customer wants to migrate their database to opensource, then
+PostgreSQL would be the first option to evaluate.</p>
+<p>This post covers the following:</p>
+<ul class="simple">
+<li><p>How to benchmark PostgreSQL</p></li>
+<li><p>What are the key performance factors in PostgreSQL</p></li>
+<li><ul>
+<li><p>What are levers you can pull to increase performance</p></li>
+</ul>
+</li>
+<li><p>What are performance pitfalls to avoid</p></li>
+<li><p>What are common mistakes people make?</p></li>
+<li><p>How do you know if your system is performing? What tools can you use?</p></li>
+</ul>
+<div class="section" id="how-to-benchmark-postgresql">
+<h3>How to benchmark PostgreSQL<a class="headerlink" href="#how-to-benchmark-postgresql" title="Permalink to this headline">¶</a></h3>
+<p>The standard tool to benchmark PostgreSQL is pgbench. By default, pgbench
+tests are based on TPC-B. It involves 5 SELECT, INSERT, and UPDATE commands
+per transaction. However, depending on your application behavior, you can
+write your own script files. Let us look into the default and some script
+oriented test results. We are going to use the latest version of PostgreSQL
+for these tests, which is PostgreSQL 10 at the time of writing. You can
+install it using ClusterControl, or using the instructions
+here: <a class="reference external" href="https://www.openscg.com/bigsql/package-manager/">https://www.openscg.com/bigsql/package-manager/</a>.</p>
+<p>Specs of machine</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Version</span><span class="p">:</span> <span class="n">RHEL</span> <span class="mi">6</span> <span class="o">-</span> <span class="mi">64</span> <span class="n">bit</span>
+<span class="n">Memory</span> <span class="p">:</span> <span class="mi">4</span><span class="n">GB</span>
+<span class="n">Processors</span><span class="p">:</span> <span class="mi">4</span>
+<span class="n">Storage</span><span class="p">:</span> <span class="mi">50</span><span class="n">G</span>
+<span class="n">PostgreSQL</span> <span class="n">version</span><span class="p">:</span> <span class="mf">10.0</span>
+<span class="n">Database</span> <span class="n">Size</span><span class="p">:</span> <span class="mi">15</span><span class="n">G</span>
+</pre></div>
+</div>
+<p>Before you run benchmarking with pgbench tool, you would need to initialize
+it below command:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>-bash-4.1$ ./pgbench -i -p 5432 -d postgres
+NOTICE:  table &quot;pgbench_history&quot; does not exist, skipping
+NOTICE:  table &quot;pgbench_tellers&quot; does not exist, skipping
+NOTICE:  table &quot;pgbench_accounts&quot; does not exist, skipping
+NOTICE:  table &quot;pgbench_branches&quot; does not exist, skipping
+creating tables…
+100000 of 100000 tuples (100%) done (elapsed 0.18 s, remaining 0.00 s)
+Vacuum…
+set primary keys…
+done.
+</pre></div>
+</div>
+<p>As shown in the NOTICE messages, it creates pgbench_history, pgbench_tellers,
+pgbench_accounts, and pgbench_branches tables to run the transactions for
+benchmarking.</p>
+<p>Here is a simple test with 10 clients:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>-bash-4.1$ ./pgbench -c 10
+starting vacuum...end.
+transaction type: &lt;builtin: TPC-B (sort of)&gt;
+scaling factor: 1
+query mode: simple
+number of clients: 10
+number of threads: 1
+number of transactions per client: 10
+number of transactions actually processed: 100/100
+latency average = 13.516 ms
+tps = 739.865020 (including connections establishing)
+tps = 760.775629 (excluding connections establishing)
+</pre></div>
+</div>
+<p>As you see, it ran with 10 clients and 10 transaction per client. It gave you
+739 transactions/sec.It gave you 739 transactions/sec. If you want to run it
+for specific amount of time, you can use “-T” option. In general, a 15 mins
+or 30 mins run is sufficient.</p>
+<p>As of now, we talked about how to run pgbench, however not about what should
+be options. Before you start the benchmarking, you should get proper details
+from application team on:</p>
+<ul class="simple">
+<li><p>What type of workload?</p></li>
+<li><p>How many concurrent sessions?</p></li>
+<li><p>What is the average result set of queries?</p></li>
+<li><p>What are the expected tps(transaction per sec)?</p></li>
+</ul>
+<p>Here is an example for read-only work loads. You can use “-S” option to use
+only SELECTs which falls under read-only. Note that -n is to skip vacuuming
+on tables.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>-bash-4.1$ ./pgbench -c 100 -T 300 -S -n
+transaction type: &lt;builtin: select only&gt;
+scaling factor: 1000
+query mode: simple
+number of clients: 100
+number of threads: 1
+duration: 300 s
+number of transactions actually processed: 15741
+latency average = 1916.650 ms
+tps = 52.174363 (including connections establishing)
+tps = 52.174913 (excluding connections establishing)
+-bash-4.1$
+</pre></div>
+</div>
+<p>Latency here is the average elapsed transaction time of each statement executed
+by every client. It gives 52 tps with the hardware given. As this benchmark is
+for a read-only environment, let us try tweaking shared_buffers and
+effective_cache_size parameters in postgresql.conf file and check the tps
+count. They are at default values in the above test, try increasing the values,
+and check the results.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>-bash-4.1$ ./pgbench -c 100 -T 300 -S -n
+transaction type: &lt;builtin: select only&gt;
+scaling factor: 1000
+query mode: simple
+number of clients: 100
+number of threads: 1
+duration: 300 s
+number of transactions actually processed: 15215
+latency average = 1984.255 ms
+tps = 68.396758 (including connections establishing)
+tps = 68.397322 (excluding connections establishing)
+</pre></div>
+</div>
+<p>Changing the parameters improved performance by 30%.</p>
+<p>pgbench typically runs transactions on its own tables. If you have a workload
+of 50% reads and 50% writes (or a 60:40 environment), you can create a script
+file with a set of statements to achieve the expected workload.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>-bash-4.1$ cat /tmp/bench.sql
+INSERT INTO test_bench VALUES(1,&#39;test&#39;);
+INSERT INTO test_bench VALUES(1,&#39;test&#39;);
+SELECT * FROM test_bench WHERE id=1;
+SELECT * FROM test_bench WHERE id=2;
+-bash-4.1$ ./pgbench -c 100 -T 300 -S -n -f /tmp/bench.sql
+transaction type: multiple scripts
+scaling factor: 1000
+query mode: simple
+number of clients: 100
+number of threads: 1
+duration: 300 s
+number of transactions actually processed: 25436
+latency average = 1183.093 ms
+tps = 84.524217 (including connections establishing)
+tps = 84.525206 (excluding connections establishing)
+SQL script 1: &lt;builtin: select only&gt;
+- weight: 1 (targets 50.0% of total)
+- 12707 transactions (50.0% of total, tps = 42.225555)
+- latency average = 914.240 ms
+- latency stddev = 558.013 ms
+SQL script 2: /tmp/bench.sql
+- weight: 1 (targets 50.0% of total)
+- 12729 transactions (50.0% of total, tps = 42.298662)
+- latency average = 1446.721 ms
+- latency stddev = 765.933 ms
+</pre></div>
+</div>
+</div>
+<div class="section" id="what-are-the-key-performance-factors-in-postgresql">
+<h3>What are the key performance factors in PostgreSQL<a class="headerlink" href="#what-are-the-key-performance-factors-in-postgresql" title="Permalink to this headline">¶</a></h3>
+<p>If we consider a real production environment, it is consolidated with
+different components at application level, hardware like CPU and memory,
+and the underlying operating system. We install PostgreSQL on top of
+the operating system to communicate with other components of the
+production environment. Every environment is different and overall
+performance will be degraded if it is not properly configured. In
+PostgreSQL, some queries run faster and some slow, however it depends
+on configuration that has been set. The goal of database performance
+optimization is to maximize the database throughput and minimize
+connections to achieve the largest possible throughput. Below are
+few key performance factors that affect the database:</p>
+<ul class="simple">
+<li><p>Workload</p></li>
+<li><p>Resource</p></li>
+<li><p>Optimization</p></li>
+<li><p>Contention</p></li>
+</ul>
+<p>Workload consists of batch jobs, dynamic queries for online
+transactions, data analytics queries which are used for generating
+reports. Workload may be different during the period of the day,
+week or month, and depends on applications. Optimization of every
+database is unique. It can be database level configuration or query
+level optimization. We will be covering more about optimization in
+further sections of the post. Contention is the condition where two
+or more components of the workload are attempting to use a single
+resource in a conflicting way. As contention increases, throughput
+decreases.</p>
+</div>
+<div class="section" id="what-are-tips-and-best-practices">
+<h3>What are tips and best practices<a class="headerlink" href="#what-are-tips-and-best-practices" title="Permalink to this headline">¶</a></h3>
+<p>Here are few tips and best practices that you can follow to avoid
+performance issues:</p>
+<ul class="simple">
+<li><p>You can consider running maintenance activities like VACUUM and ANALYZE
+after a large modification in your database. This helps the planner to
+come up with the best plan to execute queries.</p></li>
+<li><p>Look for any need to index tables. It makes queries run much faster,
+rather than having to do full table scans.</p></li>
+<li><p>To make an index traversal much faster, you can use CREATE TABLE AS or
+CLUSTER commands to cluster rows with similar key values.</p></li>
+<li><p>When you see a performance problem, use the EXPLAIN command to look at
+the plan on how the optimizer has decided to execute your query.</p></li>
+<li><p>You can try changing the plans by influencing the optimizer by modifying
+query operators. For example, if you see a sequential scan for your query,
+you can disable seq scan using “SET ENABLE_SEQSCAN TO OFF”. There is no
+guarantee that the optimizer would not choose that operator if you disable
+it. The optimizer just considers the operator to be much more expensive.
+More details are
+here: <a class="reference external" href="https://www.postgresql.org/docs/current/static/runtime-config-query.html">https://www.postgresql.org/docs/current/static/runtime-config-query.html</a></p></li>
+<li><p>You can also try changing the costs parameters like CPU_OPERATOR_COST,
+CPU_INDEX_TUPLE_COST, CPU_TUPLE_COST, RANDOM_PAGE_COST, and
+EFFECTIVE_CACHE_SIZE to influence the optimizer. More details are
+here: <a class="reference external" href="https://www.postgresql.org/docs/current/static/runtime-config-query.html#RUNTIME-CONFIG-QUERY-CONSTANTS">https://www.postgresql.org/docs/current/static/runtime-config-query.html#RUNTIME-CONFIG-QUERY-CONSTANTS</a></p></li>
+<li><p>Always filter data on the server rather than in client application. It
+will minimize the network traffic and gives better performance.</p></li>
+<li><p>To perform common operations, it is always recommended to use server-side
+procedures (triggers and functions). Server-side triggers or functions are
+parsed, planned, and optimized the first time they are used, not every time.</p></li>
+</ul>
+</div>
+<div class="section" id="what-are-common-mistakes-people-make">
+<h3>What are common mistakes people make<a class="headerlink" href="#what-are-common-mistakes-people-make" title="Permalink to this headline">¶</a></h3>
+<p>One of the common mistakes that people do is running the database server
+and database with default parameters. The PostgreSQL default configuration
+is tested in few environments, however not every application would find
+those values optimal. So you need to understand your application behavior
+and based on it, set your configuration parameters. You can use the pgTune
+tool to get values for your parameters based on the hardware that you are
+using. You can have a look at: <a class="reference external" href="http://pgtune.leopard.in.ua/">http://pgtune.leopard.in.ua/</a>. However, keep
+in mind that you will have to test your application with changes that you
+make, to see if there are any performance degradation with the changes.</p>
+<p>Another thing to consider would be indexing the database. Indexes help to
+fetch the data faster, however more indexes create issues with loading the
+data. So always check if any unused indexes are there in the database, and
+get rid of those to reduce the maintenance of those indexes and improve
+loading of data.</p>
+<p>== link:https://wiki.postgresql.org/wiki/Pgbenchtesting[</p>
+</div>
+</div>
+<div class="section" id="pgbenchtesting">
+<h2>Pgbenchtesting<a class="headerlink" href="#pgbenchtesting" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="testing-for-performance-regression-with-pgbench-9-0">
+<h3>Testing for Performance Regression with pgBench 9.0<a class="headerlink" href="#testing-for-performance-regression-with-pgbench-9-0" title="Permalink to this headline">¶</a></h3>
+<p>This page will eventually be merged into Regression Testing with pgbench</p>
+<ul class="simple">
+<li><p>pgBench 9.0 Docs</p></li>
+</ul>
+<p>In order to test for performance regressions (or improvements) it’s necessary
+to install two versions of PostgreSQL on the same machine. Otherwise, you
+have no comparable statistics. For example, you might install 8.4.3 and
+9.0alpha5, or you might install 9.0alpha4 and 9.0alpha5. You also might
+run against the same test version in two modes: with HS/SR and without,
+for example.</p>
+<p>Since pgbench is such a simple test, you’ll need to run several different
+runs to see different aspects of performance. It’s also a good idea to run
+each at least 3 times, since pgbench has some randomness to it.</p>
+<p>Always run the same version of pgBench against both databases, probably the
+newer version.</p>
+<p>Some factors:</p>
+<ul class="simple">
+<li><p><em>Where to run pgBench</em>: Ideally, you want to run it from a separate
+machine from the one holding the database. That way, you don’t have
+pgBench taking CPU away from the database.</p></li>
+<li><p><em>Number of Threads and Clients to Use</em>: This depends on the number of
+cores on the machine(s) you’re testing. For each core available to the
+database, I suggest 1 thread and 2 clients. Note: do not use multi-threaded
+pgBench on non-threadsafe systems; you will get unreliable results.</p></li>
+<li><p><em>PostgreSQL Configuration</em>: use what you’d consider a normal performance
+configuration for the machine being tested. Use (as much as possible)
+the same configuration for both.</p></li>
+<li><p><em>Time vs. Transactions</em>: results which run pgbench for a specific
+amount of time are easier to compare. You also know how long they’ll
+take you.</p></li>
+<li><p><em>Initializing Databases</em>: if you are going to use the same database
+for several test runs in a row, it’s important that you “prime” it by
+running pgbench against it for at least 20 minutes first, or the first
+couple of tests will be misleadingly fast. Alternately, you can initialize
+a new database for each test run.</p></li>
+<li><p><em>Time to Run</em> Ideally, you’d do each pgbench run for at least an hour
+for useful results. However, this interferes with running a lot of
+different tests for people who don’t do this full-time or have a dedicated
+testing server. Make sure to run it for at least 10 minutes, though, to
+get results you can even measure. Possibly run the most interesting
+results in a 1-hour test. All tests below run for 10 minutes.</p></li>
+</ul>
+<p>What follows are some examples of tests. The command line given would
+be appropriate for a machine with 2 cores available to the database and
+thread-safe.</p>
+</div>
+<div class="section" id="memory-vs-disk-performance">
+<h3>Memory vs. Disk Performance<a class="headerlink" href="#memory-vs-disk-performance" title="Permalink to this headline">¶</a></h3>
+<p>You want to test pgbench at the 3 levels of performance related to disk:
+in buffer, mostly in cache, and all on disk. You manipulate this by
+changing the scale factor, following these two formulas, assuming a
+dedicated database server.</p>
+<p>scale / 75 = 1GB database</p>
+<ul class="simple">
+<li><p>In Buffer Test: 0.1 X RAM</p></li>
+<li><p>Mostly Cached: 0.9 X RAM</p></li>
+<li><p>Mostly on Disk: 4.0 X RAM</p></li>
+</ul>
+<p>Note that the mostly-on-disk test may require you to have a considerable
+amount of disk space available for your database.</p>
+<p>Examples: the following assume a 2-core machine with 2GB of RAM, running
+for 10 minutes:</p>
+<p>Buffer test:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">pgbench</span> <span class="o">-</span><span class="n">i</span> <span class="o">-</span><span class="n">s</span> <span class="mi">15</span> <span class="n">bench1</span>
+<span class="n">pgbench</span> <span class="o">-</span><span class="n">c</span> <span class="mi">4</span> <span class="o">-</span><span class="n">j</span> <span class="mi">2</span> <span class="o">-</span><span class="n">T</span> <span class="mi">600</span> <span class="n">bench1</span>
+</pre></div>
+</div>
+<p>Mostly Cache Test:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">pgbench</span> <span class="o">-</span><span class="n">i</span> <span class="o">-</span><span class="n">s</span> <span class="mi">70</span> <span class="n">bench2</span>
+<span class="n">pgbench</span> <span class="o">-</span><span class="n">c</span> <span class="mi">4</span> <span class="o">-</span><span class="n">j</span> <span class="mi">2</span> <span class="o">-</span><span class="n">T</span> <span class="mi">600</span> <span class="n">bench2</span>
+</pre></div>
+</div>
+<p>On-Disk Test:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">pgbench</span> <span class="o">-</span><span class="n">i</span> <span class="o">-</span><span class="n">s</span> <span class="mi">600</span> <span class="n">bench3</span>
+<span class="n">pgbench</span> <span class="o">-</span><span class="n">c</span> <span class="mi">4</span> <span class="o">-</span><span class="n">j</span> <span class="mi">2</span> <span class="o">-</span><span class="n">T</span> <span class="mi">600</span> <span class="n">bench3</span>
+</pre></div>
+</div>
+<p>Measuring the amount of time required to initialize the three databases
+will also provide interesting results.</p>
+</div>
+<div class="section" id="read-vs-write-performance">
+<h3>Read vs. Write Performance<a class="headerlink" href="#read-vs-write-performance" title="Permalink to this headline">¶</a></h3>
+<p>It is also interesting to test relative speed of different write patterns.
+For this set of tests, use either the Mostly Cache or On-Disk size
+database, or something in-between.</p>
+<p>The tests below assume the same machine above. All start with:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">pgbench</span> <span class="o">-</span><span class="n">i</span> <span class="o">-</span><span class="n">s</span> <span class="mi">70</span> <span class="n">bench2</span>
+</pre></div>
+</div>
+<p>Read-Write Test</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">pgbench</span> <span class="o">-</span><span class="n">c</span> <span class="mi">4</span> <span class="o">-</span><span class="n">j</span> <span class="mi">2</span> <span class="o">-</span><span class="n">T</span> <span class="mi">600</span> <span class="n">bench2</span>
+</pre></div>
+</div>
+<p>Read-Only Test</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">pgbench</span> <span class="o">-</span><span class="n">c</span> <span class="mi">4</span> <span class="o">-</span><span class="n">j</span> <span class="mi">2</span> <span class="o">-</span><span class="n">T</span> <span class="mi">600</span> <span class="o">-</span><span class="n">S</span> <span class="n">bench2</span>
+</pre></div>
+</div>
+<p>Simple Write Test</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">pgbench</span> <span class="o">-</span><span class="n">c</span> <span class="mi">4</span> <span class="o">-</span><span class="n">j</span> <span class="mi">2</span> <span class="o">-</span><span class="n">T</span> <span class="mi">600</span> <span class="o">-</span><span class="n">N</span> <span class="n">bench2</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="connections-and-contention">
+<h3>Connections and Contention<a class="headerlink" href="#connections-and-contention" title="Permalink to this headline">¶</a></h3>
+<p>For this series of tests, we want to test how PostgreSQL behaves with
+different levels of connection activity. In this case, it’s very
+relative to how many cores you have. Again, we’re assuming the same
+2-core, 2GB machine.</p>
+<p>Unfortunately, you can only do this test effectively from another
+machine which has at least as many cores as the database server.</p>
+<p>All tests start with:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">pgbench</span> <span class="o">-</span><span class="n">i</span> <span class="o">-</span><span class="n">s</span> <span class="mi">30</span> <span class="n">bench</span>
+</pre></div>
+</div>
+<p>Single-Threaded</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">pgbench</span> <span class="o">-</span><span class="n">c</span> <span class="mi">1</span> <span class="o">-</span><span class="n">T</span> <span class="mi">600</span> <span class="n">bench</span>
+</pre></div>
+</div>
+<p>Normal Load</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">pgbench</span> <span class="o">-</span><span class="n">c</span> <span class="mi">8</span> <span class="o">-</span><span class="n">j</span> <span class="mi">2</span> <span class="o">-</span><span class="n">T</span> <span class="mi">600</span> <span class="n">bench</span>
+</pre></div>
+</div>
+<p>Heavy Contention</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">pgbench</span> <span class="o">-</span><span class="n">c</span> <span class="mi">64</span> <span class="o">-</span><span class="n">j</span> <span class="mi">4</span> <span class="o">-</span><span class="n">T</span> <span class="mi">600</span> <span class="n">bench</span>
+</pre></div>
+</div>
+<p>Heavy Connections without Contention</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">pgbench</span> <span class="o">-</span><span class="n">c</span> <span class="mi">64</span> <span class="o">-</span><span class="n">j</span> <span class="mi">4</span> <span class="o">-</span><span class="n">T</span> <span class="mi">600</span> <span class="o">-</span><span class="n">N</span> <span class="n">bench</span>
+</pre></div>
+</div>
+<p>Heavy Re-connection (simulates no connection pooling)</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">pgbench</span> <span class="o">-</span><span class="n">c</span> <span class="mi">8</span> <span class="o">-</span><span class="n">j</span> <span class="mi">2</span> <span class="o">-</span><span class="n">T</span> <span class="mi">600</span> <span class="o">-</span><span class="n">C</span> <span class="n">bench</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="prepared-vs-ah-hoc-queries">
+<h3>Prepared vs. Ah-hoc Queries<a class="headerlink" href="#prepared-vs-ah-hoc-queries" title="Permalink to this headline">¶</a></h3>
+<p>pgBench 9.0 also allows you to test the effect of prepared queries on
+performance. Assumes the same database server as above.</p>
+<p>Initialize with:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">pgbench</span> <span class="o">-</span><span class="n">i</span> <span class="o">-</span><span class="n">s</span> <span class="mi">70</span> <span class="n">bench</span>
+</pre></div>
+</div>
+<p>Unprepared, Read-Write:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">pgbench</span> <span class="o">-</span><span class="n">c</span> <span class="mi">4</span> <span class="o">-</span><span class="n">j</span> <span class="mi">2</span> <span class="o">-</span><span class="n">T</span> <span class="mi">600</span> <span class="n">bench</span>
+</pre></div>
+</div>
+<p>Prepared, Read-Write:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">pgbench</span> <span class="o">-</span><span class="n">c</span> <span class="mi">4</span> <span class="o">-</span><span class="n">j</span> <span class="mi">2</span> <span class="o">-</span><span class="n">T</span> <span class="mi">600</span> <span class="o">-</span><span class="n">M</span> <span class="n">prepared</span> <span class="n">bench</span>
+</pre></div>
+</div>
+<p>Unprepared, Read-Only:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">pgbench</span> <span class="o">-</span><span class="n">c</span> <span class="mi">4</span> <span class="o">-</span><span class="n">j</span> <span class="mi">2</span> <span class="o">-</span><span class="n">T</span> <span class="mi">600</span> <span class="o">-</span><span class="n">S</span> <span class="n">bench</span>
+</pre></div>
+</div>
+<p>Prepared, Read-Only:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">pgbench</span> <span class="o">-</span><span class="n">c</span> <span class="mi">4</span> <span class="o">-</span><span class="n">j</span> <span class="mi">2</span> <span class="o">-</span><span class="n">T</span> <span class="mi">600</span> <span class="o">-</span><span class="n">M</span> <span class="n">prepared</span> <span class="o">-</span><span class="n">S</span> <span class="n">bench</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="postmark.html" title="Postmark Benchmarking"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="ceph.html" title="Ceph"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">Enterprise Architecture  documentation</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2019, Peter Preeper.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.2.1.
+    </div>
+  </body>
+</html>

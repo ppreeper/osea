@@ -1,0 +1,450 @@
+
+
+<!doctype html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>&lt;no title&gt; &#8212; Enterprise Architecture  documentation</title>
+    <link rel="stylesheet" href="../_static/bizstyle.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/language_data.js"></script>
+    <script type="text/javascript" src="../_static/bizstyle.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="&lt;no title&gt;" href="webdev-checks.html" />
+    <link rel="prev" title="&lt;no title&gt;" href="top_10_javascript_errors_from_1000_projects_and_how_to_avoid_them.html" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <!--[if lt IE 9]>
+    <script type="text/javascript" src="_static/css3-mediaqueries.js"></script>
+    <![endif]-->
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="webdev-checks.html" title="&lt;no title&gt;"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="top_10_javascript_errors_from_1000_projects_and_how_to_avoid_them.html" title="&lt;no title&gt;"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">Enterprise Architecture  documentation</a> &#187;</li> 
+      </ul>
+    </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="top_10_javascript_errors_from_1000_projects_and_how_to_avoid_them.html"
+                        title="previous chapter">&lt;no title&gt;</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="webdev-checks.html"
+                        title="next chapter">&lt;no title&gt;</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/misc/trying_clean_architecture_on_golang.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <p>#Trying Clean Architecture on Golang
+Independent, Testable , and Clean</p>
+<p>After reading the uncle Bob’s Clean Architecture Concept, I’m trying to implement it in Golang. This is a similar architecture that we used in our company, Kurio - App Berita Indonesia, but a little different structure. Not too different, same concept but different in folder structure.</p>
+<p>You can look for a sample project here [[<a class="reference external" href="https://github.com/bxcodec/go-clean">https://github.com/bxcodec/go-clean</a>-arch|https://github.com/bxcodec/go-clean-arch]], a sample CRUD management article.</p>
+<p>{{<a class="reference external" href="https://cdn-images-1.medium.com/max/800/1*CyteJRpIHC-DFE23UtlZfQ.png">https://cdn-images-1.medium.com/max/800/1*CyteJRpIHC-DFE23UtlZfQ.png</a>}}</p>
+<p>&gt; Disclaimer : I’m not recommending any library or framework used here. You could replace anything here, with your own or third party that has the same functions.</p>
+<p>##Basic</p>
+<p>As we know the constraint before designing the Clean Architecture are :</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>Independent of Frameworks. The architecture does not depend on the existence of some library of feature laden software. This allows you to use such frameworks as tools, rather than having to cram your system into their limited constraints.</p></li>
+<li><p>Testable. The business rules can be tested without the UI, Database, Web Server, or any other external element.</p></li>
+<li><p>Independent of UI. The UI can change easily, without changing the rest of the system. A Web UI could be replaced with a console UI, for example, without changing the business rules.</p></li>
+<li><p>Independent of Database. You can swap out Oracle or SQL Server, for Mongo, BigTable, CouchDB, or something else. Your business rules are not bound to the database.</p></li>
+<li><p>Independent of any external agency. In fact your business rules simply don’t know anything at all about the outside world.</p></li>
+</ul>
+</div></blockquote>
+<p>More at [[<a class="reference external" href="https://8thlight.com/blog/uncle-bob/2012/08/13/the-clean-architecture">https://8thlight.com/blog/uncle-bob/2012/08/13/the-clean-architecture</a>.html|https://8thlight.com/blog/uncle-bob/2012/08/13/the-clean-architecture.html]]</p>
+<p>So, based on this constraint, every layer must independent and testable.</p>
+<p>If Uncle Bob’s Architecture, has 4 layer :</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>Entities</p></li>
+<li><p>Usecase</p></li>
+<li><p>Controller</p></li>
+<li><p>Framework &amp; Driver</p></li>
+</ul>
+</div></blockquote>
+<p>In my projects, I’m using 4 too :</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>Models</p></li>
+<li><p>Repository</p></li>
+<li><p>Usecase</p></li>
+<li><p>Delivery</p></li>
+</ul>
+</div></blockquote>
+<p>###Models</p>
+<p>Same as Entities, will used in all layer. This layer, will store any Object’s Struct and it’s method. Example : Article, Student, Book.
+Example struct :</p>
+<p>&lt;code go&gt;
+import “time”</p>
+<dl class="simple">
+<dt>type Article struct {</dt><dd><p>ID    int64   json:”id”
+Title   string  json:”title”
+Content  string  json:”content”
+UpdatedAt time.Time json:”updated_at”
+CreatedAt time.Time json:”created_at”</p>
+</dd>
+</dl>
+<p>}
+&lt;/code&gt;</p>
+<p>Any entities, or model will stored here.</p>
+<p>###Repository</p>
+<p>Repository will store any Database handler. Querying, or Creating/ Inserting into any database will stored here. This layer will act for CRUD to database only. No business process happen here. Only plain function to Database.</p>
+<p>This layer also have responsibility to choose what DB will used in Application. Could be Mysql, MongoDB, MariaDB, Postgresql whatever, will decided here.</p>
+<p>If using ORM, this layer will control the input, and give it directly to ORM services.</p>
+<p>If calling microservices, will handled here. Create HTTP Request to other services, and sanitize the data. This layer, must fully act as a repository. Handle all data input - output no specific logic happen.</p>
+<p>This Repository layer will depends to Connected DB , or other microservices if exists.</p>
+<p>###Usecase</p>
+<p>This layer will act as the business process handler. Any process will handled here. This layer will decide, which repository layer will use. And have responsibility to provide data to serve into delivery. Process the data doing calculation or anything will done here.</p>
+<p>Usecase layer will accept any input from Delivery layer, that already sanitized, then process the input could be storing into DB , or Fetching from DB ,etc.</p>
+<p>This Usecase layer will depends to Repository Layer</p>
+<p>###Delivery</p>
+<p>This layer will act as the presenter. Decide how the data will presented. Could be as REST API, or HTML File, or gRPC whatever the delivery type.
+This layer also will accept the input from user. Sanitize the input and sent it to Usecase layer.</p>
+<p>For my sample project, I’m using REST API as the delivery method.
+Client will call the resource endpoint over network, and the Delivery layer will get the input or request, and sent it to Usecase Layer.</p>
+<p>This layer will depends to Usecase Layer.</p>
+<p>###Communications Between Layer</p>
+<p>Except Models, each layer will communicate through inteface. For example, Usecase layer need the Repository layer, so how they communicate? Repository will provide an interface to be their contract and communication.</p>
+<p>Example of Repository’s Interface</p>
+<p>&lt;code go&gt;
+package repository</p>
+<p>import models “github.com/bxcodec/go-clean-arch/article”</p>
+<dl class="simple">
+<dt>type ArticleRepository interface {</dt><dd><p>Fetch(cursor string, num int64) ([]*models.Article, error)
+GetByID(id int64) (<a href="#id1"><span class="problematic" id="id2">*</span></a>models.Article, error)
+GetByTitle(title string) (<a href="#id3"><span class="problematic" id="id4">*</span></a>models.Article, error)
+Update(article <a href="#id5"><span class="problematic" id="id6">*</span></a>models.Article) (<a href="#id7"><span class="problematic" id="id8">*</span></a>models.Article, error)
+Store(a <a href="#id9"><span class="problematic" id="id10">*</span></a>models.Article) (int64, error)
+Delete(id int64) (bool, error)</p>
+</dd>
+</dl>
+<p>}
+&lt;/code&gt;</p>
+<p>Usecase layer will communicate to Repository using this contract, and Repository layer <strong>MUST</strong> implement this interface so can used by Usecase</p>
+<p>Example of Usecase’s Interface</p>
+<p>&lt;code go&gt;
+package usecase</p>
+<dl class="simple">
+<dt>import (</dt><dd><p>“github.com/bxcodec/go-clean-arch/article”</p>
+</dd>
+</dl>
+<p>)</p>
+<dl class="simple">
+<dt>type ArticleUsecase interface {</dt><dd><p>Fetch(cursor string, num int64) ([]*article.Article, string, error)
+GetByID(id int64) (<a href="#id11"><span class="problematic" id="id12">*</span></a>article.Article, error)
+Update(ar <a href="#id13"><span class="problematic" id="id14">*</span></a>article.Article) (<a href="#id15"><span class="problematic" id="id16">*</span></a>article.Article, error)
+GetByTitle(title string) (<a href="#id17"><span class="problematic" id="id18">*</span></a>article.Article, error)
+Store(<a href="#id19"><span class="problematic" id="id20">*</span></a>article.Article) (<a href="#id21"><span class="problematic" id="id22">*</span></a>article.Article, error)
+Delete(id int64) (bool, error)</p>
+</dd>
+</dl>
+<p>}
+&lt;/code&gt;</p>
+<p>Same with Usecase, Delivery layer will use this contract interface. And Usecase layer <strong>MUST</strong> implement this interface.</p>
+<p>##Testing Each Layer</p>
+<p>As we know, clean means independent. Each layer testable even other layers doesn’t exist yet.</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>Models Layer</p></li>
+</ul>
+<blockquote>
+<div><ul class="simple">
+<li><p>This layer only tested if any function/method declared in any of Struct.</p></li>
+<li><p>And can test easily and independent to other layers.</p></li>
+</ul>
+</div></blockquote>
+<ul class="simple">
+<li><p>Repository</p></li>
+</ul>
+<blockquote>
+<div><ul class="simple">
+<li><p>To test this layer, the better ways is doing Integrations testing. But you also can doing mocking for each test. I’m using github.com/DATA-DOG/go-sqlmock as my helper to mock query process msyql.</p></li>
+</ul>
+</div></blockquote>
+<ul class="simple">
+<li><p>Usecase</p></li>
+</ul>
+<blockquote>
+<div><ul class="simple">
+<li><p>Because this layer depends to Repository layer, means this layer need Repository layer for testing . So we must make a mockup of Repository that mocked with mockery, based on the contract interface defined before.</p></li>
+</ul>
+</div></blockquote>
+<ul class="simple">
+<li><p>Delivery</p></li>
+</ul>
+<blockquote>
+<div><ul class="simple">
+<li><p>Same with Usecase, because this layer depends to Usecase layer, means we need Usecase layer for testing. And Usecase layer also must mocked with mockery, based on the contract interface defined before</p></li>
+</ul>
+</div></blockquote>
+</div></blockquote>
+<p>For mocking , I use mockery for golang by vektra could be seen here <a class="reference external" href="https://github.com/vektra/mockery">https://github.com/vektra/mockery</a>
+Repository Test</p>
+<p>To test this layer, like I said before , I’m using a sql-mock to mock my query process. You can use like what I used here github.com/DATA-DOG/go-sqlmock , or another that have similar function</p>
+<p>###Repository Test</p>
+<p>To test this layer, like I said before , I’m using a sql-mock to mock my query process. You can use like what I used here github.com/DATA-DOG/go-sqlmock , or another that have similar function</p>
+<p>&lt;code go&gt;
+func TestGetByID(t <a href="#id23"><span class="problematic" id="id24">*</span></a>testing.T) {</p>
+<blockquote>
+<div><p>db, mock, err := sqlmock.New()
+if err != nil {</p>
+<blockquote>
+<div><dl class="simple">
+<dt>t.Fatalf(“an error ‘%s’ was not expected when opening a stub</dt><dd><p>database connection”, err)</p>
+</dd>
+</dl>
+</div></blockquote>
+<p>}</p>
+<p>defer db.Close()
+rows := sqlmock.NewRows([]string{</p>
+<blockquote>
+<div><p>“id”, “title”, “content”, “updated_at”, “created_at”}).
+AddRow(1, “title 1”, “Content 1”, time.Now(), time.Now())</p>
+</div></blockquote>
+<dl class="simple">
+<dt>query := “SELECT id,title,content,updated_at, created_at FROM</dt><dd><p>article WHERE ID = \?”</p>
+</dd>
+</dl>
+<p>mock.ExpectQuery(query).WillReturnRows(rows)</p>
+<p>a := articleRepo.NewMysqlArticleRepository(db)</p>
+<p>num := int64(1)</p>
+<p>anArticle, err := a.GetByID(num)</p>
+<p>assert.NoError(t, err)
+assert.NotNil(t, anArticle)</p>
+</div></blockquote>
+<p>}
+&lt;/code&gt;</p>
+<p>###Usecase Test</p>
+<p>Sample test for Usecase layer, that depends to Repository layer.</p>
+<p>&lt;code go&gt;
+package usecase_test</p>
+<dl>
+<dt>import (</dt><dd><p>“errors”
+“strconv”
+“testing”</p>
+<p>“github.com/bxcodec/faker”
+models “github.com/bxcodec/go-clean-arch/article”
+“github.com/bxcodec/go-clean-arch/article/repository/mocks”
+ucase “github.com/bxcodec/go-clean-arch/article/usecase”
+“github.com/stretchr/testify/assert”
+“github.com/stretchr/testify/mock”</p>
+</dd>
+</dl>
+<p>)</p>
+<dl>
+<dt>func TestFetch(t <a href="#id25"><span class="problematic" id="id26">*</span></a>testing.T) {</dt><dd><p>mockArticleRepo := new(mocks.ArticleRepository)
+var mockArticle models.Article
+err := faker.FakeData(&amp;mockArticle)
+assert.NoError(t, err)</p>
+<p>mockListArtilce := make([]*models.Article, 0)
+mockListArtilce = append(mockListArtilce, &amp;mockArticle)
+mockArticleRepo.On(“Fetch”, mock.AnythingOfType(“string”), mock.AnythingOfType(“int64”)).Return(mockListArtilce, nil)
+u := ucase.NewArticleUsecase(mockArticleRepo)
+num := int64(1)
+cursor := “12”
+list, nextCursor, err := u.Fetch(cursor, num)
+cursorExpected := strconv.Itoa(int(mockArticle.ID))
+assert.Equal(t, cursorExpected, nextCursor)
+assert.NotEmpty(t, nextCursor)
+assert.NoError(t, err)
+assert.Len(t, list, len(mockListArtilce))</p>
+<p>mockArticleRepo.AssertCalled(t, “Fetch”, mock.AnythingOfType(“string”), mock.AnythingOfType(“int64”))</p>
+</dd>
+</dl>
+<p>}
+&lt;/code&gt;</p>
+<p>Mockery will generate a mockup of repository layer for me. So I don’t need to finish my Repository layer first. I can work finishing my Usecase first even my Repository layer not implemented yet.</p>
+<p>###Delivery Test</p>
+<p>Delivery test will depends on how you to deliver the data. If using http REST API, we can use httptest a builtin package for httptest in golang.</p>
+<p>Because it’s depends to Usecase, so we need a mock of Usecase . Same with Repository, i’m also using Mockery to mock my usecase, for delivery testing.</p>
+<p>&lt;code go&gt;
+func TestGetByID(t <a href="#id27"><span class="problematic" id="id28">*</span></a>testing.T) {</p>
+<blockquote>
+<div><p>var mockArticle models.Article
+err := faker.FakeData(&amp;mockArticle)
+assert.NoError(t, err)
+mockUCase := new(mocks.ArticleUsecase)
+num := int(mockArticle.ID)
+mockUCase.On(“GetByID”, int64(num)).Return(&amp;mockArticle, nil)
+e := echo.New()
+req, err := http.NewRequest(echo.GET, “/article/” +</p>
+<blockquote>
+<div><p>strconv.Itoa(int(num)), strings.NewReader(“”))</p>
+</div></blockquote>
+<p>assert.NoError(t, err)</p>
+<p>rec := httptest.NewRecorder()
+c := e.NewContext(req, rec)
+c.SetPath(“article/:id”)
+c.SetParamNames(“id”)
+c.SetParamValues(strconv.Itoa(num))</p>
+<dl class="simple">
+<dt>handler:= articleHttp.ArticleHandler{</dt><dd><p>AUsecase: mockUCase,
+Helper: httpHelper.HttpHelper{}</p>
+</dd>
+</dl>
+<p>}
+handler.GetByID(c)</p>
+<p>assert.Equal(t, http.StatusOK, rec.Code)
+mockUCase.AssertCalled(t, “GetByID”, int64(num))</p>
+</div></blockquote>
+<p>}
+&lt;/code&gt;</p>
+<p>##Final Output and The Merging</p>
+<p>After finish all layer and already passed on testing. You should merge into one system in main.go in root project.</p>
+<p>Here you will define, and create every needs to environment, and merge all layers into one.</p>
+<p>Look for my main.go as example:</p>
+<p>&lt;code go&gt;
+package main</p>
+<dl>
+<dt>import (</dt><dd><p>“database/sql”
+“fmt”
+“net/url”</p>
+<p>httpDeliver “github.com/bxcodec/go-clean-arch/article/delivery/http”
+articleRepo “github.com/bxcodec/go-clean-arch/article/repository/mysql”
+articleUcase “github.com/bxcodec/go-clean-arch/article/usecase”
+cfg “github.com/bxcodec/go-clean-arch/config/env”
+“github.com/bxcodec/go-clean-arch/config/middleware”
+_ “github.com/go-sql-driver/mysql”
+“github.com/labstack/echo”</p>
+</dd>
+</dl>
+<p>)</p>
+<p>var config cfg.Config</p>
+<dl>
+<dt>func init() {</dt><dd><p>config = cfg.NewViperConfig()</p>
+<dl class="simple">
+<dt>if config.GetBool(debug) {</dt><dd><p>fmt.Println(“Service RUN on DEBUG mode”)</p>
+</dd>
+</dl>
+<p>}</p>
+</dd>
+</dl>
+<p>}</p>
+<p>func main() {</p>
+<blockquote>
+<div><p>dbHost := config.GetString(database.host)
+dbPort := config.GetString(database.port)
+dbUser := config.GetString(database.user)
+dbPass := config.GetString(database.pass)
+dbName := config.GetString(database.name)
+connection := fmt.Sprintf(“%s:%s&#64;tcp(%s:%s)/%s”, dbUser, dbPass, dbHost, dbPort, dbName)
+val := url.Values{}
+val.Add(“parseTime”, “1”)
+val.Add(“loc”, “Asia/Jakarta”)
+dsn := fmt.Sprintf(“%s?%s”, connection, val.Encode())
+dbConn, err := sql.Open(mysql, dsn)
+if err != nil &amp;&amp; config.GetBool(“debug”) {</p>
+<blockquote>
+<div><p>fmt.Println(err)</p>
+</div></blockquote>
+<p>}
+defer dbConn.Close()
+e := echo.New()
+middL := middleware.InitMiddleware()
+e.Use(middL.CORS)</p>
+<p>ar := articleRepo.NewMysqlArticleRepository(dbConn)
+au := articleUcase.NewArticleUsecase(ar)</p>
+<p>httpDeliver.NewArticleHttpHandler(e, au)</p>
+<p>e.Start(config.GetString(“server.address”))</p>
+</div></blockquote>
+<p>}
+&lt;/code&gt;</p>
+<p>You can see, every layer merge into one with it’s dependencies.</p>
+<p>##Conclusion</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>In short, if drawn in a diagram, can seen below</p></li>
+</ul>
+</div></blockquote>
+<p>{{<a class="reference external" href="https://cdn-images-1.medium.com/max/800/1*GQdkAd7IwIwOWW-WLG5ikQ.png">https://cdn-images-1.medium.com/max/800/1*GQdkAd7IwIwOWW-WLG5ikQ.png</a>}}</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>Every library used here you can change by your own. Because the main point of clean architecture is : no matter your library, but your architecture is clean, and testable also independent</p></li>
+<li><p>This is how i organized my projects, you could argue, or agree, or maybe improve this for more better, just leave a comment and share this</p></li>
+</ul>
+</div></blockquote>
+<p>###The Sample Projects</p>
+<p>The sample project can seen here <a class="reference external" href="https://github.com/bxcodec/go-clean-arch">https://github.com/bxcodec/go-clean-arch</a></p>
+<p>Libary used for my project:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>Glide : for package management</p></li>
+<li><p>go-sqlmock from github.com/DATA-DOG/go-sqlmock</p></li>
+<li><p>Testify : for testing</p></li>
+<li><p>Echo Labstack (Golang Web Framework) for Delivery layer</p></li>
+<li><p>Viper : for environment configurations</p></li>
+</ul>
+</div></blockquote>
+<p>Further Reading about Clean Architecture :</p>
+<blockquote>
+<div><ul class="simple">
+<li><p><a class="reference external" href="https://8thlight.com/blog/uncle-bob/2012/08/13/the-clean-architecture.html">https://8thlight.com/blog/uncle-bob/2012/08/13/the-clean-architecture.html</a></p></li>
+<li><p><a class="reference external" href="http://manuel.kiessling.net/2012/09/28/applying-the-clean-architecture-to-go-applications/">http://manuel.kiessling.net/2012/09/28/applying-the-clean-architecture-to-go-applications/</a> . Another version of Clean Architecture in Golang</p></li>
+</ul>
+</div></blockquote>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="webdev-checks.html" title="&lt;no title&gt;"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="top_10_javascript_errors_from_1000_projects_and_how_to_avoid_them.html" title="&lt;no title&gt;"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">Enterprise Architecture  documentation</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2019, Peter Preeper.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.2.1.
+    </div>
+  </body>
+</html>

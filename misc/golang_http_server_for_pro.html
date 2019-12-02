@@ -1,0 +1,236 @@
+
+
+<!doctype html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>&lt;no title&gt; &#8212; Enterprise Architecture  documentation</title>
+    <link rel="stylesheet" href="../_static/bizstyle.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/language_data.js"></script>
+    <script type="text/javascript" src="../_static/bizstyle.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="&lt;no title&gt;" href="how_i_went_from_newbie_to_software_engineer_in_9_months_while_working_full_time.html" />
+    <link rel="prev" title="[source,go]" href="Golang HTTP server for pro.html" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <!--[if lt IE 9]>
+    <script type="text/javascript" src="_static/css3-mediaqueries.js"></script>
+    <![endif]-->
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="how_i_went_from_newbie_to_software_engineer_in_9_months_while_working_full_time.html" title="&lt;no title&gt;"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="Golang HTTP server for pro.html" title="[source,go]"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">Enterprise Architecture  documentation</a> &#187;</li> 
+      </ul>
+    </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="Golang HTTP server for pro.html"
+                        title="previous chapter">[source,go]</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="how_i_went_from_newbie_to_software_engineer_in_9_months_while_working_full_time.html"
+                        title="next chapter">&lt;no title&gt;</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/misc/golang_http_server_for_pro.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <p>#Golang HTTP server for pro</p>
+<p>How to start a new web project with Go, using Routing, Middleware and Let’s Encrypt certification.</p>
+<p>Golang have a great http server package: net/http As always, it’s simple and very powerful. Define the function that handle a route, and let’s listen to port 80.</p>
+<p>&lt;code go&gt;
+package main</p>
+<dl class="simple">
+<dt>import (</dt><dd><p>“io”
+“net/http”</p>
+</dd>
+</dl>
+<p>)</p>
+<dl class="simple">
+<dt>func main() {</dt><dd><p>http.HandleFunc(“/”, helloWorldHandler)
+http.ListenAndServe(“:80”, nil)</p>
+</dd>
+</dl>
+<p>}</p>
+<dl class="simple">
+<dt>func helloWorldHandler(w http.ResponseWriter, r <a href="#id1"><span class="problematic" id="id2">*</span></a>http.Request) {</dt><dd><p>io.WriteString(w, “Hello world!”)</p>
+</dd>
+</dl>
+<p>}
+&lt;/code&gt;</p>
+<p>Nice, but let’s use a more powerfull router like the Gorilla package: gorilla/mux [[<a class="reference external" href="http://www.gorillatoolkit.org/pkg">http://www.gorillatoolkit.org/pkg</a>/mux|http://www.gorillatoolkit.org/pkg/mux]]</p>
+<p>It implements a request router and a dispatcher. It allows you to create routes with named parameters, restricted on http verb and host/domain management.</p>
+<p>Updating the previous exemple with this package allow us to manage easily many routes with simples configurations:</p>
+<p>&lt;code go&gt;
+func main() {</p>
+<blockquote>
+<div><p>r := mux.NewRouter()
+r.HandleFunc(“/products/{key}”, ProductHandler)
+r.HandleFunc(“/articles/{category}/”, ArticlesCategoryHandler)
+r.HandleFunc(“/articles/{category}/{id:[0-9]+}”, ArticleHandler)
+http.Handle(“/”, r)</p>
+</div></blockquote>
+<p>}
+&lt;/code&gt;</p>
+<p>##Use alice to manage our middleware</p>
+<p>[[<a class="reference external" href="https://en.wikipedia.org/wiki">https://en.wikipedia.org/wiki</a>/Middleware|Middleware pattern]] is very common if you use the webserver package. If you don’t have seen it yet, you should watch this video from Mat Ryer at the Golang UK Conference 2015 about the power of middleware. ([[<a class="reference external" href="https://medium.com/&#64;matryer/writing-middleware-in-golang-and-how-go-makes-it-so-much-fun">https://medium.com/&#64;matryer/writing-middleware-in-golang-and-how-go-makes-it-so-much-fun</a>-4375c1246e81|Full blog post here]])</p>
+<p>And another great article about the middleware patterns [[<a class="reference external" href="http://www.alexedwards.net/blog/making-and-using">http://www.alexedwards.net/blog/making-and-using</a>-middleware|http://www.alexedwards.net/blog/making-and-using-middleware]]</p>
+<p>As described by it author ([[<a class="reference external" href="https://github.com/justinas">https://github.com/justinas</a>/alice|Github]]):</p>
+<blockquote>
+<div><p>Alice provides a convenient way to chain your HTTP middleware functions and the app handler.</p>
+</div></blockquote>
+<p>In short, it transforms</p>
+<p>&lt;code go&gt;
+Middleware1(Middleware2(Middleware3(App)))
+&lt;/code&gt;</p>
+<p>to</p>
+<p>&lt;code go&gt;
+alice.New(Middleware1, Middleware2, Middleware3).Then(App)
+&lt;/code&gt;</p>
+<p>Here’s our first exemple, updated with Alice’s usage:</p>
+<p>&lt;code go&gt;
+func main() {</p>
+<blockquote>
+<div><p>errorChain := alice.New(loggerHandler, recoverHandler)</p>
+</div></blockquote>
+<dl class="simple">
+<dt>r := mux.NewRouter()</dt><dd><p>r.HandleFunc(“/products/{key}”, ProductHandler)
+r.HandleFunc(“/articles/{category}/”, ArticlesCategoryHandler)
+r.HandleFunc(“/articles/{category}/{id:[0-9]+}”, ArticleHandler)
+http.Handle(“/”, errorChain.then(r))</p>
+</dd>
+</dl>
+<p>}
+&lt;/code&gt;</p>
+<p>You can chain many handler, but here are the two described:</p>
+<p>&lt;code go&gt;
+func loggerHandler(h http.Handler) http.Handler {</p>
+<blockquote>
+<div><dl class="simple">
+<dt>return http.HandlerFunc(func(w http.ResponseWriter, r <a href="#id3"><span class="problematic" id="id4">*</span></a>http.Request) {</dt><dd><p>start := time.Now()
+h.ServeHTTP(w, r)
+log.Printf(“&lt;&lt; %s %s %v”, r.Method, r.URL.Path, time.Since(start))</p>
+</dd>
+</dl>
+<p>})</p>
+</div></blockquote>
+<p>}
+&lt;/code&gt;</p>
+<p>The loggerHandler, and the recoverHandler:</p>
+<p>&lt;code go&gt;
+func recoverHandler(next http.Handler) http.Handler {</p>
+<blockquote>
+<div><dl>
+<dt>fn := func(w http.ResponseWriter, r <a href="#id5"><span class="problematic" id="id6">*</span></a>http.Request) {</dt><dd><dl>
+<dt>defer func() {</dt><dd><dl class="simple">
+<dt>if err := recover(); err != nil {</dt><dd><p>log.Printf(“panic: %+v”, err)
+http.Error(w, http.StatusText(500), 500)</p>
+</dd>
+</dl>
+<p>}</p>
+</dd>
+</dl>
+<p>}()</p>
+</dd>
+</dl>
+</div></blockquote>
+<dl class="simple">
+<dt>next.ServeHTTP(w, r)</dt><dd><p>}</p>
+</dd>
+</dl>
+<p>return http.HandlerFunc(fn)
+}
+&lt;/code&gt;</p>
+<p>At this point, we have a HTTP server, with a powerful routing package. You can also manage middleware with ease, to extend quickly the functionalities of your application.</p>
+<p>##HTTP server is nice, HTTPS server is better!</p>
+<p>Easy and fast way to create a secure HTTP server, it to use Let’s Encrypt service. Let’s Encrypt uses the [[<a class="reference external" href="https://en.wikipedia.org/wiki">https://en.wikipedia.org/wiki</a>/Automated_Certificate_Management_Environment|ACME protocol]] to verify that you control a given domain name and to issue you a certificate. It’s called a certification, and yes, there’s a Auto-Certification package: [[<a class="reference external" href="https://godoc.org/golang.org/x/crypto/acme">https://godoc.org/golang.org/x/crypto/acme</a>/autocert|acme/autocert]]</p>
+<p>&lt;code go&gt;
+m := autocert.Manager{</p>
+<blockquote>
+<div><p>Prompt:   autocert.AcceptTOS,
+HostPolicy: autocert.HostWhitelist(“www.checknu.de”),
+Cache:   autocert.DirCache(“/home/letsencrypt/”),</p>
+</div></blockquote>
+<p>}
+&lt;/code&gt;</p>
+<p>Create the http.server using tls:</p>
+<p>&lt;code go&gt;
+server := &amp;http.Server{</p>
+<blockquote>
+<div><p>Addr: “:443”,
+TLSConfig: &amp;tls.Config{</p>
+<blockquote>
+<div><p>GetCertificate: m.GetCertificate,</p>
+</div></blockquote>
+<p>},</p>
+</div></blockquote>
+<p>}</p>
+<p>err := server.ListenAndServeTLS(“”, “”) if err != nil {     log.Fatal(“ListenAndServe: “, err) }
+&lt;/code&gt;</p>
+<p>{{<a class="reference external" href="https://cdn-images-1.medium.com/max/800/1*Wn9uFSeup0blHnxweTFdoQ">https://cdn-images-1.medium.com/max/800/1*Wn9uFSeup0blHnxweTFdoQ</a>.png|And now it’s done!}}</p>
+<p>You can find this HTTP server here: {{<a class="reference external" href="https://github.com/ScullWM/go">https://github.com/ScullWM/go</a>-bootstrap|ScullWM/go-bootstrap}}</p>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="how_i_went_from_newbie_to_software_engineer_in_9_months_while_working_full_time.html" title="&lt;no title&gt;"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="Golang HTTP server for pro.html" title="[source,go]"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">Enterprise Architecture  documentation</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2019, Peter Preeper.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.2.1.
+    </div>
+  </body>
+</html>

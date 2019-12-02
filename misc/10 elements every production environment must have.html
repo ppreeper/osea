@@ -1,0 +1,280 @@
+
+
+<!doctype html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>10 elements every production environment must have &#8212; Enterprise Architecture  documentation</title>
+    <link rel="stylesheet" href="../_static/bizstyle.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/language_data.js"></script>
+    <script type="text/javascript" src="../_static/bizstyle.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="10 IT risk management issues that are often overlooked" href="10_it_risk_management_issues_that_are_often_overlooked.html" />
+    <link rel="prev" title="10 efficient ways to produce useful metrics" href="10_efficient_ways_to_produce_useful_metrics.html" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <!--[if lt IE 9]>
+    <script type="text/javascript" src="_static/css3-mediaqueries.js"></script>
+    <![endif]-->
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="10_it_risk_management_issues_that_are_often_overlooked.html" title="10 IT risk management issues that are often overlooked"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="10_efficient_ways_to_produce_useful_metrics.html" title="10 efficient ways to produce useful metrics"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">Enterprise Architecture  documentation</a> &#187;</li> 
+      </ul>
+    </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="../index.html">Table of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">10 elements every production environment must have</a><ul>
+<li><a class="reference internal" href="#redundancy">1. Redundancy</a></li>
+<li><a class="reference internal" href="#disaster-recovery-capability">2. Disaster recovery capability</a></li>
+<li><a class="reference internal" href="#secure-access">3. Secure access</a></li>
+<li><a class="reference internal" href="#standardized-access">4. Standardized access</a></li>
+<li><a class="reference internal" href="#minimalism">5. Minimalism</a></li>
+<li><a class="reference internal" href="#a-patching-strategy">6. A patching strategy</a></li>
+<li><a class="reference internal" href="#segregated-networks">7. Segregated networks</a></li>
+<li><a class="reference internal" href="#change-management">8. Change management</a></li>
+<li><a class="reference internal" href="#auditing-logging-and-alerting">9. Auditing, logging, and alerting</a></li>
+<li><a class="reference internal" href="#appropriate-documentation">10. Appropriate documentation</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="10_efficient_ways_to_produce_useful_metrics.html"
+                        title="previous chapter">10 efficient ways to produce useful metrics</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="10_it_risk_management_issues_that_are_often_overlooked.html"
+                        title="next chapter">10 IT risk management issues that are often overlooked</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/misc/10 elements every production environment must have.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="elements-every-production-environment-must-have">
+<h1>10 elements every production environment must have<a class="headerlink" href="#elements-every-production-environment-must-have" title="Permalink to this headline">¶</a></h1>
+<p>By Scott Matteson | June 16, 2017, 8:18 AM PST</p>
+<p>One company recently experienced disaster when an employee accidentally
+destroyed a production database. Here are 10 ways to prevent future scenarios
+like that.</p>
+<p>A recent story regarding a programmer who was fired the first day on the
+job for accidentally destroying a production database was the stuff of
+nightmares for technologists.</p>
+<p>The sad tale, posted on Reddit by the unfortunate ex-employee, details some
+disturbing elements such as the new hire being given administrative access
+in production, orientation documents containing inaccurate information which
+produced the mistake and — worst of all —the fact no backups of the database
+existed, which heightened the impact of the crisis.</p>
+<p>Any company or IT professional can learn a lot from this debacle since it
+speaks to best practices for production environments. With that in mind,
+here are 10 elements every production environment should have to ensure
+maximum uptime, stability — and job security for those who maintain it.</p>
+<div class="section" id="redundancy">
+<h2>1. Redundancy<a class="headerlink" href="#redundancy" title="Permalink to this headline">¶</a></h2>
+<p>Redundancy is probably one of the most important ingredients of a successful
+production environment. If a system or service is critical to the organization,
+either by producing revenue or preventing the loss of revenue, there should
+never be a single instance of it. Use application as well as system redundancy
+to ensure you can withstand the loss of an entire server. Power and network
+connections should also be redundant. Some organizations even have entire
+site redundancies so they can run their operations in an entirely different
+location.</p>
+<p>Cost is often cited as a factor against implementing robust redundancy,
+but keep in mind that investing in redundancy, while potentially painful
+at the onset, can reap hefty dividends down the road — even if only for
+the peace of mind it provides.</p>
+</div>
+<div class="section" id="disaster-recovery-capability">
+<h2>2. Disaster recovery capability<a class="headerlink" href="#disaster-recovery-capability" title="Permalink to this headline">¶</a></h2>
+<p>A “disaster” can have an ambiguous meaning. It refers to any unexpected
+misfortune or failure ranging from a crashed application to the loss of
+an entire site due to a power outage. Plan for disasters which will
+impact your ability to run a production environment and ensure you have
+appropriate solutions in place. Some examples:</p>
+<ul class="simple">
+<li><p>Perform nightly backups of all systems and confirm restore functionality</p></li>
+<li><p>Ship backup tapes/hard drives off-site (or copy data to the cloud so
+it will be accessible remotely)</p></li>
+<li><p>Take snapshots of SAN volumes and virtual machines to be able to roll
+back to a known good state</p></li>
+<li><p>Keep spare hard drives, network cards and servers on hand for emergency
+situations</p></li>
+<li><p>Install a generator to guard against power outages</p></li>
+</ul>
+</div>
+<div class="section" id="secure-access">
+<h2>3. Secure access<a class="headerlink" href="#secure-access" title="Permalink to this headline">¶</a></h2>
+<p>The incident involving the developer deleting a production database would
+never have happened had the company followed one simple guideline: only
+provide production access to individuals who actually need it, and configure
+permissions to match their job role. Store any system or service account
+passwords in a secured, centralized password database.</p>
+<p>Unless someone is going to directly work in production from day one, don’t
+give them the key to do so. If they do need the access, determine whether
+“read” permissions are sufficient so they can’t actually change the data.</p>
+<p>If employees with production access leave the company, make sure to disable
+or lock their accounts. If administrators with production access depart,
+change all the passwords involved such as root or administrator passwords.</p>
+</div>
+<div class="section" id="standardized-access">
+<h2>4. Standardized access<a class="headerlink" href="#standardized-access" title="Permalink to this headline">¶</a></h2>
+<p>There are a variety of methods to access production data; via a web
+browser, SSH connectivity, remote desktop, a Squirrel database client,
+secure FTP or various other methods. Ensure users have a standard method
+for production access involving the same client or portal.</p>
+<p>A “jump box” or bastion host for them to connect to and then access
+production also makes sense. For example, a Windows server users can log
+into via remote desktop can then be set up with standard applications
+such as Putty, Squirrel, or Firefox for consistency and the ability to
+easily support their needs. This also helps better secure the production
+environment.</p>
+</div>
+<div class="section" id="minimalism">
+<h2>5. Minimalism<a class="headerlink" href="#minimalism" title="Permalink to this headline">¶</a></h2>
+<p>Your production systems should contain only necessary services/applications.
+This means there will be less to troubleshoot and patch, and the simplicity
+will ensure a more predictable and manageable environment. This strategy
+will also reduce a potential attack footprint.</p>
+<p>A web server should only run IIS or Apache/Tomcat. An FTP server should only
+run the secure FTP service. A file server should only host data. And so
+forth. If applications or services are no longer in use, remove them.</p>
+</div>
+<div class="section" id="a-patching-strategy">
+<h2>6. A patching strategy<a class="headerlink" href="#a-patching-strategy" title="Permalink to this headline">¶</a></h2>
+<p>Speaking of patching, it’s a necessary evil. Develop a patching mechanism
+to ensure production systems are updated on at least a monthly basis.</p>
+<p>Rebooting production systems is never anyone’s idea of a fun time, but
+suffering a data breach makes it look like a picnic by comparison. Besides,
+if you’re using redundancy, you should be able to patch and reboot a pair
+of clustered systems, for instance, with zero user impact. However, make
+sure to let at least a day or two pass before patching all redundant systems,
+just in case the patch produces an adverse impact which might obviate the
+protection you’ve implemented via redundancy.</p>
+</div>
+<div class="section" id="segregated-networks">
+<h2>7. Segregated networks<a class="headerlink" href="#segregated-networks" title="Permalink to this headline">¶</a></h2>
+<p>Your production systems should never be on the same network as your other
+servers, let alone your client workstations. Put them on their own dedicated
+subnet and maintain access through a firewall which permits only the desired
+systems to connect via only the necessary ports. This will help ensure
+security as well as help achieve the minimalism I mentioned above.</p>
+<p>It can be tedious trying to determine which ports need to be opened in the
+firewall, but consider it an investment in learning more about how your
+production environment works - which will pay dividends when it comes to
+troubleshooting and supporting it.</p>
+</div>
+<div class="section" id="change-management">
+<h2>8. Change management<a class="headerlink" href="#change-management" title="Permalink to this headline">¶</a></h2>
+<p>Change management is the process of documenting proposed changes and their
+expected impact then submitting a request for review and approval of said
+change. Ideally, the request should list the affected systems, the plan for
+change, methods to validate the changes (both from a system administrator
+and end user standpoint, and a backout plan.</p>
+<p>Other technical individuals should inspect the process for potential pitfalls
+(known as a peer review), and the request must then be approved by a manager
+before the change can be implemented.</p>
+<p>Most large companies, especially financial institutions, follow stringent
+change management guidelines, and smaller companies would benefit from it
+as well. It can be onerous and provoke impatience or reluctance among busy
+IT professionals, but it serves to ensure the least possible negative impact
+upon production environments. It can also preserve one’s job if a change
+leads to an unexpected outage, since it was known about and approved in
+advance, and not a rogue act by a careless administrator.</p>
+</div>
+<div class="section" id="auditing-logging-and-alerting">
+<h2>9. Auditing, logging, and alerting<a class="headerlink" href="#auditing-logging-and-alerting" title="Permalink to this headline">¶</a></h2>
+<p>Many of the above steps become less effective or meaningless if you’re not
+using auditing, logging and alerting. Every action taken on a production
+system should be recorded and, depending on the severity, should trigger
+an alert if appropriate. For instance, logging in as root should send a
+notification to IT staff and/or the security group so they can assess
+what’s happening and whether an illegal act is occurring.</p>
+<p>The same applies to hardware which might be faulty. There’s a saying that
+“your users should be the last ones to know when production is down.”
+Hard drives which are filling up should page responsible staff. The same
+applies for excessive bandwidth usage, low available memory, intermittent
+connectivity problems or other operational issues.</p>
+</div>
+<div class="section" id="appropriate-documentation">
+<h2>10. Appropriate documentation<a class="headerlink" href="#appropriate-documentation" title="Permalink to this headline">¶</a></h2>
+<p>A Chinese proverb states: “The palest ink is better than the best memory.”
+Knowledge is a powerful thing, but the ability to properly share it with
+others is even more powerful. Staff turnover is a fact of life, and
+employees who depart with critical information about the production
+environment stored only in their brains represent a significant company
+loss.</p>
+<p>Documentation of the production environment should be comprehensive and
+kept up-to-date. It should include hardware, software, networking details,
+vendor information, support information, dependencies upon other systems
+or applications, and any other details necessary to maintain order.
+Conduct quarterly reviews and ensure all staff responsible for the
+production environment are familiar with the documentation — and that
+it is safely backed up in the event of a disaster.</p>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="10_it_risk_management_issues_that_are_often_overlooked.html" title="10 IT risk management issues that are often overlooked"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="10_efficient_ways_to_produce_useful_metrics.html" title="10 efficient ways to produce useful metrics"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">Enterprise Architecture  documentation</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2019, Peter Preeper.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.2.1.
+    </div>
+  </body>
+</html>

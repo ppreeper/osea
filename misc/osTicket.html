@@ -1,0 +1,126 @@
+
+
+<!doctype html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>&lt;no title&gt; &#8212; Enterprise Architecture  documentation</title>
+    <link rel="stylesheet" href="../_static/bizstyle.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/language_data.js"></script>
+    <script type="text/javascript" src="../_static/bizstyle.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="&lt;no title&gt;" href="parted-usage.html" />
+    <link rel="prev" title="With Compose, you use a YAML file to configure your application’s services. Then, with a single command, you create and start all the services from your configuration" href="Nginx_and_Lets_Encrypt_with_Docker_in_Less_Than_5_Minutes.html" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <!--[if lt IE 9]>
+    <script type="text/javascript" src="_static/css3-mediaqueries.js"></script>
+    <![endif]-->
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="parted-usage.html" title="&lt;no title&gt;"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="Nginx_and_Lets_Encrypt_with_Docker_in_Less_Than_5_Minutes.html" title="With Compose, you use a YAML file to configure your application’s services. Then, with a single command, you create and start all the services from your configuration"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">Enterprise Architecture  documentation</a> &#187;</li> 
+      </ul>
+    </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="Nginx_and_Lets_Encrypt_with_Docker_in_Less_Than_5_Minutes.html"
+                        title="previous chapter">With Compose, you use a YAML file to configure your application’s services. Then, with a single command, you create and start all the services from your configuration</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="parted-usage.html"
+                        title="next chapter">&lt;no title&gt;</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/misc/osTicket.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <p><a class="reference external" href="https://github.com/osTicket/osTicket/releases/download/v1.10.4/osTicket-v1.10.4.zip">https://github.com/osTicket/osTicket/releases/download/v1.10.4/osTicket-v1.10.4.zip</a></p>
+<p>apt update; apt install vim-nox apt-transport-https unzip -y; apt full-upgrade -y</p>
+<p>apt install nginx php-common php-cli php-fpm
+apt install apache2 php php-cli
+apt install php-mysql php-gd php-imap php-xml php-mbstring php-intl php-apcu php-ldap</p>
+<p>mkdir -p /opt/osTicket
+cd /opt/osTicket
+wget -O /opt/osTicket.zip <a class="reference external" href="https://github.com/osTicket/osTicket/releases/download/v1.10.4/osTicket-v1.10.4.zip">https://github.com/osTicket/osTicket/releases/download/v1.10.4/osTicket-v1.10.4.zip</a>
+unzip /opt/osTicket.zip
+mv /opt/osTicket/upload/* /var/www/html/.
+chown -R www-data:www-data /var/www/html
+cd /var/www/html
+cp include/ost-sampleconfig.php include/ost-config.php
+chown -R www-data:www-data /var/www/html
+chmod 0666 include/ost-config.php
+&lt;follow install procedures&gt;
+chmod 0644 include/ost-config.php
+systemctl restart apache2</p>
+<p>CREATE DATABASE ost;</p>
+<p>CREATE USER ‘ost’&#64;’%’ IDENTIFIED BY ‘Wa0dRmDiPnRESS’;</p>
+<p>GRANT ALL PRIVILEGES ON ost.* TO ‘ost’&#64;’%’;</p>
+<p>FLUSH PRIVILEGES;</p>
+<p>setup sendmail</p>
+<p>apt install sendmail mailutils sendmail-bin</p>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="parted-usage.html" title="&lt;no title&gt;"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="Nginx_and_Lets_Encrypt_with_Docker_in_Less_Than_5_Minutes.html" title="With Compose, you use a YAML file to configure your application’s services. Then, with a single command, you create and start all the services from your configuration"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">Enterprise Architecture  documentation</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2019, Peter Preeper.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.2.1.
+    </div>
+  </body>
+</html>

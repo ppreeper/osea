@@ -1,0 +1,215 @@
+
+
+<!doctype html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>Configure RNDC Key for Bind9 (DNS Server) &#8212; Enterprise Architecture  documentation</title>
+    <link rel="stylesheet" href="../_static/bizstyle.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/language_data.js"></script>
+    <script type="text/javascript" src="../_static/bizstyle.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="How to get log listing of incoming DNS requests" href="get_logging_of_requests.html" />
+    <link rel="prev" title="Certification Authority SSL (Self-Signed)" href="ssl-local-ca.html" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <!--[if lt IE 9]>
+    <script type="text/javascript" src="_static/css3-mediaqueries.js"></script>
+    <![endif]-->
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="get_logging_of_requests.html" title="How to get log listing of incoming DNS requests"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="ssl-local-ca.html" title="Certification Authority SSL (Self-Signed)"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">Enterprise Architecture  documentation</a> &#187;</li> 
+      </ul>
+    </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="../index.html">Table of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Configure RNDC Key for Bind9 (DNS Server)</a><ul>
+<li><a class="reference internal" href="#step-1-create-rndc-key-and-configuration-file">Step 1: Create RNDC Key and Configuration File</a></li>
+<li><a class="reference internal" href="#step-2-configure-rndc-key-and-configuration-file">Step 2: Configure RNDC Key and Configuration File</a><ul>
+<li><a class="reference internal" href="#copy-entire-output-of-1-to-etc-rndc-conf">2.1 Copy entire output of #1 to /etc/rndc.conf</a></li>
+<li><a class="reference internal" href="#copy-the-key-section-of-1-to-etc-rndc-key-file">2.2 Copy the key section of #1 to /etc/rndc.key file</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#step-3-configure-named-conf-to-use-rndc-key">Step 3: Configure named.conf to Use rndc key</a></li>
+<li><a class="reference internal" href="#step-4-restart-bind-service">Step 4: Restart Bind Service</a></li>
+<li><a class="reference internal" href="#step-5-test-rndc-setup">Step 5: Test RNDC Setup</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="ssl-local-ca.html"
+                        title="previous chapter">Certification Authority SSL (Self-Signed)</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="get_logging_of_requests.html"
+                        title="next chapter">How to get log listing of incoming DNS requests</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/doc/Configure RNDC Key for BIND9.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="configure-rndc-key-for-bind9-dns-server">
+<h1>Configure RNDC Key for Bind9 (DNS Server)<a class="headerlink" href="#configure-rndc-key-for-bind9-dns-server" title="Permalink to this headline">¶</a></h1>
+<p><em>RNDC</em> controls the operation of a name server. rndc uses tcp connection to
+communicate with bind server for sending commands authenticated with digital
+signatures. Configure RNDC Key for Bind9 using below steps.</p>
+<div class="section" id="step-1-create-rndc-key-and-configuration-file">
+<h2>Step 1: Create RNDC Key and Configuration File<a class="headerlink" href="#step-1-create-rndc-key-and-configuration-file" title="Permalink to this headline">¶</a></h2>
+<p>First step is to create rndc key file and configuration file. rndc provides
+command line tool rndc-confgen to generate it.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">rndc</span><span class="o">-</span><span class="n">confgen</span>
+</pre></div>
+</div>
+<p>Sample Output:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Start of rndc.conf</span>
+<span class="n">key</span> <span class="s2">&quot;rndc-key&quot;</span> <span class="p">{</span>
+        <span class="n">algorithm</span> <span class="n">hmac</span><span class="o">-</span><span class="n">md5</span><span class="p">;</span>
+        <span class="n">secret</span> <span class="s2">&quot;DTngw5O8I5Axx631GjQ9pA==&quot;</span><span class="p">;</span>
+<span class="p">};</span>
+
+<span class="n">options</span> <span class="p">{</span>
+        <span class="n">default</span><span class="o">-</span><span class="n">key</span> <span class="s2">&quot;rndc-key&quot;</span><span class="p">;</span>
+        <span class="n">default</span><span class="o">-</span><span class="n">server</span> <span class="mf">127.0</span><span class="o">.</span><span class="mf">0.1</span><span class="p">;</span>
+        <span class="n">default</span><span class="o">-</span><span class="n">port</span> <span class="mi">953</span><span class="p">;</span>
+<span class="p">};</span>
+<span class="c1"># End of rndc.conf</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="step-2-configure-rndc-key-and-configuration-file">
+<h2>Step 2: Configure RNDC Key and Configuration File<a class="headerlink" href="#step-2-configure-rndc-key-and-configuration-file" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="copy-entire-output-of-1-to-etc-rndc-conf">
+<h3>2.1 Copy entire output of #1 to /etc/rndc.conf<a class="headerlink" href="#copy-entire-output-of-1-to-etc-rndc-conf" title="Permalink to this headline">¶</a></h3>
+</div>
+<div class="section" id="copy-the-key-section-of-1-to-etc-rndc-key-file">
+<h3>2.2 Copy the key section of #1 to /etc/rndc.key file<a class="headerlink" href="#copy-the-key-section-of-1-to-etc-rndc-key-file" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># cat /etc/rndc.key</span>
+<span class="n">key</span> <span class="s2">&quot;rndc-key&quot;</span> <span class="p">{</span>
+    <span class="n">algorithm</span> <span class="n">hmac</span><span class="o">-</span><span class="n">md5</span><span class="p">;</span>
+    <span class="n">secret</span> <span class="s2">&quot;DTngw5O8I5Axx631GjQ9pA==&quot;</span><span class="p">;</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="step-3-configure-named-conf-to-use-rndc-key">
+<h2>Step 3: Configure named.conf to Use rndc key<a class="headerlink" href="#step-3-configure-named-conf-to-use-rndc-key" title="Permalink to this headline">¶</a></h2>
+<p>Add below entry in named.conf. I have added it to above option’s section.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">include</span> <span class="s2">&quot;/etc/rndc.key&quot;</span><span class="p">;</span>
+
+<span class="n">controls</span> <span class="p">{</span>
+    <span class="n">inet</span> <span class="mf">127.0</span><span class="o">.</span><span class="mf">0.1</span> <span class="n">allow</span> <span class="p">{</span> <span class="n">localhost</span><span class="p">;</span> <span class="p">}</span> <span class="n">keys</span> <span class="p">{</span> <span class="s2">&quot;rndc-key&quot;</span><span class="p">;</span> <span class="p">};</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="step-4-restart-bind-service">
+<h2>Step 4: Restart Bind Service<a class="headerlink" href="#step-4-restart-bind-service" title="Permalink to this headline">¶</a></h2>
+<p>Before restarting bind service, I recommend to check configuration file first.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">named</span><span class="o">-</span><span class="n">checkconf</span> <span class="o">/</span><span class="n">etc</span><span class="o">/</span><span class="n">named</span><span class="o">.</span><span class="n">conf</span>
+</pre></div>
+</div>
+<p>and</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">named</span><span class="o">-</span><span class="n">checkconf</span> <span class="o">-</span><span class="n">t</span> <span class="o">/</span><span class="n">var</span><span class="o">/</span><span class="n">named</span><span class="o">/</span><span class="n">chroot</span> <span class="o">/</span><span class="n">etc</span><span class="o">/</span><span class="n">named</span><span class="o">.</span><span class="n">conf</span>
+</pre></div>
+</div>
+<p>If above command shows nothing in output, means configuration is ok,
+Now restart bind service.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">/</span><span class="n">etc</span><span class="o">/</span><span class="n">init</span><span class="o">.</span><span class="n">d</span><span class="o">/</span><span class="n">named</span> <span class="n">restart</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="step-5-test-rndc-setup">
+<h2>Step 5: Test RNDC Setup<a class="headerlink" href="#step-5-test-rndc-setup" title="Permalink to this headline">¶</a></h2>
+<p>Test your setup using rndc command as below.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">rndc</span> <span class="n">status</span>
+</pre></div>
+</div>
+<p>Sample output:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">WARNING</span><span class="p">:</span> <span class="n">key</span> <span class="n">file</span> <span class="p">(</span><span class="o">/</span><span class="n">etc</span><span class="o">/</span><span class="n">rndc</span><span class="o">.</span><span class="n">key</span><span class="p">)</span> <span class="n">exists</span><span class="p">,</span> <span class="n">but</span> <span class="n">using</span> <span class="n">default</span> <span class="n">configuration</span> <span class="n">file</span> <span class="p">(</span><span class="o">/</span><span class="n">etc</span><span class="o">/</span><span class="n">rndc</span><span class="o">.</span><span class="n">conf</span><span class="p">)</span>
+<span class="n">version</span><span class="p">:</span> <span class="mf">9.9</span><span class="o">.</span><span class="mi">2</span><span class="o">-</span><span class="n">P2</span><span class="o">-</span><span class="n">RedHat</span><span class="o">-</span><span class="mf">9.9</span><span class="o">.</span><span class="mi">2</span><span class="o">-</span><span class="mf">3.</span><span class="n">P2</span><span class="o">.</span><span class="n">el6</span>
+<span class="n">CPUs</span> <span class="n">found</span><span class="p">:</span> <span class="mi">1</span>
+<span class="n">worker</span> <span class="n">threads</span><span class="p">:</span> <span class="mi">1</span>
+<span class="n">UDP</span> <span class="n">listeners</span> <span class="n">per</span> <span class="n">interface</span><span class="p">:</span> <span class="mi">1</span>
+<span class="n">number</span> <span class="n">of</span> <span class="n">zones</span><span class="p">:</span> <span class="mi">38</span>
+<span class="n">debug</span> <span class="n">level</span><span class="p">:</span> <span class="mi">0</span>
+<span class="n">xfers</span> <span class="n">running</span><span class="p">:</span> <span class="mi">0</span>
+<span class="n">xfers</span> <span class="n">deferred</span><span class="p">:</span> <span class="mi">0</span>
+<span class="n">soa</span> <span class="n">queries</span> <span class="ow">in</span> <span class="n">progress</span><span class="p">:</span> <span class="mi">0</span>
+<span class="n">query</span> <span class="n">logging</span> <span class="ow">is</span> <span class="n">OFF</span>
+<span class="n">recursive</span> <span class="n">clients</span><span class="p">:</span> <span class="mi">0</span><span class="o">/</span><span class="mi">0</span><span class="o">/</span><span class="mi">1000</span>
+<span class="n">tcp</span> <span class="n">clients</span><span class="p">:</span> <span class="mi">0</span><span class="o">/</span><span class="mi">100</span>
+<span class="n">server</span> <span class="ow">is</span> <span class="n">up</span> <span class="ow">and</span> <span class="n">running</span>
+</pre></div>
+</div>
+<p>Thanks You! for using this article.</p>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="get_logging_of_requests.html" title="How to get log listing of incoming DNS requests"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="ssl-local-ca.html" title="Certification Authority SSL (Self-Signed)"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">Enterprise Architecture  documentation</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2019, Peter Preeper.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.2.1.
+    </div>
+  </body>
+</html>

@@ -1,0 +1,265 @@
+
+
+<!doctype html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>5 things you should be monitoring &#8212; Enterprise Architecture  documentation</title>
+    <link rel="stylesheet" href="../_static/bizstyle.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/language_data.js"></script>
+    <script type="text/javascript" src="../_static/bizstyle.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="How to Monitor Apache Web Server with Prometheus and Grafana in 5 minutes" href="How to Monitor Apache Web Server with Prometheus and Grafana in 5 minutes.html" />
+    <link rel="prev" title="nextcloud upgrade" href="nextcloud_upgrade.html" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <!--[if lt IE 9]>
+    <script type="text/javascript" src="_static/css3-mediaqueries.js"></script>
+    <![endif]-->
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="How to Monitor Apache Web Server with Prometheus and Grafana in 5 minutes.html" title="How to Monitor Apache Web Server with Prometheus and Grafana in 5 minutes"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="nextcloud_upgrade.html" title="nextcloud upgrade"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">Enterprise Architecture  documentation</a> &#187;</li> 
+      </ul>
+    </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="../index.html">Table of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">5 things you should be monitoring</a><ul>
+<li><a class="reference internal" href="#latency">1. Latency</a></li>
+<li><a class="reference internal" href="#errors">2. Errors</a></li>
+<li><a class="reference internal" href="#throughput">3. Throughput</a></li>
+<li><a class="reference internal" href="#utilization">4. Utilization</a></li>
+<li><a class="reference internal" href="#blackbox-monitoring">5. Blackbox monitoring</a></li>
+<li><a class="reference internal" href="#use-monitoring-to-cover-your-bases">Use monitoring to cover your bases</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="nextcloud_upgrade.html"
+                        title="previous chapter">nextcloud upgrade</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="How to Monitor Apache Web Server with Prometheus and Grafana in 5 minutes.html"
+                        title="next chapter">How to Monitor Apache Web Server with Prometheus and Grafana in 5 minutes</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/doc/5 Things you should be monitoring.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="things-you-should-be-monitoring">
+<h1>5 things you should be monitoring<a class="headerlink" href="#things-you-should-be-monitoring" title="Permalink to this headline">¶</a></h1>
+<p><a class="reference external" href="https://www.oreilly.com/ideas/5-things-you-should-be-monitoring">https://www.oreilly.com/ideas/5-things-you-should-be-monitoring</a></p>
+<p>By Brian Brazil August 6, 2018</p>
+<p>Achieve high-impact systems monitoring by focusing on latency, errors,
+throughput, utilization, and blackbox monitoring.</p>
+<p>So you’ve deployed your brand new web application (now with blockchain!),
+and your users love it. Traffic is increasing, and you’re getting great
+press. Then one morning you wake up to find that the site has been slow
+all night, and your users are complaining. How do you find the problem?</p>
+<p>Whether you’re a developer building websites or internal applications,
+or an administrator building the infrastructure to back them, your job
+doesn’t stop once they’re up and running. Machine failure, releases
+containing bugs, and growth in usage can all lead to problems that need
+to be dealt with. To detect them, you need monitoring.</p>
+<p>But monitoring can do more than just send you alerts about the things
+that are going wrong. It can also help you debug those problems and
+prevent them in the future. So what things should you be monitoring?</p>
+<div class="section" id="latency">
+<h2>1. Latency<a class="headerlink" href="#latency" title="Permalink to this headline">¶</a></h2>
+<p>Faster web pages lead to happier users. The opposite is also true:
+increased latency leads to user dissatisfaction and could also be the
+first warning sign that your system is strained. Launching resource-intensive
+features often means more user requests being served. As servers die,
+latency can increase. In fact, latency tends to increase nonlinearly in
+response to load due to increased contention. Small latency increases today
+could indicate bigger latency increases in the future; early awareness gives
+you some time to fix any issues.</p>
+<p>Latency is generally measured from two perspectives: your users and your
+system. Having instrumentation inside the user’s browser can detect issues
+such as JavaScript and static assets getter larger slowing the user
+experience. This measurement will have a lot of variance due to users’
+specific hardware, their network environment, and their internet connection.
+Measuring from each of your own backend systems tends to be much less noisy
+but can never capture the entire user experience, so it’s best to measure
+both. Browser latency monitoring will catch frontend issues due to a
+release, and backend monitoring will catch most of the rest.</p>
+<p>But what do you do with your latency data once you’ve gathered it? You
+could alert every time latency increases by a millisecond, but that’s not
+really a good reason to drag yourself out of bed at 3:00am. A better option
+is to set alert thresholds based on service-level agreements (SLA). If
+you don’t have SLAs, choose a threshold that indicates when things are
+significantly abnormal. For example, if your latency usually varies
+between 50ms and 100ms, 200ms might be a good threshold to start with.</p>
+<p>Beyond alerts that require immediate human attention, it is also wise
+to review key metrics, such as latency, every week, month, or quarter
+depending on your development velocity and how dynamic your system is.
+Using a review process to notice trends in advance is better than
+burning engineers out with hair-trigger alerts.</p>
+</div>
+<div class="section" id="errors">
+<h2>2. Errors<a class="headerlink" href="#errors" title="Permalink to this headline">¶</a></h2>
+<p>While latency can make a system feel sluggish for your users, errors
+tend to cause more obvious problems. Error sources may include a bug in
+your system, a bad interaction with a new browser release, or a timeout
+due to increased load. These can lead to malfunctions or outright failure.</p>
+<p>Ordinarily, you want to know about errors at every level of your stack,
+from the frontend all the way down to the backend data stores. But that
+doesn’t mean you need an alert on every single error counter. For
+example, if database errors always cause application errors, an alert
+on application errors will suffice, because it will cover the database
+errors and more. However, you should still show both database and
+application errors on your dashboards to help you determine whether
+the application errors are due to the database. Conversely, if you have
+an optional backend whose errors don’t cause upstream systems to hard
+fail, it makes sense to alert on the errors of the optional backend,
+since the application error alert won’t catch them.</p>
+<p>When creating dashboards and alerts related to errors, it’s best to use
+the ratio of number of errors to total requests rather than just the
+number of errors. For example, one error per second might be typical
+during peak traffic but could be a bad sign during times of lower load.
+Knowing that the error ratio is 5% is more useful for comparison and
+doesn’t require updating the alert threshold as your traffic grows.</p>
+<p>Finally, remember that not all errors are equal. Say you have a system
+that accepts user uploads, processes them, and then serves them over
+HTTP. If the storage backend times out, your system is clearly at fault.
+But if a user makes a malformed request, you may choose to ignore the
+error unless you see enough malformed requests to prompt you to investigate
+a broken frontend. Similarly, you may choose to ignore requests made for
+things that don’t exist because they could be caused by a number of things,
+from user error to lost uploads or uploads that haven’t completed processing.
+However, as with malformed requests, a high level of these errors is likely
+worth alerting on.</p>
+</div>
+<div class="section" id="throughput">
+<h2>3. Throughput<a class="headerlink" href="#throughput" title="Permalink to this headline">¶</a></h2>
+<p>In order to learn your error ratio, you need to know the number of requests
+that you are serving (i.e., throughput). When debugging a performance issue,
+knowing your throughput can reveal whether traffic increased around the same
+time, which can indicate a capacity problem.</p>
+<p>Beyond immediate debugging, monitoring throughput helps you understand how
+your traffic has been growing over the past few months or years. This is
+important for capacity planning, helping predict what traffic is likely to
+be in the future. You don’t want to leave yourself short in terms of
+resources and finances, but neither do you want to overspend.</p>
+<p>There’s more to consider than raw request count. It’s useful to track what
+the requests are for and whether they are cheap or expensive requests to
+serve. Expense might be quantified in terms of CPU or even network
+bandwidth. You may also want to know where your users are geographically
+so that you can plan your data center locations accordingly.</p>
+</div>
+<div class="section" id="utilization">
+<h2>4. Utilization<a class="headerlink" href="#utilization" title="Permalink to this headline">¶</a></h2>
+<p>Capacity planning should ensure that you have enough resources, but that
+isn’t always the case. Growth may exceed expectations, feature launches
+may entail unforeseen expenses, and you may experience traffic spikes or
+a sudden loss of machines. That’s where utilization comes in. Utilization
+is a measure of how close your service is to maximum capacity. This is
+usually determined by CPU, but some systems may be constrained by other
+resources, such as network bandwidth, storage space, or RAM.</p>
+<p>Determining how utilization of your existing machines correlates with
+traffic enables you to use your traffic growth projections to predict
+your hardware/resource needs. For example, if serving 100 requests per
+second takes one CPU, and you need to serve 200 requests per second in
+the future, you know you’ll need at least two CPUs to make that happen.
+Be aware that as traffic increases, your resource needs will increase
+faster than linear, as explained by models such as the Universal
+Scalability Law.</p>
+</div>
+<div class="section" id="blackbox-monitoring">
+<h2>5. Blackbox monitoring<a class="headerlink" href="#blackbox-monitoring" title="Permalink to this headline">¶</a></h2>
+<p>Is this thing turned on? Monitoring whether your service is working as
+seen from the outside is known as blackbox monitoring. Everything might
+ook fine at your backend servers from inside your network, but a broken
+load balancer or misconfigured internet routing could stop users from
+getting that far. Thus, it’s wise to have some basic monitoring from
+outside your network confirming that traffic can get in. It’s also useful
+to look for sudden dips in traffic to detect issues with users getting
+to your services, although this tends to be difficult to tune for a good
+signal-to-noise ratio.</p>
+<p>You should also check whether key features, such as user login, are
+working. I recommend treating these as smoke tests rather than regression
+tests. The main purpose of blackbox monitoring is to tell you if your
+system is severely broken. But blackbox monitoring has a tendency to be
+flaky, particularly when using heavy, complex tests, and flaky monitoring
+will burn out the engineer on the receiving end of any alerts. More subtle
+failures, like users being unable to log in if their password is longer
+than 32 characters, are best caught in other ways, such as the above
+metrics, error logs, and user bug reports.</p>
+</div>
+<div class="section" id="use-monitoring-to-cover-your-bases">
+<h2>Use monitoring to cover your bases<a class="headerlink" href="#use-monitoring-to-cover-your-bases" title="Permalink to this headline">¶</a></h2>
+<p>With a combination of latency, errors, throughput, utilization, and blackbox
+monitoring, all of your main needs should be covered. Monitoring these
+five areas will not catch every possible problem (although you shouldn’t
+try to catch every problem, as you’ll quickly hit diminishing returns).
+However, it will offer enough information to give you confidence that
+your systems are running smoothly.</p>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="How to Monitor Apache Web Server with Prometheus and Grafana in 5 minutes.html" title="How to Monitor Apache Web Server with Prometheus and Grafana in 5 minutes"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="nextcloud_upgrade.html" title="nextcloud upgrade"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">Enterprise Architecture  documentation</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2019, Peter Preeper.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.2.1.
+    </div>
+  </body>
+</html>

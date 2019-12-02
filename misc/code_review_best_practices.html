@@ -1,0 +1,283 @@
+
+
+<!doctype html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>&lt;no title&gt; &#8212; Enterprise Architecture  documentation</title>
+    <link rel="stylesheet" href="../_static/bizstyle.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/language_data.js"></script>
+    <script type="text/javascript" src="../_static/bizstyle.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="&lt;no title&gt;" href="comparing_traditional_and_agile_project_management_estimation_techniques.html" />
+    <link rel="prev" title="&lt;no title&gt;" href="Code Review Best Practices.html" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <!--[if lt IE 9]>
+    <script type="text/javascript" src="_static/css3-mediaqueries.js"></script>
+    <![endif]-->
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="comparing_traditional_and_agile_project_management_estimation_techniques.html" title="&lt;no title&gt;"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="Code Review Best Practices.html" title="&lt;no title&gt;"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">Enterprise Architecture  documentation</a> &#187;</li> 
+      </ul>
+    </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="Code Review Best Practices.html"
+                        title="previous chapter">&lt;no title&gt;</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="comparing_traditional_and_agile_project_management_estimation_techniques.html"
+                        title="next chapter">&lt;no title&gt;</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/misc/code_review_best_practices.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <p>#Code Review Best Practices</p>
+<p>{{<a class="reference external" href="https://cdn-images-1.medium.com/max/800/1*6u51C_pl-UH3X3CbggmCjA">https://cdn-images-1.medium.com/max/800/1*6u51C_pl-UH3X3CbggmCjA</a>.png|XKCD Code Quality}}</p>
+<p>The Internet provides a wealth of material on code reviews: on the effect of code reviews on company culture, on formal security reviews, shorter guides, longer checklists, humanized reviews, reasons for doing code reviews in the first place, best practices, more best practices, statistics on code review effectiveness for catching bugs, and examples of code reviews gone wrong. Oh, and of course there are books, too. Long story short, this blog post presents Palantir’s take on code reviews. Organizations with deep cultural reluctance to peer reviews may want to consult Karl E. Wiegers’ excellent essay on Humanizing Peer Reviews before trying to follow this guide.</p>
+<p>This post is copied from the best practices guides of our Java Code Quality tool chain, Baseline, and covers the following topics:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>Why, what, and when to do code reviews</p></li>
+<li><p>Preparing code for review</p></li>
+<li><p>Performing code reviews</p></li>
+<li><p>Code review examples</p></li>
+</ul>
+</div></blockquote>
+<p>##Motivation</p>
+<p>We perform code reviews (CRs) in order to improve code quality and benefit from positive effects on team and company culture. For example:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p><strong>Committers are motivated</strong> by the notion of a set of reviewers who will look over the change request: the committer tends to clean up loose ends, consolidate TODOs, and generally improve the commit. Recognition of coding expertise through peers is a source of pride for many programmers.</p></li>
+<li><p><strong>Sharing knowledge</strong> helps development teams in several ways:</p></li>
+</ul>
+<blockquote>
+<div><ul class="simple">
+<li><p>A CR explicitly communicates added/altered/removed functionality to team members who can subsequently build on the work done.</p></li>
+<li><p>The committer may use a technique or algorithm that reviewers can learn from. More generally, code reviews help raise the quality bar across the organization.</p></li>
+<li><p>Reviewers may possess knowledge about programming techniques or the code base that can help improve or consolidate the change; for example, someone else may be concurrently working on a similar feature or fix.</p></li>
+<li><p>Positive interaction and communication strengthens social bonds between team members.</p></li>
+</ul>
+</div></blockquote>
+<ul class="simple">
+<li><p><strong>Consistency</strong> in a code base makes code easier to read and understand, helps prevent bugs, and facilitates collaboration between regular and migratory developer species.</p></li>
+<li><p><strong>Legibility</strong> of code fragments is hard to judge for the author whose brain child it is, and easy to judge for a reviewer who does not have the full context. Legible code is more reusable, bug-free, and future-proof.</p></li>
+<li><p><strong>Accidental errors</strong> (e.g., typos) as well as <strong>structural errors</strong> (e.g., dead code, logic or algorithm bugs, performance or architecture concerns) are often much easier to spot for critical reviewers with an outside perspective. Studies have found that even short and informal code reviews have significant impact on code quality and bug frequency.</p></li>
+<li><p><strong>Compliance</strong> and regulatory environments often demand reviews. CRs are a great way to avoid common security traps. If your feature or environment has significant security requirements it will benefit from (and probably require) review by your local security curmudgeons (OWASP’s guide is a good example of the process).</p></li>
+</ul>
+</div></blockquote>
+<p>##What to review</p>
+<p>There is no eternally true answer to this question and each development team should agree on its own approach. Some teams prefer to review every change merged into the main branch, while others will have a “triviality” threshold under which a review is not required. The trade-off is between effective use of engineers’ (both authors’ and reviewers’) time and maintaining code quality. In certain regulatory environments, code review may be required even for trivial changes.</p>
+<p>Code reviews are classless: being the most senior person on the team does not imply that your code does not need review. Even if, in the rare case, code is flawless, the review provides an opportunity for mentorship and collaboration, and, minimally, diversifies the understanding of code in the code base.</p>
+<p>##When to review</p>
+<p>Code reviews should happen after automated checks (tests, style, other CI) have completed successfully, but before the code merges to the repository’s mainline branch. We generally don’t perform formal code review of aggregate changes since the last release.</p>
+<p>For complex changes that should merge into the mainline branch as a single unit but are too large to fit into one reasonable CR, consider a stacked CR model: Create a primary branch feature/big-feature and a number of secondary branches (e.g., feature/big-feature-api, feature/big-feature-testing, etc.) that each encapsulate a subset of the functionality and that get individually code-reviewed against the feature/big-feature branch. Once all secondary branches are merged into feature/big-feature, create a CR for merging the latter into the main branch.</p>
+<p>##Preparing code for review</p>
+<p>It is the author’s responsibility to submit CRs that are easy to review in order not to waste reviewers’ time and motivation:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p><strong>Scope and size</strong>. Changes should have a narrow, well-defined, self-contained scope that they cover exhaustively. For example, a change may implement a new feature or fix a bug. Shorter changes are preferred over longer ones. If a CR makes substantive changes to more than ~5 files, or took longer than 1–2 days to write, or would take more than 20 minutes to review, consider splitting it into multiple self-contained CRs. For example, a developer can submit one change that defines the API for a new feature in terms of interfaces and documentation, and a second change that adds implementations for those interfaces.</p></li>
+<li><p>Only submit <strong>complete, self-reviewed</strong> (by diff), and <strong>self-tested</strong> CRs. In order to save reviewers’ time, test the submitted changes (i.e., run the test suite) and make sure they pass all builds as well as all tests and code quality checks, both locally and on the CI servers, //before assigning reviewers//.</p></li>
+<li><p><strong>Refactoring changes</strong> should not alter behavior; conversely, a behavior-changing changes should avoid refactoring and code formatting changes. There are multiple good reasons for this:</p></li>
+</ul>
+<blockquote>
+<div><ul class="simple">
+<li><p>Refactoring changes often touch many lines and files and will consequently be reviewed with less attention. Unintended behavior changes can leak into the code base without anyone noticing.</p></li>
+<li><p>Large refactoring changes break cherry-picking, rebasing, and other source control magic. It is very onerous to undo a behavior change that was introduced as part of a repository-wide refactoring commit.</p></li>
+<li><p>Expensive human review time should be spent on the program logic rather than style, syntax, or formatting debates. We prefer settling those with automated tooling like Checkstyle, TSLint, Baseline, Prettier, etc.</p></li>
+</ul>
+</div></blockquote>
+</div></blockquote>
+<p>Commit messages</p>
+<p>The following is an example of a good commit message following a [[<a class="reference external" href="http://tbaggery.com/2008/04/19/a-note-about-git-commit-messages">http://tbaggery.com/2008/04/19/a-note-about-git-commit-messages</a>.html|widely quoted standard]]:</p>
+<p>&lt;code&gt;
+Capitalized, short (80 chars or less) summary</p>
+<p>More detailed explanatory text, if necessary. Wrap it to about 120 characters or so. In some contexts, the first
+line is treated as the subject of an email and the rest of the text as the body. The blank line separating the
+summary from the body is critical (unless you omit the body entirely); tools like rebase can get confused if you run
+the two together.</p>
+<p>Write your commit message in the imperative: “Fix bug” and not “Fixed bug” or “Fixes bug.” This convention matches
+up with commit messages generated by commands like git merge and git revert.</p>
+<p>Further paragraphs come after blank lines.</p>
+<ul class="simple">
+<li><p>Bullet points are okay, too</p></li>
+</ul>
+<p>&lt;/code&gt;</p>
+<p>Try to describe both what the commit changes and how it does it:</p>
+<p>&lt;code&gt;
+&gt; BAD. Don’t do this.
+Make compile again</p>
+<p>&gt; Good.
+Add jcsv dependency to fix IntelliJ compilation
+&lt;/code&gt;</p>
+<p>##Finding reviewers</p>
+<p>It is customary for the committer to propose one or two reviewers who are familiar with the code base. Often, one of the reviewers is the project lead or a senior engineer. Project owners should consider subscribing to their projects in order to get notified of new CRs. Code reviews among more than three parties are often unproductive or even counter-productive since different reviewers may propose contradictory changes. This may indicate fundamental disagreement on the correct implementation and should be resolved outside a code review in a higher-bandwidth forum, for example in person or in a video conference with all involved parties.</p>
+<p>##Performing code reviews</p>
+<p>A code review is a synchronization point among different team members and thus has the potential to block progress. Consequently, code reviews need to be prompt (on the order of hours, not days), and team members and leads need to be aware of the time commitment and prioritize review time accordingly. If you don’t think you can complete a review in time, please let the committer know right away so they can find someone else.</p>
+<p>A review should be thorough enough that the reviewer could explain the change at a reasonable level of detail to another developer. This ensures that the details of the code base are known to more than a single person.</p>
+<p>As a reviewer, it is your responsibility to enforce coding standards and keep the quality bar up. Reviewing code is more of an art than a science. The only way to learn it is to do it; an experienced reviewer should consider putting other less experienced reviewers on their changes and have them do a review first. Assuming the author has followed the guidelines above (especially with respect to self-review and ensuring the code runs), here’s an list of things a reviewer should pay attention to in a code review:</p>
+<p>###Purpose</p>
+<blockquote>
+<div><ul class="simple">
+<li><p><strong>Does this code accomplish the author’s purpose?</strong> Every change should have a specific reason (new feature, refactor, bugfix, etc). Does the submitted code actually accomplish this purpose?</p></li>
+<li><p><strong>Ask questions.</strong> Functions and classes should exist for a reason. When the reason is not clear to the reviewer, this may be an indication that the code needs to be rewritten or supported with comments or tests.</p></li>
+</ul>
+</div></blockquote>
+<p>###Implementation</p>
+<blockquote>
+<div><ul class="simple">
+<li><p><strong>Think about how you would have solved the problem.</strong> If it’s different, why is that? Does your code handle more (edge) cases? Is it shorter/easier/cleaner/faster/safer yet functionally equivalent? Is there some underlying pattern you spotted that isn’t captured by the current code?</p></li>
+<li><p><strong>Do you see potential for useful abstractions?</strong> Partially duplicated code often indicates that a more abstract or general piece of functionality can be extracted and then reused in different contexts.</p></li>
+<li><p><strong>Think like an adversary, but be nice about it.</strong> Try to “catch” authors taking shortcuts or missing cases by coming up with problematic configurations/input data that breaks their code.</p></li>
+<li><p><strong>Think about libraries or existing product code.</strong> When someone re-implements existing functionality, more often than not it’s simply because they don’t know it already exists. Sometimes, code or functionality is duplicated on purpose, e.g., in order to avoid dependencies. In such cases, a code comment can clarify the intent. Is the introduced functionality already provided by an existing library?</p></li>
+<li><p><strong>Does the change follow standard patterns?</strong> Established code bases often exhibit patterns around naming conventions, program logic decomposition, data type definitions, etc. It is usually desirable that changes are implemented in accordance with existing patterns.</p></li>
+<li><p><strong>Does the change add compile-time or run-time dependencies (especially between sub-projects)?</strong> We want to keep our products loosely coupled, with as few dependencies as possible. Changes to dependencies and the build system should be scrutinized heavily.</p></li>
+</ul>
+</div></blockquote>
+<p>###Legibility and style</p>
+<blockquote>
+<div><ul class="simple">
+<li><p><strong>Think about your reading experience.</strong> Did you grasp the concepts in a reasonable amount of time? Was the flow sane and were variable and methods names easy to follow? Were you able to keep track through multiple files or functions? Were you put off by inconsistent naming?</p></li>
+<li><p><strong>Does the code adhere to coding guidelines and code style?</strong> Is the code consistent with the project in terms of style, API conventions, etc.? As mentioned above, we prefer to settle style debates with automated tooling.</p></li>
+<li><p><strong>Does this code have TODOs?</strong> TODOs just pile up in code, and become stale over time. Have the author submit a ticket on GitHub Issues or JIRA and attach the issue number to the TODO. The proposed code change should not contain commented-out code.</p></li>
+</ul>
+</div></blockquote>
+<p>###Maintainability</p>
+<blockquote>
+<div><ul class="simple">
+<li><p><strong>Read the tests</strong>. If there are no tests and there should be, ask the author to write some. Truly untestable features are rare, while untested implementations of features are unfortunately common. Check the tests themselves: are they covering interesting cases? Are they readable? Does the CR lower overall test coverage? Think of ways this code could break. Style standards for tests are often different than core code, but still important.</p></li>
+<li><p><strong>Does this CR introduce the risk of breaking test code, staging stacks, or integrations tests?</strong> These are often not checked as part of the pre-commit/merge checks, but having them go down is painful for everyone. Specific things to look for are: removal of test utilities or modes, changes in configuration, and changes in artifact layout/structure.</p></li>
+<li><p><strong>Does this change break backward compatibility?</strong> If so, is it OK to merge the change at this point or should it be pushed into a later release? Breaks can include database or schema changes, public API changes, user workflow changes, etc.</p></li>
+<li><p><strong>Does this code need integration tests?</strong> Sometimes, code can’t be adequately tested with unit tests alone, especially if the code interacts with outside systems or configuration.</p></li>
+<li><p><strong>Leave feedback on code-level documentation, comments, and commit messages.</strong> Redundant comments clutter the code, and terse commit messages mystify future contributors. This isn’t always applicable, but quality comments and commit messages will pay for themselves down the line. (Think of a time you saw an excellent, or truly terrible, commit message or comment.)</p></li>
+<li><p><strong>Was the external documentation updated?</strong> If your project maintains a README, CHANGELOG, or other documentation, was it updated to reflect the changes? Outdated documentation can be more confusing than none, and it will be more costly to fix it in the future than to update it now.</p></li>
+</ul>
+</div></blockquote>
+<p>Don’t forget to praise concise/readable/efficient/elegant code. Conversely, declining or disapproving a CR is not rude. If the change is redundant or irrelevant, decline it with an explanation. If you consider it unacceptable due to one or more fatal flaws, disapprove it, again with an explanation. Sometimes the right outcome of a CR is “let’s do this a totally different way” or even “let’s not do this at all.”</p>
+<p>Be respectful to the reviewees. While adversarial thinking is handy, it’s not your feature and you can’t make all the decisions. If you can’t come to an agreement with your reviewee with the code as is, switch to real-time communication or seek a third opinion.</p>
+<p>###Security</p>
+<p>Verify that API endpoints perform appropriate authorization and authentication consistent with the rest of the code base. Check for other common weaknesses, e.g., weak configuration, malicious user input, missing log events, etc. When in doubt, refer the CR to an application security expert.</p>
+<p>###Comments: concise, friendly, actionable</p>
+<p>Reviews should be concise and written in neutral language. Critique the code, not the author. When something is unclear, ask for clarification rather than assuming ignorance. Avoid possessive pronouns, in particular in conjunction with evaluations: “//my// code worked before //your// change”, “//your// method has a bug”, etc. Avoid absolute judgements: “this can //never// work”, “the result is //always// wrong”.</p>
+<p>Try to differentiate between suggestions (e.g., “Suggestion: extract method to improve legibility”), required changes (e.g., “Add &#64;Override”), and points that need discussion or clarification (e.g., “Is this really the correct behavior? If so, please add a comment explaining the logic.”). Consider providing links or pointers to in-depth explanations of a problem.</p>
+<p>When you’re done with a code review, indicate to what extent you expect the author to respond to your comments and whether you would like to re-review the CR after the changes have been implemented (e.g., “Feel free to merge after responding to the few minor suggestions” vs. “Please consider my suggestions and let me know when I can take another look.”).</p>
+<p>##Responding to reviews</p>
+<p>Part of the purpose of the code review is improve the author’s change request; consequently, don’t be offended by your reviewer’s suggestions and take them seriously even if you don’t agree. Respond to every comment, even if it’s only a simple “ACK” or “done.” Explain why you made certain decisions, why some function exists, etc. If you can’t come to an agreement with the reviewer, switch to real-time communication or seek an outside opinion.</p>
+<p>Fixes should be pushed to the same branch, but in a separate commit. Squashing commits during the review process makes it hard for the reviewer to follow up on changes.</p>
+<p>Different teams have different merge policies: some teams allow only project owners to merge, while other teams allow the contributor to merge after a positive code review.</p>
+<p>###In-person code reviews</p>
+<p>For the majority of code reviews, asynchronous diff-based tools such as Reviewable, Gerrit or, GitHub are a great choice. Complex changes, or reviews between parties with very different expertise or experience can be more efficient when performed in person, either in front of the same screen or projector, or remotely via VTC or screen share tools.</p>
+<p>##Examples</p>
+<p>In the following examples, suggested review comments are indicated by R: … comments in the code blocks.</p>
+<p>###Inconsistent naming</p>
+<p>&lt;code&gt;
+class MyClass {</p>
+<blockquote>
+<div><p>private int countTotalPageVisits; //R: name variables consistently
+private int uniqueUsersCount;</p>
+</div></blockquote>
+<p>}
+&lt;/code&gt;</p>
+<p>###Inconsistent method signatures</p>
+<p>&lt;code&gt;
+interface MyInterface {</p>
+<blockquote>
+<div><p>/** Returns <a class="reference external" href="mailto:{&#37;&#52;&#48;link">{<span>&#64;</span>link</a> Optional#empty} if s cannot be extracted. <a href="#id1"><span class="problematic" id="id2">*</span></a>/
+public Optional&lt;String&gt; extractString(String s);</p>
+<p>/** Returns null if <a class="reference external" href="mailto:{&#37;&#52;&#48;code">{<span>&#64;</span>code</a> s} cannot be rewritten. <a href="#id3"><span class="problematic" id="id4">*</span></a>/
+//R: should harmonize return values: use Optional&lt;&gt; here, too
+public String rewriteString(String s);</p>
+</div></blockquote>
+<p>}
+&lt;/code&gt;</p>
+<p>###Library use</p>
+<p>&lt;code&gt;
+//R: remove and replace by Guava’s MapJoiner
+String joinAndConcatenate(Map&lt;String, String&gt; map, String keyValueSeparator, String keySeparator);
+&lt;/code&gt;</p>
+<p>###Personal taste</p>
+<p>&lt;code&gt;
+int dayCount; //R: nit: I usually prefer numFoo over fooCount; up to you, but we should keep it consistent in this project
+&lt;/code&gt;</p>
+<p>###Bugs</p>
+<p>&lt;code&gt;
+//R: This performs numIterations+1 iterations, is that intentional?
+//  If it is, consider changing the numIterations semantics?
+for (int i = 0; i &lt;= numIterations; ++i) {</p>
+<blockquote>
+<div><p>…</p>
+</div></blockquote>
+<p>}
+&lt;/code&gt;</p>
+<p>###Architectural concerns</p>
+<p>&lt;code&gt;
+otherService.call(); //R: I think we should avoid the dependency on OtherService. Can we discuss this in person?
+&lt;/code&gt;</p>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="comparing_traditional_and_agile_project_management_estimation_techniques.html" title="&lt;no title&gt;"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="Code Review Best Practices.html" title="&lt;no title&gt;"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">Enterprise Architecture  documentation</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2019, Peter Preeper.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.2.1.
+    </div>
+  </body>
+</html>

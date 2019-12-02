@@ -1,0 +1,366 @@
+
+
+<!doctype html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>innodb_file_per_table=1 &#8212; Enterprise Architecture  documentation</title>
+    <link rel="stylesheet" href="../_static/bizstyle.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/language_data.js"></script>
+    <script type="text/javascript" src="../_static/bizstyle.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="&lt;no title&gt;" href="20 home office must-haves for remote workers.html" />
+    <link rel="prev" title="fi;" href="13_tips_tricks_for_writing_shell_scripts_with_awesome_ux.html" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <!--[if lt IE 9]>
+    <script type="text/javascript" src="_static/css3-mediaqueries.js"></script>
+    <![endif]-->
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="20 home office must-haves for remote workers.html" title="&lt;no title&gt;"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="13_tips_tricks_for_writing_shell_scripts_with_awesome_ux.html" title="fi;"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">Enterprise Architecture  documentation</a> &#187;</li> 
+      </ul>
+    </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="../index.html">Table of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">innodb_file_per_table=1</a></li>
+<li><a class="reference internal" href="#fdisk-dev-sdb">fdisk /dev/sdb</a></li>
+<li><a class="reference internal" href="#mkfs-ext4-dev-sdb1">mkfs.ext4 /dev/sdb1</a></li>
+<li><a class="reference internal" href="#mkdir-ssd">mkdir /ssd/</a></li>
+<li><a class="reference internal" href="#mount-dev-sdb1-ssd">mount /dev/sdb1 /ssd/</a></li>
+<li><a class="reference internal" href="#dev-sdb1-ssd-ext3-defaults-0-0">/dev/sdb1 /ssd ext3 defaults 0 0</a></li>
+<li><a class="reference internal" href="#service-mysqld-stop">service mysqld stop</a></li>
+<li><a class="reference internal" href="#cp-var-lib-mysql-ssd-rp">cp /var/lib/mysql /ssd/ -Rp</a></li>
+<li><a class="reference internal" href="#mv-var-lib-mysql-var-lib-mysql-backup">= mv /var/lib/mysql /var/lib/mysql-backup</a></li>
+<li><a class="reference internal" href="#ln-s-ssd-mysql-var-lib-mysql">= ln -s /ssd/mysql /var/lib/mysql</a><ul>
+<li><a class="reference internal" href="#service-nginx-start">= service nginx start</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#innodb-buffer-pool-size">innodb_buffer_pool_size</a></li>
+<li><a class="reference internal" href="#sysctl-w-vm-swappiness-0">= sysctl -w vm.swappiness=0</a></li>
+<li><a class="reference internal" href="#mysql-set-global-thread-cache-size-16">mysql&gt; set global thread_cache_size = 16;</a><ul>
+<li><a class="reference internal" href="#skip-name-resolve">skip-name-resolve</a></li>
+<li><a class="reference internal" href="#max-heap-table-size-64m">max_heap_table_size= 64M</a></li>
+<li><a class="reference internal" href="#long-query-time-1">long_query_time = 1</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#mysqladmin-processlist-u-root-p-grep-sleep">= mysqladmin processlist -u root -p | grep “Sleep”</a></li>
+<li><a class="reference internal" href="#wait-timeout-60">wait_timeout=60</a></li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="13_tips_tricks_for_writing_shell_scripts_with_awesome_ux.html"
+                        title="previous chapter">fi;</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="20 home office must-haves for remote workers.html"
+                        title="next chapter">&lt;no title&gt;</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/misc/15_useful_mysql_mariadb_performance_tuning_and_optimization_tips.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <p>= 15 Useful MySQL/MariaDB Performance Tuning and Optimization Tips</p>
+<p>by Marin Todorov | Published: June 22, 2015 | Last Updated: January 27, 2017</p>
+<p>MySQL is a powerful open source Relational Database Management System or in short RDBMS.
+It was released back in 1995 (20 years old).
+It uses Structured Query Language which is probably the most popular choice for managing content within a database.
+The latest MySQL version is 5.6.25 and was released on 29 May 2015.</p>
+<p>An interesting fact about MySQL is the fact that the name comes from Michael Widenius’s (MySQL’s creator) daughter My.
+Even though there are plenty of interesting facts about MySQL, this article is meant to show you some useful practices to help you manage your MySQL server.</p>
+<p>In April 2009 the MySQL project was bought by Oracle.
+As a result a MySQL community fork called MariaDB was created.
+The main reason for creating the fork was to keep the project free under the General Public License.</p>
+<p>Today MySQL and MariaDB are one of the most (if not the most) frequently used RDBMS used for web applications such as WordPress, Joomla, Magento and others.</p>
+<p>This article will show you some basic, yet useful tips how to optimize the fine tune the performance of MySQL/MariaDB.
+Please keep in mind that this article assumes that you already have MySQL or MariaDB installed.</p>
+<p>Important: Before we start – do not accept this suggestions blindly.
+Each MySQL setup is unique and requires additional thought, before making any changes.</p>
+<p>Things you need to know:</p>
+<p>MySQL/MariaDB configuration file is located in /etc/my.cnf.
+Every time you modify this file you will need to restart the MySQL service so the new changes can take effect.</p>
+<p>For writing this article MySQL version 5.6 has been used as template.</p>
+<p>== 1 Enable InnoDB file-per-table</p>
+<p>First it is important to explain that InnoDB is a storage engine.
+MySQL and MariaDB use InnoDB as default storage engine.
+In the past MySQL used to keep database tables and indexes in a system tablespace.
+This approach was meant for servers which sole purpose is database processing and their storage disk is not used for any other purposes.</p>
+<p>The InnoDB provides more flexible approach and each database information is kept in a .ibd data file.
+Each .ibd file represents a tablespace of its own.
+That way database operations such as “TRUNCATE” can be completed faster and you may also reclaim unused space when dropping or truncating a database table.</p>
+<p>Another benefit of this configuration is the fact that you can keep some of the database tables in a separate storage device.
+This can greatly improve the I/O load on your disks.</p>
+<p>The innodb_file_per_table is enabled by default in MySQL 5.6 and above.
+You can see that in /etc/my.cnf file.
+The directive looks like this:</p>
+<div class="section" id="innodb-file-per-table-1">
+<h1>innodb_file_per_table=1<a class="headerlink" href="#innodb-file-per-table-1" title="Permalink to this headline">¶</a></h1>
+<p>== 2 Store MySQL Database Data on Separate Partition</p>
+<p>Note: This setup only works with MySQL, but not with MariaDB.</p>
+<p>Sometimes OS read/writes can slow down the performance of your MySQL server, especially if located on same hard drive.
+Instead, I would recommend using separate hard drive (preferably SSD) for the MySQL service.</p>
+<p>To complete, this you will need to attach the new drive to your computer/server.
+For the purpose of this article, I will assume that the drive will be under /dev/sdb.</p>
+<p>The next step is to prepare the new drive:</p>
+</div>
+<div class="section" id="fdisk-dev-sdb">
+<h1>fdisk /dev/sdb<a class="headerlink" href="#fdisk-dev-sdb" title="Permalink to this headline">¶</a></h1>
+<p>Now press “n” to create new partition.
+Next press “p” to make the new partition primary.
+After that, set the partition number from 1-4.
+After that you will select the partition size.
+Press enter here.
+On the next step you will need to configure the size of the partition.</p>
+<p>If you wish to use the entire disk press enter once more.
+Otherwise you can manually set the size of the new partition.
+When ready press “w” to write the changes.
+Now we will need to create a filesystem for our new partition.
+This can be easily done with:</p>
+</div>
+<div class="section" id="mkfs-ext4-dev-sdb1">
+<h1>mkfs.ext4 /dev/sdb1<a class="headerlink" href="#mkfs-ext4-dev-sdb1" title="Permalink to this headline">¶</a></h1>
+<p>Now we will mount our new partition in a folder.
+I have named my folder “ssd” and created in the root directory:</p>
+</div>
+<div class="section" id="mkdir-ssd">
+<h1>mkdir /ssd/<a class="headerlink" href="#mkdir-ssd" title="Permalink to this headline">¶</a></h1>
+<p>We are ready to mount the new partition we just made in the new folder:</p>
+</div>
+<div class="section" id="mount-dev-sdb1-ssd">
+<h1>mount /dev/sdb1 /ssd/<a class="headerlink" href="#mount-dev-sdb1-ssd" title="Permalink to this headline">¶</a></h1>
+<p>You can perform the mount at startup by adding the following line in /etc/fstab file.</p>
+</div>
+<div class="section" id="dev-sdb1-ssd-ext3-defaults-0-0">
+<h1>/dev/sdb1 /ssd ext3 defaults 0 0<a class="headerlink" href="#dev-sdb1-ssd-ext3-defaults-0-0" title="Permalink to this headline">¶</a></h1>
+<p>Now you are ready to move MySQL to the new disk.
+First stop the MySQL service with:</p>
+</div>
+<div class="section" id="service-mysqld-stop">
+<h1>service mysqld stop<a class="headerlink" href="#service-mysqld-stop" title="Permalink to this headline">¶</a></h1>
+<p>I would recommend you stopping Apache/nginx as well to prevent any attempts to write in the databases:</p>
+<hr class="docutils" />
+<p>Now copy the entire MySQL directory in the new drive:</p>
+</div>
+<div class="section" id="cp-var-lib-mysql-ssd-rp">
+<h1>cp /var/lib/mysql /ssd/ -Rp<a class="headerlink" href="#cp-var-lib-mysql-ssd-rp" title="Permalink to this headline">¶</a></h1>
+<p>This may take a while depending on the site of your MySQL databases.
+Once this process is complete rename the MySQL directory:</p>
+</div>
+<div class="section" id="mv-var-lib-mysql-var-lib-mysql-backup">
+<h1>= mv /var/lib/mysql /var/lib/mysql-backup<a class="headerlink" href="#mv-var-lib-mysql-var-lib-mysql-backup" title="Permalink to this headline">¶</a></h1>
+<p>Next we will create a symlink.</p>
+</div>
+<div class="section" id="ln-s-ssd-mysql-var-lib-mysql">
+<h1>= ln -s /ssd/mysql /var/lib/mysql<a class="headerlink" href="#ln-s-ssd-mysql-var-lib-mysql" title="Permalink to this headline">¶</a></h1>
+<p>Now you are ready to start your MySQL and web service:</p>
+<div class="section" id="service-nginx-start">
+<h2>= service nginx start<a class="headerlink" href="#service-nginx-start" title="Permalink to this headline">¶</a></h2>
+<p>At this point your MySQL databases will be accessed from the new drive.</p>
+<p>== 3 Optimizing InnoDB buffer pool Usage</p>
+<p>The InnoDB engine has a buffer pool used for caching data and indexes in memory.
+This of course will help your MySQL/MariaDB queries be executed significantly faster.
+Choosing the proper size here requires some very important decisions and good knowledge on your system’s memory consumption.</p>
+<p>Here is what you need to consider:</p>
+<p>How much memory you need for other processes.
+This includes your system processes, page tables, socket buffers.
+Is your server dedicated for MySQL or you will be running other memory hungry services.</p>
+<p>On a dedicated box, you would probably want to give about 60-70% of the memory to the innodb_buffer_pool_size.
+If you plan on running more services on a single box, you should re-consider the amount of memory you dedicate for your innodb_buffer_pool_size.</p>
+<p>The value that you should edit in my.cnf is:</p>
+</div>
+</div>
+<div class="section" id="innodb-buffer-pool-size">
+<h1>innodb_buffer_pool_size<a class="headerlink" href="#innodb-buffer-pool-size" title="Permalink to this headline">¶</a></h1>
+<p>== 4 Avoid Swappiness in MySQL</p>
+<p>Swapping is process that occurs when system moves part of memory to a special disk space called “swap”.
+The event usually appears when your system runs out of physical memory and instead of freeing up some RAM, the system pushed the information into disk.
+As you might have guess the disk is much slower than your RAM.</p>
+<p>By default the option is enabled:</p>
+<hr class="docutils" />
+<p>To disable swappiness, run the following command:</p>
+</div>
+<div class="section" id="sysctl-w-vm-swappiness-0">
+<h1>= sysctl -w vm.swappiness=0<a class="headerlink" href="#sysctl-w-vm-swappiness-0" title="Permalink to this headline">¶</a></h1>
+<p>== 5 Set MySQL Max Connections</p>
+<p>The max_connections directive tells your server how many concurrent connections are permitted.
+The MySQL/MariaDB server allows the value given in max_connections + 1 for user with SUPER privileges.
+The connection is opened only for the time MySQL query is executed – after that it is closed and new connection can take its place.</p>
+<p>Keep in mind that too many connections can cause high RAM usage and lock up your MySQL server.
+Usually small websites will require between 100-200 connections while larger may require 500-800 or even more.
+The value you apply here strongly depends on your particular MySQL/MariaDB usage.</p>
+<p>You can dynamically change the value of max_connections, without having to restart the MySQL service by running:</p>
+<hr class="docutils" />
+<p>== 6 Configure MySQL thread_cache_size</p>
+<p>The thread_cache_size directive sets the amount of threads that your server should cache.
+As the client disconnects, his threads are put in the cache if they are less than the thread_cache_size.
+Further requests are completed by using the threads stored in the cache.</p>
+<p>To improve your performance you can set the thread_cache_size to a relatively high number.
+To find the thread cache hit rate, you can use the following technique:</p>
+<hr class="docutils" />
+<p>Now use the following formula to calculate the thread cache hit rate percentage:</p>
+<p>100 - ((Threads_created / Connections) * 100)</p>
+<p>If you get a low number, it means that most of the new mysql connections are starting new thread instead of loading from cache.
+You will surely want to increase the thread_cache_size in such cases.</p>
+<p>The good thing here is that the thread_cache_size can be dynamically changed without having to restart the MySQL service.
+You can achieve this by running:</p>
+</div>
+<div class="section" id="mysql-set-global-thread-cache-size-16">
+<h1>mysql&gt; set global thread_cache_size = 16;<a class="headerlink" href="#mysql-set-global-thread-cache-size-16" title="Permalink to this headline">¶</a></h1>
+<p>== 7 Disable MySQL Reverse DNS Lookups</p>
+<p>By default MySQL/MariaDB perform a DNS lookup of the user’s IP address/Hostname from which the connection is coming.
+For each client connection, the IP address is checked by resolving it to a host name.
+After that the host name is resolved back to an IP to verify that both match.</p>
+<p>This unfortunately may cause delays in case of badly configured DNS or problems with DNS server.
+This is why you can disable the reverse DNS lookup by adding the following in your configuration file:</p>
+<div class="section" id="skip-name-resolve">
+<h2>skip-name-resolve<a class="headerlink" href="#skip-name-resolve" title="Permalink to this headline">¶</a></h2>
+<p>You will have to restart the MySQL service after applying these changes.</p>
+<p>== 8 Configure MySQL query_cache_size</p>
+<p>If you have many repetitive queries and your data does not change often – use query cache.
+People often do not understand the concept behind the query_cache_size and set this value to gigabytes, which can actually cause degradation in the performance.</p>
+<p>The reason behind that is the fact that threads need to lock the cache during updates.
+Usually value of 200-300 MB should be more than enough.
+If your website is relatively small, you can try giving the value of 64M and increase in time.</p>
+<p>You will have to add the following settings in the MySQL configuration file:</p>
+<p>query_cache_min_res_unit = 2k
+query_cache_size = 80M
+—-</p>
+<p>== 9 Configure tmp_table_size and max_heap_table_size</p>
+<p>Both directives should have the same size and will help you prevent disk writes.
+The tmp_table_size is the maximum amount of size of internal in-memory tables.
+In case the limit in question is exceeded the table will be converted to on-disk MyISAM table.</p>
+<p>This will affect the database performance.
+Administrators usually recommend giving 64M for both values for every GB of RAM on the server.</p>
+</div>
+<div class="section" id="max-heap-table-size-64m">
+<h2>max_heap_table_size= 64M<a class="headerlink" href="#max-heap-table-size-64m" title="Permalink to this headline">¶</a></h2>
+<p>== 10 Enable MySQL Slow query Logs</p>
+<p>Logging slow queries can help you determine issues with your database and help you debug them.
+This can be easily enabled by adding the following values in your MySQL configuration file:</p>
+</div>
+<div class="section" id="long-query-time-1">
+<h2>long_query_time = 1<a class="headerlink" href="#long-query-time-1" title="Permalink to this headline">¶</a></h2>
+<p>The first directive enables the logging of slow queries, while the second one tells MySQL where to store the actual log file.
+Use long_query_time to define the amount of time that is considered long for MySQL query to be completed.</p>
+<p>== 11 Check for MySQL idle Connections</p>
+<p>Idle connections consume resources and should be interrupted or refreshed when possible.
+Such connections are in “sleep” state and usually stay that way for long period of time.
+To look for idled connections you can run the following command:</p>
+</div>
+</div>
+<div class="section" id="mysqladmin-processlist-u-root-p-grep-sleep">
+<h1>= mysqladmin processlist -u root -p | grep “Sleep”<a class="headerlink" href="#mysqladmin-processlist-u-root-p-grep-sleep" title="Permalink to this headline">¶</a></h1>
+<p>This will show you list of processes that are in sleep state.
+The event appears when the code is using persistent connection to the database.
+When using PHP this event can appear when using mysql_pconnect which opens the connection, after that executes queries, removes the authentication and leaves the connection open.
+This will cause any per-thread buffers to be kept in memory until the thread dies.</p>
+<p>The first thing you would do here is to check the code and fix it.
+If you don’t have access to the code that is being ran, you can change the wait_timeout directive.
+The default value is 28800 seconds, while you can safely decrease it to something like 60:</p>
+</div>
+<div class="section" id="wait-timeout-60">
+<h1>wait_timeout=60<a class="headerlink" href="#wait-timeout-60" title="Permalink to this headline">¶</a></h1>
+<p>== 12 Choosing Right MySQL Filesystem</p>
+<p>Choosing the right filesystem is vital for your databases.
+Most important things you need to consider here are – data integrity, performance and ease of administration.</p>
+<p>As per MariaDB’s recommendations, the best file systems are XFS, Ext4 and Btrfs.
+All of them are enterprise journaling filesystems that can be used with very large files and large storage volumes.</p>
+<p>Below you can find some useful information about the three filesystems:</p>
+<p>[options=”header”]
+<a href="#id1"><span class="problematic" id="id2">|</span></a>===
+<a href="#id3"><span class="problematic" id="id4">|</span></a>Filesystems|XFS|Ext4|Btrfs
+<a href="#id5"><span class="problematic" id="id6">|</span></a>Maximum filesystem size|8EB|1EB|16EB
+<a href="#id7"><span class="problematic" id="id8">|</span></a>Maximum file size|8EB|16TB|16EB
+<a href="#id9"><span class="problematic" id="id10">|</span></a>===</p>
+<p>== 13 Set MySQL max_allowed_packet</p>
+<p>MySQL splits data into packets.
+Usually a single packet is considered a row that is sent to a client.
+The max_allowed_packet directive defines the maximum size of packet that can be sent.</p>
+<p>Setting this value too low can cause a query to stall and you will receive an error in your MySQL error log.
+It is recommended to set the value to the size of your largest packet.</p>
+<p>== 14 Check MySQL Performance Tuning</p>
+<p>Measuring your MySQL/MariaDB performance is something that you should do on regular basis.
+This will help you see if something in the resource usage changes or needs to be improved.</p>
+<p>There are plenty of tools available for benchmarking, but I would like to suggest you one that is simple and easy to use.
+The tool is called mysqltuner.</p>
+<p>To download and run it, use the following set of commands:</p>
+<p>cd major-MySQLTuner-perl-993bc18/
+./mysqltuner.pl
+—-</p>
+<p>You will receive a detailed report about your MySQL usage and recommendation tips.
+Here is a sample output of default MariaDB installation:</p>
+<p>MySQL Performance Tuning</p>
+<p>== 15 Optimize and Repair MySQL Databases</p>
+<p>Sometimes MySQL/MariaDB database tables get crashed quite easily, especially when unexpected server shut down, sudden file system corruption or during copy operation, when database is still accessed.
+Surprisingly, there is a free open source tool called ‘mysqlcheck‘, which automatically check, repair and optimize databases of all tables in Linux.</p>
+<hr class="docutils" />
+<p>That’s it! I hope you have found the above article useful and help you tune up your MySQL server.
+As always if you have any further questions or comments, please submit them in the comment section below.</p>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="20 home office must-haves for remote workers.html" title="&lt;no title&gt;"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="13_tips_tricks_for_writing_shell_scripts_with_awesome_ux.html" title="fi;"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">Enterprise Architecture  documentation</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2019, Peter Preeper.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.2.1.
+    </div>
+  </body>
+</html>

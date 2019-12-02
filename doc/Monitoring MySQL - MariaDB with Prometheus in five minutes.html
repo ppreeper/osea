@@ -1,0 +1,240 @@
+
+
+<!doctype html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>Monitoring MySQL / MariaDB with Prometheus in five minutes &#8212; Enterprise Architecture  documentation</title>
+    <link rel="stylesheet" href="../_static/bizstyle.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/language_data.js"></script>
+    <script type="text/javascript" src="../_static/bizstyle.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="10 efficient ways to produce useful metrics" href="../misc/10_efficient_ways_to_produce_useful_metrics.html" />
+    <link rel="prev" title="Monitoring Ceph Cluster with Prometheus and Grafana" href="Monitoring Ceph Cluster with Prometheus and Grafana.html" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <!--[if lt IE 9]>
+    <script type="text/javascript" src="_static/css3-mediaqueries.js"></script>
+    <![endif]-->
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../misc/10_efficient_ways_to_produce_useful_metrics.html" title="10 efficient ways to produce useful metrics"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="Monitoring Ceph Cluster with Prometheus and Grafana.html" title="Monitoring Ceph Cluster with Prometheus and Grafana"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">Enterprise Architecture  documentation</a> &#187;</li> 
+      </ul>
+    </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="../index.html">Table of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Monitoring MySQL / MariaDB with Prometheus in five minutes</a><ul>
+<li><a class="reference internal" href="#step-1-install-and-configure-prometheus-server">Step 1: Install and Configure Prometheus server</a></li>
+<li><a class="reference internal" href="#step-2-install-and-configure-prometheus-mysql-exporter-on-linux">Step 2: Install and Configure Prometheus MySQL Exporter on Linux</a><ul>
+<li><a class="reference internal" href="#add-prometheus-system-user-and-group">Add Prometheus system user and group</a></li>
+<li><a class="reference internal" href="#download-and-install-prometheus-mysql-exporter">Download and install Prometheus MySQL Exporter</a></li>
+<li><a class="reference internal" href="#create-prometheus-exporter-database-user">Create Prometheus exporter database user</a></li>
+<li><a class="reference internal" href="#configure-database-credentials">Configure database credentials</a></li>
+<li><a class="reference internal" href="#create-systemd-unit-file-for-systemd-systems">Create systemd unit file (For Systemd systems)</a></li>
+<li><a class="reference internal" href="#configure-mysql-endpoint-to-be-scraped-by-prometheus-server">Configure MySQL endpoint to be scraped by Prometheus Server</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#step-3-creating-importing-mysql-grafana-dashboards">Step 3: Creating / Importing MySQL Grafana dashboards</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="Monitoring Ceph Cluster with Prometheus and Grafana.html"
+                        title="previous chapter">Monitoring Ceph Cluster with Prometheus and Grafana</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="../misc/10_efficient_ways_to_produce_useful_metrics.html"
+                        title="next chapter">10 efficient ways to produce useful metrics</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/doc/Monitoring MySQL - MariaDB with Prometheus in five minutes.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="monitoring-mysql-mariadb-with-prometheus-in-five-minutes">
+<h1>Monitoring MySQL / MariaDB with Prometheus in five minutes<a class="headerlink" href="#monitoring-mysql-mariadb-with-prometheus-in-five-minutes" title="Permalink to this headline">¶</a></h1>
+<p><a class="reference external" href="https://computingforgeeks.com/monitoring-mysql-mariadb-with-prometheus-in-five-minutes/">https://computingforgeeks.com/monitoring-mysql-mariadb-with-prometheus-in-five-minutes/</a></p>
+<p>(Last Updated On: September 10, 2018)</p>
+<p>Prometheus is a leading time series database and monitoring solution that is
+open source. Prometheus collects metrics from configured targets at given
+intervals, evaluates rule expressions, displays the results, and can trigger
+alerts if some condition is observed to be true.</p>
+<p>Here we will look at how to configure Prometheus MySQL exporters on database
+servers, both MySQL MariaDB and visualizing data with Grafana. This will
+enable you to have a good view of database performance and know where to
+check whenever you have issues.  The configuration of alerting rules is
+beyond the scope of this guide, but I’ll try to cover it in the next guides.</p>
+<p>This guide will have three main steps</p>
+<ol class="arabic simple">
+<li><p>Installation and configuration of Prometheus server</p></li>
+<li><p>Installation and configuration of MySQL Prometheus exporter on database
+servers</p></li>
+<li><p>Creating / Importing MySQL Grafana dashboards – We will use readily
+baked dashboards by Percona.</p></li>
+</ol>
+<div class="section" id="step-1-install-and-configure-prometheus-server">
+<h2>Step 1: Install and Configure Prometheus server<a class="headerlink" href="#step-1-install-and-configure-prometheus-server" title="Permalink to this headline">¶</a></h2>
+<p>I had written a comprehensive guide on how to install and configure Prometheus
+server. The guide was titled for Ubuntu and CentOS 7 but it should work for
+any other systemd server.</p>
+<p>How to Install Prometheus Server on CentOS / Ubuntu</p>
+<p>Follow the guide and you should have a working Prometheus server at the end.</p>
+</div>
+<div class="section" id="step-2-install-and-configure-prometheus-mysql-exporter-on-linux">
+<h2>Step 2: Install and Configure Prometheus MySQL Exporter on Linux<a class="headerlink" href="#step-2-install-and-configure-prometheus-mysql-exporter-on-linux" title="Permalink to this headline">¶</a></h2>
+<p>Once you have installed Prometheus server, you need to install Prometheus
+exporter for MySQL server metrics. Note that the supported MySQL
+versions is 5.5 and up.</p>
+<div class="section" id="add-prometheus-system-user-and-group">
+<h3>Add Prometheus system user and group<a class="headerlink" href="#add-prometheus-system-user-and-group" title="Permalink to this headline">¶</a></h3>
+<p>This user will manage the exporter service.</p>
+</div>
+<div class="section" id="download-and-install-prometheus-mysql-exporter">
+<h3>Download and install Prometheus MySQL Exporter<a class="headerlink" href="#download-and-install-prometheus-mysql-exporter" title="Permalink to this headline">¶</a></h3>
+<p>This should be done on MySQL / MariaDB servers, both slaves and master
+servers. You may need to check <a class="reference external" href="https://github.com/prometheus/mysqld_exporter/releases">https://github.com/prometheus/mysqld_exporter/releases</a>
+Prometheus MySQL exporter releases page for the latest release, then export
+the latest version to <cite>VER</cite> variable as shown below:</p>
+<p>Clean installation by removing the tarball and extraction directory.</p>
+</div>
+<div class="section" id="create-prometheus-exporter-database-user">
+<h3>Create Prometheus exporter database user<a class="headerlink" href="#create-prometheus-exporter-database-user" title="Permalink to this headline">¶</a></h3>
+<p>The user should have <cite>PROCESS</cite>, <cite>SELECT</cite>, <cite>REPLICATION CLIENT</cite> grants</p>
+<p>If you have a Master-Slave database architecture, create user on the
+master servers only.</p>
+<p><cite>WITH MAX_USER_CONNECTIONS 2</cite> is used to set a max connection limit for
+the user to avoid overloading the server with monitoring scrapes under
+heavy load.</p>
+</div>
+<div class="section" id="configure-database-credentials">
+<h3>Configure database credentials<a class="headerlink" href="#configure-database-credentials" title="Permalink to this headline">¶</a></h3>
+<p>Create database credentials file</p>
+<p>Add correct username and password for user create</p>
+<p>Set ownership permissions:</p>
+</div>
+<div class="section" id="create-systemd-unit-file-for-systemd-systems">
+<h3>Create systemd unit file (For Systemd systems)<a class="headerlink" href="#create-systemd-unit-file-for-systemd-systems" title="Permalink to this headline">¶</a></h3>
+<p>This is for systemd servers, for SysV init system, use
+<a class="reference external" href="https://computingforgeeks.com/prometheus-mysql-exporter-init-script-for-sysv-init-system/">https://computingforgeeks.com/prometheus-mysql-exporter-init-script-for-sysv-init-system/</a>
+Prometheus MySQL exporter init script for SysV init system</p>
+<p>Create a new service file:</p>
+<p>Add the following content</p>
+<p>If your server has a public and private network, you may need to
+replace <cite>0.0.0.0:9104</cite> with private IP, e.g. <cite>192.168.4.5:9104</cite></p>
+<p>When done, reload systemd and start <cite>mysql_exporter</cite> service.</p>
+</div>
+<div class="section" id="configure-mysql-endpoint-to-be-scraped-by-prometheus-server">
+<h3>Configure MySQL endpoint to be scraped by Prometheus Server<a class="headerlink" href="#configure-mysql-endpoint-to-be-scraped-by-prometheus-server" title="Permalink to this headline">¶</a></h3>
+<p>Login to your Prometheus server and Configure endpoint to scrape.
+Below is an example for two MySQL database servers.</p>
+<p>The first server has the IP address <cite>10.10.1.10</cite> and the second one
+is <cite>10.10.1.11</cite>. Add other targets using the similar format.
+<em>Job names</em> should be <em>unique</em> for each target.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Prometheus Server should be able to reach the targets over the
+network. Ensure you have correct network/firewall configurations.</p>
+</div>
+</div>
+</div>
+<div class="section" id="step-3-creating-importing-mysql-grafana-dashboards">
+<h2>Step 3: Creating / Importing MySQL Grafana dashboards<a class="headerlink" href="#step-3-creating-importing-mysql-grafana-dashboards" title="Permalink to this headline">¶</a></h2>
+<p>Now that we have the targets configured and agents to be monitored, we should
+be good to add Prometheus data source to Grafana so that we can do metrics
+visualization. If you don’t have a ready Grafana server, use any of the
+guides below to install Grafana:</p>
+<p>Install Grafana and InfluxDB on CentOS 7</p>
+<p>How to Install Grafana on Ubuntu and Debian</p>
+<p>When installed, login to admin dashboard and add Datasource by navigating
+to <cite>Configuration &gt; Data Sources</cite>.</p>
+<p>If Prometheus server is not on the same host as Grafana, provide IP address
+of the server.</p>
+<p>image:https://computingforgeeks.com/wp-content/uploads/2018/09/prometheus-add-data-source-min-696x450.png[]</p>
+<p>## Create / Import Grafana Dashboard for MySQL Prometheus exporter</p>
+<p>If you don’t have all the golden time to create your own dashboards, you
+can use one created by link:https://github.com/percona/grafana-dashboards
+Percona, they are Open source.</p>
+<p>Let’s download <cite>MySQL_Overview</cite> dashboard which has a good overview of database
+performance.</p>
+<p>### Upload Prometheus MySQL dashboard(s) to grafana</p>
+<p>Go to <cite>Dashboards &gt; Import &gt; Upload .json file</cite></p>
+<p>image:https://computingforgeeks.com/wp-content/uploads/2018/09/prometheus-import-dashboard-min-696x181.png[]</p>
+<p>Locate the directory with dashboard file and import.</p>
+<p>image:https://computingforgeeks.com/wp-content/uploads/2018/09/prometheus-import-dashboard-02-min.png[]</p>
+<p>Metrics collected should start showing.</p>
+<p>image:https://computingforgeeks.com/wp-content/uploads/2018/09/prometheus-grafana-metrics-min.png[]</p>
+<p>If you wish to import all Percona dashboards for Prometheus, install them
+on Grafana server.</p>
+<p>You need to restart Grafana server to import these dashboards.</p>
+<p>You can then start using the dashboards on Grafana. I’ll do a guide for how
+to Monitor Linux server with Prometheus, for OS metrics, before then, check
+similar guides below:</p>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../misc/10_efficient_ways_to_produce_useful_metrics.html" title="10 efficient ways to produce useful metrics"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="Monitoring Ceph Cluster with Prometheus and Grafana.html" title="Monitoring Ceph Cluster with Prometheus and Grafana"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">Enterprise Architecture  documentation</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2019, Peter Preeper.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.2.1.
+    </div>
+  </body>
+</html>

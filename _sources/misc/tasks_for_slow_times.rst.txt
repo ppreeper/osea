@@ -1,0 +1,101 @@
+= 10 small IT projects you can do during holiday slow times
+
+* Version 1.0
+* December 7, 2007
+* By Rick Vanover
+
+During the short week before the New Year's holiday, you may get a chance to tackle some tasks that you normally wouldn't have time for. Most organizations have a slower week if the office is open. Instead of having light days, you can slip in some little projects that have been on the back burner for maybe too long. Here are some possible ways to make good use of the slower days in the office.
+
+== 1. Evaluate some additional virtualization platforms
+
+Are you totally satisfied with your current virtualization environment? Many players are coming onto the virtualization scene that will be adding compelling management interfaces and functionality. It's easy to become too entrenched in a particular direction, so now might be the time to check into some of the new virtualization platforms and management options.
+
+== 2. Test your failover and disaster recovery mechanisms 
+
+DR mechanisms are critical, so why not take a moment to do a full or even a partial test of relevant procedures (or at least update the procedure, if it has changed). Include tests of any bare-metal recovery for backups as well as spare equipment for critical systems. This could be done to host live operations or to run in a simulation environment.
+
+Testing these mechanisms will give you two added benefits: You'll be familiar with the process and you'll know that it works, should you need to use it in a non-drill situation.
+
+== 3. Inventory and remove your obsolete equipment
+
+How many systems do you have that you know you will never turn on again for any real purpose? Take some time to assess the equipment you have that is not in use (and destroy drive data if necessary). Ask yourself whether you will ever really need to use it again and get the equipment to a recycling service. If you have a vendor that supports that type of equipment with other customers, you could also inquire whether a transaction can be made for the equipment (usually a credit to future purchases or a discount against a service agreement).
+
+== 4. Verify and update documentation
+
+I can hear grumbles from coast to coast on this one, but this is a great time to get documentation updated (or to finally get around to it). Chances are you can make better documentation during a quiet time in the office -- all the while thinking, “How can I make this documentation so good, no one will ever ask me a question about it?”
+
+== 5. Ensure correct equipment labeling
+
+As with documentation, most of us are guilty of being a bit lax in our labeling practices. How many times have you had to remember that a particular server was repurposed from an install perspective but not relabeled? If you have a device that gives you a particular error frequently, you might also want to make some self-help labels for that situation, which may save on help desk calls.
+
+== 6. Test and implement additional security measures
+
+Take a look around for access that is over-permissioned and determine the correct required access. This can be viewed as a preventive maintenance opportunity to keep systems safe from accidental or malicious use. One example might be the use of service and task accounts instead of general rights assigned to users. In the Windows space, the Run As command can be a big help in delegating security and roles, while not having users log in as the particular user with full rights within their logon session.
+
+== 7. Benchmark
+
+Take a little time to set up those performance monitor and baseline statistics that you can easily run on demand when the data is needed. By setting them up during the slow week, you’ll get a chance to review the output. Be sure to run these tools during a more representative week as well for comparison. Benchmarks can be a big help when you're troubleshooting a performance issue, since a baseline that reflects the problem is really no help to the solution.
+
+== 8. Do some self-guided training
+
+Self-guided training can be casual, peaceful, and most of all convenient. The slow times during the holidays can be a great opportunity to look at some new solutions from the training perspective, to catch up to a current version from prior version expertise, or to simply check for different approaches to common tasks.
+
+**Example**
+
+One good place to start is with the Microsoft Virtual Labs. These are useful resources available online for most Microsoft products. You can connect to a virtual system and perform tasks according to canned plans and exercises. This is a good way to get a first look at a solution you may be considering for implementation.
+
+== 9. Cross-train on the mundane
+
+For tasks that are generally done by one person and that aren't too complex, consider training someone else on how to do it. This can really help in coverage situations. It also helps ensure that the process is done consistently 0and correctly, if you build a more formal procedure from the training.
+
+== 10. Perform your physical to virtual (P2V) migrations
+
+The slow time of the last full week of the year may be a great time for you to schedule downtime so that you can perform any necessary migrations. Depending on how you approach your P2V process, you may need some downtime on your candidate migration machines. Just be sure not to get too excited and turn off the physical systems too early -- you may need to go back!
+
+= 10 tasks to keep your IT department productive during slow times
+
+* By Jack Wallen
+* March 12, 2012, 2:37 PM PDT
+* **Takeaway: When work slows down, it’s smart to catch up on back-burner tasks. You can keep your techs busy and get some necessary (but neglected) chores out of the way.**
+
+Every minute of every day isn’t filled with emergencies, data migration, backup cleanup, and end-user babysitting. Sometimes, you find yourself faced with engineers who have nothing to do. Naturally, you don’t want those brilliant minds idle — or else you’d have World of Warcraft parties breaking out in the department. So what can you do when slow times strike? Well, it’s simple. You tackle the tasks that you’re normally too busy to get to. Here are 10 chores that will keep your department humming, even when there are no front-burner issues to deal with.
+
+== 1. Clean up the shop
+
+The shop (or departmental offices) can get out of sorts when life is hectic. But a clean environment is much more conducive to efficient work. When things are slow, why not take a moment to clean up the office? This could be as simple as a good sweep, dust, and shine or as involved as getting rid of older and dead tech and completely rearranging the furniture for a better layout. 
+
+== 2. Make patch cables
+
+You can never have enough patch cables. And although it’s simple to order 3-, 5-, 7-, 15-foot cables, you don’t always have the perfect length. Buying spooled cable in bulk and RJ45 connectors is a heck of a lot cheaper than buying bags of precut and pre-terminated Ethernet cables.
+
+== 3. Get cables under control
+
+Open up that server closet. What do you see? A minefield of thick, worm-like cables ready to tangle your feet at every step? Downtime is a great time to bring order to that chaos. It goes without saying you must do this without disrupting anyone’s work, so this could be a job for early morning or after hours.
+
+== 4. Learn something new
+
+IT is an ever-evolving field. That means education. Slow times offer a perfect opportunity to have your engineers learn something new. They don’t necessarily have to take classes. It could be as simple as having them work with a new coding language or having high-level admins teaching lower-level employees their way around more complex systems. Any knowledge employees can share with one another is a good investment in time. 
+
+== 5. Clean up your code
+
+Sometimes, when things are crazy, we don’t write the cleanest code. Or we may forget to comment it. We all know the benefit of clean code — easier debugging and rewriting and, in some cases, more efficient execution. We also know that when code is written poorly, it can be a real pain to clean up — so slow times are well suited for taking on 
+
+== 6. Test new systems and software
+
+We’re all, always, looking for new systems to use. The thing is, we rarely have the time and energy to actually test out new systems. What about that new open source CMS you’ve been dying to give a go? Or the groupware? Slow times give you a great opportunity to get those systems up and running and hammer them to see if they’ll do the job you need them to do.
+
+== 7. Document systems and software
+
+This is one of the last tasks that ever get done, but it’s one of the most important. Without documentation, your systems rely upon your engineers to remember everything. Unfortunately, employee turnover is inevitable. When people leave, you still need to be able to log on to those mission-critical servers. Take this opportunity to begin the process of documenting your systems, software, users, etc. In the end, you’ll be very glad you did this.
+
+== 8. Audit your network
+
+Do you know every piece of hardware on your network? You should — or at least you should have it on paper. Downtime gives you a chance to audit your network and create both digital and paper maps of that topology. At some point, you will be happy you took the time to do this. Just make sure that if you include passwords in this map, you place it in a secure location (like a safe).
+
+== 9. File paperwork
+
+Your company might still do everything on paper. Or you may have already gone digital. Either way, there is most likely some form of paperwork to be done. And if you’re like many IT shops, you’re already way behind in the paperwork department. Now is the perfect time to catch up... and maybe even get a bit ahead! 
+
+== 10. Run a security audit on your servers
+
+You never know when you’re going to get hit by malicious hackers hoping to make you another notch in their belt. Now that you have some downtime, this might be the perfect moment to run a full-scale security audit on your servers. Armed with this kind of information, you can harden those systems so you don’t have to worry about security when you don’t have time to worry.

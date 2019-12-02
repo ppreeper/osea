@@ -1,0 +1,356 @@
+
+
+<!doctype html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>&lt;no title&gt; &#8212; Enterprise Architecture  documentation</title>
+    <link rel="stylesheet" href="../_static/bizstyle.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/language_data.js"></script>
+    <script type="text/javascript" src="../_static/bizstyle.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="prev" title="&lt;no title&gt;" href="wordpress-4.9-ubuntu-16.04.html" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <!--[if lt IE 9]>
+    <script type="text/javascript" src="_static/css3-mediaqueries.js"></script>
+    <![endif]-->
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="wordpress-4.9-ubuntu-16.04.html" title="&lt;no title&gt;"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">Enterprise Architecture  documentation</a> &#187;</li> 
+      </ul>
+    </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="wordpress-4.9-ubuntu-16.04.html"
+                        title="previous chapter">&lt;no title&gt;</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/misc/writing_a_simple_linux_kernel_module.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <p>#Writing a Simple Linux Kernel Module</p>
+<p>##Grabbing the Golden Ring-0</p>
+<p>Linux provides a powerful and expansive API for applications, but sometimes that’s not enough. Interacting with a piece of hardware or conducting operations that require accessed to privileged information in the system require a kernel module.</p>
+<p>A Linux kernel module is a piece of compiled binary code that is inserted directly into the Linux kernel, running at ring 0, the lowest and least protected ring of execution in the x86–64 processor. Code here runs completely unchecked but operates at incredible speed and has access to everything in the system.</p>
+<p>##Not for Mere Mortals</p>
+<p>Writing a Linux kernel module is not for the faint of heart. By altering the kernel, you risk data loss and system corruption. Kernel code doesn’t have the usual safety net that regular Linux applications enjoy. If you have a fault, it will lock up the entire system.</p>
+<p>To make matters worse, your issue may not become immediately apparent. Your module locking up immediately upon loading is probably the best-case scenario for failure. As you add more code to your module, you run the risk of introducing runaway loops and memory leaks. If you’re not careful, these can continue to grow as your machine continues to run. Eventually important memory structures and even buffers can be overwritten.</p>
+<p>Traditional application development paradigms can be largely discarded. Other than loading and unloading of your module, you’ll be writing code that responds to system events rather than operates in a sequential pattern. With kernel development, you’re writing APIs, not applications themselves.</p>
+<p>You also have no access to the standard library. While the kernel provides some functions like printk (which serves as a replacement for printf) and kmalloc (which operates in a similar fashion to malloc), you are largely left to your own devices. Additionally, when your module unloads, you are responsible for completely cleaning up after yourself. There is no garbage collection.</p>
+<p>##Prerequisites</p>
+<p>Before we get started, we need to make sure we have the correct tools for the job. Most importantly, you’ll need a Linux machine. I know that comes as a complete surprise! While any Linux distribution will do, I am using Ubuntu 16.04 LTS in this example, so if you’re using a different distribution you may need to slightly adjust your installation commands.</p>
+<p>Secondly, you’ll need either a separate physical machine or a virtual machine. I prefer to do my work in a virtual machine, but this is entirely up to you. I don’t suggest using your primary machine because data loss can occur when you make a mistake. I say when, not if, because you undoubtedly will lock up your machine at least a few times during the process. Your latest code changes may still be in the write buffer when the kernel panics, so it’s possible that your source files can become corrupted. Testing in a virtual machine eliminates this risk.</p>
+<p>And finally, you’ll need to know at least some C. The C++ runtime is far too large for the kernel, so writing bare metal C is essential. For interaction with hardware, knowing some assembly might be helpful.</p>
+<p>##Installing the Development Environment</p>
+<p>On Ubuntu, we need to run:</p>
+<p>&lt;code bash&gt;
+apt-get install build-essential linux-headers-uname -r
+&lt;/code&gt;</p>
+<p>This will install the essential development tools and the kernel headers necessary for this example.</p>
+<p>The examples below assume you are running as a regular user and not root, but that you have sudo privileges. Sudo is mandatory for loading kernel modules, but we want to work outside of root whenever possible.</p>
+<p>##Getting Started</p>
+<p>Let’s start writing some code. Let’s prepare our environment:</p>
+<p>&lt;code bash&gt;
+mkdir ~/src/lkm_example
+cd ~/src/lkm_example
+&lt;/code&gt;</p>
+<p>Fire up your favorite editor (in my case, this is vim) and create the file lkm_example.c with the following contents:</p>
+<p>&lt;code c&gt;
+#include &lt;linux/init.h&gt;
+#include &lt;linux/module.h&gt;
+#include &lt;linux/kernel.h&gt;
+MODULE_LICENSE(“GPL”);
+MODULE_AUTHOR(“Robert W. Oliver II”);
+MODULE_DESCRIPTION(“A simple example Linux module.”);
+MODULE_VERSION(“0.01”);
+static int __init lkm_example_init(void) {</p>
+<blockquote>
+<div><p>printk(KERN_INFO “Hello, World!n”);
+return 0;</p>
+</div></blockquote>
+<p>}
+static void __exit lkm_example_exit(void) {</p>
+<blockquote>
+<div><p>printk(KERN_INFO “Goodbye, World!n”);</p>
+</div></blockquote>
+<p>}
+module_init(lkm_example_init);
+module_exit(lkm_example_exit);
+&lt;/code&gt;</p>
+<p>Now that we’ve constructed the simplest possible module, let’s example the important parts in detail:</p>
+<p>· The “includes” cover the required header files necessary for Linux kernel development.</p>
+<dl class="simple">
+<dt>· MODULE_LICENSE can be set to a variety of values depending on the license of the module. To see a full list, run:</dt><dd><p>grep “MODULE_LICENSE” -B 27 /usr/src/linux-headers-uname -r/include/linux/module.h</p>
+</dd>
+</dl>
+<p>· We define both the init (loading) and exit (unloading) functions as static and returning an int.</p>
+<p>· Note the use of printk instead of printf. Also, printk doesn’t share the same parameters as printf. For example, the KERN_INFO, which is a flag to declare what priority of logging should be set for this line, is defined without a comma. The kernel sorts this out inside the printk function to save stack memory.</p>
+<p>· At the end of the file, we call module_init and module_exit to tell the kernel which functions are or loading and unloading functions. This gives us the freedom to name the functions whatever we like.</p>
+<p>We can’t compile this file yet, though. We need a Makefile. This basic example will work for now. Note that make is very picky about spaces and tabs, so ensure you use tab instead of space where appropriate.</p>
+<p>&lt;code bash&gt;
+obj-m += lkm_example.o
+all:</p>
+<blockquote>
+<div><p>make -C /lib/modules/$(shell uname -r)/build M=$(PWD) modules</p>
+</div></blockquote>
+<dl class="simple">
+<dt>clean:</dt><dd><p>make -C /lib/modules/$(shell uname -r)/build M=$(PWD) clean</p>
+</dd>
+</dl>
+<p>&lt;/code&gt;</p>
+<p>If we run “make”, it should compile your module successfully. The resulting file is “lkm_example.ko”. If you receive any errors, check that your quotation marks in the example source file are correct and not pasted accidentally as UTF-8 characters.</p>
+<p>Now we can insert the module to test it. To do this, run:</p>
+<p>&lt;code bash&gt;
+sudo insmod lkm_example.ko
+&lt;/code&gt;</p>
+<p>If all goes well, you won’t see a thing. The printk function doesn’t output to the console but rather the kernel log. To see that, we’ll need to run:</p>
+<p>&lt;code bash&gt;
+sudo dmesg
+&lt;/code&gt;</p>
+<p>You should see the “Hello, World!” line prefixed by a timestamp. This means our kernel module loaded and successfully printed to the kernel log. We can also check to see if the module is still loaded:</p>
+<p>&lt;code bash&gt;
+lsmod | grep “lkm_example”
+&lt;/code&gt;</p>
+<p>To remove the module, run:</p>
+<p>&lt;code bash&gt;
+sudo rmmod lkm_example
+&lt;/code&gt;</p>
+<p>If you run dmesg again, you’ll see “Goodbye, World!” in the logs. You can also use lsmod again to confirm it was unloaded.</p>
+<p>As you can see, this testing workflow is a bit tedious, so to automate this we can add:</p>
+<p>&lt;code bash&gt;
+test:</p>
+<blockquote>
+<div><p>sudo dmesg -C
+sudo insmod lkm_example.ko
+sudo rmmod lkm_example.ko
+dmesg</p>
+</div></blockquote>
+<p>&lt;/code&gt;</p>
+<p>at the end of our Makefile and now run:</p>
+<p>&lt;code bash&gt;
+make test
+&lt;/code&gt;</p>
+<p>to test our module and see the output of the kernel log without having to run separate commands.</p>
+<p>Now we have a fully functional, yet completely trivial, kernel module!</p>
+<p>##A Bit More Interesting</p>
+<p>Let’s dive a bit deeper. While kernel modules can accomplish all sorts of tasks, interacting with applications is one of their most common uses.</p>
+<p>Since applications are restricted from viewing the contents of kernel space memory, applications must use an API to communicate with them. While there are technically multiple ways to accomplish this, the most common is to create a device file.</p>
+<p>You’ve likely interacted with device files before. Commands that use /dev/zero, /dev/null, or similar are interacting with a device named “zero” and “null” that return the expected values.</p>
+<p>In our example, we’ll return “Hello, World”. While this isn’t a particularly useful function to provide applications, it will nevertheless show the process of responding to an application via a device file.</p>
+<p>Here’s our complete listing:</p>
+<p>&lt;code c&gt;
+#include &lt;linux/init.h&gt;
+#include &lt;linux/module.h&gt;
+#include &lt;linux/kernel.h&gt;
+#include &lt;linux/fs.h&gt;
+#include &lt;asm/uaccess.h&gt;
+MODULE_LICENSE(“GPL”);
+MODULE_AUTHOR(“Robert W. Oliver II”);
+MODULE_DESCRIPTION(“A simple example Linux module.”);
+MODULE_VERSION(“0.01”);
+#define DEVICE_NAME “lkm_example”
+#define EXAMPLE_MSG “Hello, World!n”
+#define MSG_BUFFER_LEN 15
+/* Prototypes for device functions <em>/
+static int device_open(struct inode *, struct file *);
+static int device_release(struct inode *, struct file *);
+static ssize_t device_read(struct file *, char *, size_t, loff_t *);
+static ssize_t device_write(struct file *, const char *, size_t, loff_t *);
+static int major_num;
+static int device_open_count = 0;
+static char msg_buffer[MSG_BUFFER_LEN];
+static char *msg_ptr;
+/</em> This structure points to all of the device functions <a href="#id1"><span class="problematic" id="id2">*</span></a>/
+static struct file_operations file_ops = {</p>
+<blockquote>
+<div><p>.read = device_read,
+.write = device_write,
+.open = device_open,
+.release = device_release</p>
+</div></blockquote>
+<p>};
+/* When a process reads from our device, this gets called. <a href="#id3"><span class="problematic" id="id4">*</span></a>/
+static ssize_t device_read(struct file <a href="#id5"><span class="problematic" id="id6">*</span></a>flip, char <a href="#id7"><span class="problematic" id="id8">*</span></a>buffer, size_t len, loff_t <a href="#id9"><span class="problematic" id="id10">*</span></a>offset) {</p>
+<blockquote>
+<div><p>int bytes_read = 0;
+/* If we’re at the end, loop back to the beginning <em>/
+if (*msg_ptr == 0) {
+msg_ptr = msg_buffer;
+}
+/</em> Put data in the buffer <em>/
+while (len &amp;&amp; *msg_ptr) {
+/</em> Buffer is in user data, not kernel, so you can’t just reference
+* with a pointer. The function put_user handles this for us <a href="#id11"><span class="problematic" id="id12">*</span></a>/
+put_user(<a href="#id13"><span class="problematic" id="id14">*</span></a>(msg_ptr++), buffer++);
+len–;
+bytes_read++;
+}
+return bytes_read;</p>
+</div></blockquote>
+<p>}
+/* Called when a process tries to write to our device <a href="#id15"><span class="problematic" id="id16">*</span></a>/
+static ssize_t device_write(struct file <a href="#id17"><span class="problematic" id="id18">*</span></a>flip, const char <a href="#id19"><span class="problematic" id="id20">*</span></a>buffer, size_t len, loff_t <a href="#id21"><span class="problematic" id="id22">*</span></a>offset) {</p>
+<blockquote>
+<div><p>/* This is a read-only device <a href="#id23"><span class="problematic" id="id24">*</span></a>/
+printk(KERN_ALERT “This operation is not supported.n”);
+return -EINVAL;</p>
+</div></blockquote>
+<p>}
+/* Called when a process opens our device <a href="#id25"><span class="problematic" id="id26">*</span></a>/
+static int device_open(struct inode <a href="#id27"><span class="problematic" id="id28">*</span></a>inode, struct file <a href="#id29"><span class="problematic" id="id30">*</span></a>file) {</p>
+<blockquote>
+<div><p>/* If device is open, return busy <a href="#id31"><span class="problematic" id="id32">*</span></a>/
+if (device_open_count) {
+return -EBUSY;
+}
+device_open_count++;
+try_module_get(THIS_MODULE);
+return 0;</p>
+</div></blockquote>
+<p>}
+/* Called when a process closes our device <a href="#id33"><span class="problematic" id="id34">*</span></a>/
+static int device_release(struct inode <a href="#id35"><span class="problematic" id="id36">*</span></a>inode, struct file <a href="#id37"><span class="problematic" id="id38">*</span></a>file) {</p>
+<blockquote>
+<div><p>/* Decrement the open counter and usage count. Without this, the module would not unload. <a href="#id39"><span class="problematic" id="id40">*</span></a>/
+device_open_count–;
+module_put(THIS_MODULE);
+return 0;</p>
+</div></blockquote>
+<p>}
+static int __init lkm_example_init(void) {</p>
+<blockquote>
+<div><p>/* Fill buffer with our message <em>/
+strncpy(msg_buffer, EXAMPLE_MSG, MSG_BUFFER_LEN);
+/</em> Set the msg_ptr to the buffer <em>/
+msg_ptr = msg_buffer;
+/</em> Try to register character device <a href="#id41"><span class="problematic" id="id42">*</span></a>/
+major_num = register_chrdev(0, “lkm_example”, &amp;file_ops);
+if (major_num &lt; 0) {
+printk(KERN_ALERT “Could not register device: %dn”, major_num);
+return major_num;
+} else {
+printk(KERN_INFO “lkm_example module loaded with device major number %dn”, major_num);
+return 0;
+}</p>
+</div></blockquote>
+<p>}
+static void __exit lkm_example_exit(void) {</p>
+<blockquote>
+<div><p>/* Remember — we have to clean up after ourselves. Unregister the character device. <a href="#id43"><span class="problematic" id="id44">*</span></a>/
+unregister_chrdev(major_num, DEVICE_NAME);
+printk(KERN_INFO “Goodbye, World!n”);</p>
+</div></blockquote>
+<p>}
+/* Register module functions <a href="#id45"><span class="problematic" id="id46">*</span></a>/
+module_init(lkm_example_init);
+module_exit(lkm_example_exit);
+&lt;/code&gt;</p>
+<p>##Testing Our Enhanced Example</p>
+<p>Now that our example does something more than simply print a message upon loading and unloading, we need a less restrictive test routine. Let’s modify our Makefile to only load the module and not unload it.</p>
+<p>&lt;code bash&gt;
+obj-m += lkm_example.o
+all:</p>
+<blockquote>
+<div><p>make -C /lib/modules/$(shell uname -r)/build M=$(PWD) modules</p>
+</div></blockquote>
+<dl class="simple">
+<dt>clean:</dt><dd><p>make -C /lib/modules/$(shell uname -r)/build M=$(PWD) clean</p>
+</dd>
+<dt>test:</dt><dd><p># We put a — in front of the rmmod command to tell make to ignore
+# an error in case the module isn’t loaded.
+-sudo rmmod lkm_example
+# Clear the kernel log without echo
+sudo dmesg -C
+# Insert the module
+sudo insmod lkm_example.ko
+# Display the kernel log
+dmesg</p>
+</dd>
+</dl>
+<p>&lt;/code&gt;</p>
+<p>Now when you run “make test”, you’ll see the output of the device’s major number. In our example, this is automatically assigned by the kernel. However, you’ll need this value to create the device.</p>
+<p>Take the value you obtain from “make test” and use it to create a device file so that we can communicate with our kernel module from user space.</p>
+<p>&lt;code bash&gt;
+sudo mknod /dev/lkm_example c MAJOR 0
+&lt;/code&gt;</p>
+<p>(in the above example, replace MAJOR with the value you obtain from “make test” or “dmesg”)</p>
+<p>The “c” in the mknod command tells mknod that we need a character device file created.</p>
+<p>Now we can grab content from the device:</p>
+<p>&lt;code bash&gt;
+cat /dev/lkm_example
+&lt;/code&gt;</p>
+<p>or even via the “dd” command:</p>
+<p>&lt;code bash&gt;
+dd if=/dev/lkm_example of=test bs=14 count=100
+&lt;/code&gt;</p>
+<p>You can also access this device via applications. They don’t have to be compiled applications — even Python, Ruby, and PHP scripts can access this data.</p>
+<p>When we’re done with the device, delete it and unload the module:</p>
+<p>&lt;code bash&gt;
+sudo rm /dev/lkm_example
+sudo rmmod lkm_example
+&lt;/code&gt;</p>
+<p>##Conclusion</p>
+<p>I hope you’ve enjoyed our romp through kernel land. Though the examples I’ve provided are basic, you can use this structure to construct your own module that does very complex tasks.</p>
+<p>Just remember that you are completely on your own in kernel land. There are no backstops or second chances for your code. If you’re quoting a project for a client, be sure to double, if not triple, the anticipated debugging time. Kernel code has to be as perfect as possible to ensure the integrity and reliability of the systems that will run it.</p>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="wordpress-4.9-ubuntu-16.04.html" title="&lt;no title&gt;"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">Enterprise Architecture  documentation</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2019, Peter Preeper.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.2.1.
+    </div>
+  </body>
+</html>

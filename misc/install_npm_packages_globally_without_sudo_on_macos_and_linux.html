@@ -1,0 +1,131 @@
+
+
+<!doctype html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>&lt;no title&gt; &#8212; Enterprise Architecture  documentation</title>
+    <link rel="stylesheet" href="../_static/bizstyle.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/language_data.js"></script>
+    <script type="text/javascript" src="../_static/bizstyle.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="&lt;no title&gt;" href="install-perl-cpanm.html" />
+    <link rel="prev" title="&lt;no title&gt;" href="i_never_understood_javascript_closures.html" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <!--[if lt IE 9]>
+    <script type="text/javascript" src="_static/css3-mediaqueries.js"></script>
+    <![endif]-->
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="install-perl-cpanm.html" title="&lt;no title&gt;"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="i_never_understood_javascript_closures.html" title="&lt;no title&gt;"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">Enterprise Architecture  documentation</a> &#187;</li> 
+      </ul>
+    </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="i_never_understood_javascript_closures.html"
+                        title="previous chapter">&lt;no title&gt;</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="install-perl-cpanm.html"
+                        title="next chapter">&lt;no title&gt;</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/misc/install_npm_packages_globally_without_sudo_on_macos_and_linux.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <p>= Install npm packages globally without sudo on macOS and Linux</p>
+<p>npm installs packages locally within your projects by default. You can also install packages globally (e.g. npm install -g &lt;package&gt;) (useful for command-line apps). However the downside of this is that you need to be root (or use sudo) to be able to install globally.</p>
+<p>Here is a way to install packages globally for a given user.</p>
+<ol class="arabic simple">
+<li><p>Create a directory for global packages</p></li>
+</ol>
+<p>&lt;code bash&gt;
+mkdir “${HOME}/.npm-packages”
+&lt;/code&gt;</p>
+<ol class="arabic simple" start="2">
+<li><p>Indicate to npm where to store globally installed packages. In your ~/.npmrc file add:</p></li>
+</ol>
+<p>&lt;code bash&gt;
+prefix=${HOME}/.npm-packages
+&lt;/code&gt;</p>
+<ol class="arabic simple" start="3">
+<li><p>Ensure npm will find installed binaries and man pages. Add the following to your .bashrc/.zshrc:</p></li>
+</ol>
+<p>&lt;code bash&gt;
+NPM_PACKAGES=”${HOME}/.npm-packages”</p>
+<p>PATH=”$NPM_PACKAGES/bin:$PATH”</p>
+<p>= Unset manpath so we can inherit from /etc/manpath via the manpath command
+unset MANPATH # delete if you already modified MANPATH elsewhere in your config
+export MANPATH=”$NPM_PACKAGES/share/man:$(manpath)”
+&lt;/code&gt;</p>
+<p>&gt; NOTE: If you are running macOS, the .bashrc file may not yet exist, and the terminal will be obtaining its environment parameters from another file, such as .profile or .bash_profile. These files also reside in the user’s home folder. In this case, simply adding the following line to them will instruct Terminal to also load the .bashrc file:</p>
+<p>&lt;code bash&gt;
+source ~/.bashrc
+&lt;/code&gt;</p>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="install-perl-cpanm.html" title="&lt;no title&gt;"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="i_never_understood_javascript_closures.html" title="&lt;no title&gt;"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">Enterprise Architecture  documentation</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2019, Peter Preeper.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.2.1.
+    </div>
+  </body>
+</html>

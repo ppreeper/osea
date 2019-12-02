@@ -1,0 +1,121 @@
+
+
+<!doctype html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>&lt;no title&gt; &#8212; Enterprise Architecture  documentation</title>
+    <link rel="stylesheet" href="../_static/bizstyle.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/language_data.js"></script>
+    <script type="text/javascript" src="../_static/bizstyle.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="&lt;no title&gt;" href="Show hidden devices in Device Manager.html" />
+    <link rel="prev" title="&lt;no title&gt;" href="setup-lxd-cluster-allocated-from-MAAS.html" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <!--[if lt IE 9]>
+    <script type="text/javascript" src="_static/css3-mediaqueries.js"></script>
+    <![endif]-->
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="Show hidden devices in Device Manager.html" title="&lt;no title&gt;"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="setup-lxd-cluster-allocated-from-MAAS.html" title="&lt;no title&gt;"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">Enterprise Architecture  documentation</a> &#187;</li> 
+      </ul>
+    </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="setup-lxd-cluster-allocated-from-MAAS.html"
+                        title="previous chapter">&lt;no title&gt;</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="Show hidden devices in Device Manager.html"
+                        title="next chapter">&lt;no title&gt;</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/misc/Set Up SSL on Github Pages With Custom Domains for Free.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <p>= link:https://hackernoon.com/set-up-ssl-on-github-pages-with-custom-domains-for-free-a576bdf51bc[Set Up SSL on Github Pages With Custom Domains for Free]</p>
+<p>== Instructions:</p>
+<p>. link:https://support.cloudflare.com/hc/en-us/articles/201720164-Sign-up-planning-guide[Sign up for Cloudflare] if you don’t already have an account.
+. Add your website, and make sure all automatically generated records match those on your registrar’s website.
+. If you already have a gh-pages website and are simply moving to https, you don’t need to do anything else.
+. If not, and are trying to set up your site at apex, create an A record pointing to Github’s IP addresses, else a CNAME pointing to your-username.github.io.
+. Make sure there’s a <cite>CNAME</cite> file at the root of your gh-pages repo with your domain name.
+. Make sure there’s a <cite>CNAME</cite> file at the root of your gh-pages repo with your domain name.
+. Go to your Domain Registrar’s website and change the Domain Name Servers to those Cloudflare provides you with.
+. Finish Setting up your Domain on Cloudflare and go to the Domain Dashboard.
+. Open the “Cloudflare Settings” for your domain, and change the SSL Setting to “Flexible SSL”.
+. Redirect all visitors to HTTPS/SSL using <a class="reference external" href="https://support.cloudflare.com/hc/en-us/articles/200170536-How-do-I-redirect-all-visitors-to-HTTPS-SSL-[page">https://support.cloudflare.com/hc/en-us/articles/200170536-How-do-I-redirect-all-visitors-to-HTTPS-SSL-[page</a> rule].</p>
+<p>image:https://cdn-images-1.medium.com/max/1600/0*Gye0cr_gE4hUL842.png[]</p>
+<ol class="arabic simple" start="11">
+<li><p>After a couple of hours, you’ll be able to open <cite>yoursite.com</cite> with <cite>https</cite>.</p></li>
+</ol>
+<p>image:https://cdn-images-1.medium.com/max/2000/1*4ALm0XIU-qdxpNb-P8fSSg.png[]</p>
+<p>== Drawback</p>
+<p>It’s important to note that this setup is not fully secure — the connection between CloudFlare and GitHub pages is not secured. Since GitHub doesn’t have a SSL certificate for your domain, Full SSL is not possible with a custom domain. However, this setup does provide some protection your users (e.g. from the hacker on the same unsecured Wi-Fi network), and it allows your site to behave as if it has SSL (e.g. for web crawlers, APIs).</p>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="Show hidden devices in Device Manager.html" title="&lt;no title&gt;"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="setup-lxd-cluster-allocated-from-MAAS.html" title="&lt;no title&gt;"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">Enterprise Architecture  documentation</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2019, Peter Preeper.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.2.1.
+    </div>
+  </body>
+</html>

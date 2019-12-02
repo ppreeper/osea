@@ -1,0 +1,277 @@
+
+
+<!doctype html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>Installing Dropbox alternative Nextcloud with Docker &#8212; Enterprise Architecture  documentation</title>
+    <link rel="stylesheet" href="../_static/bizstyle.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/language_data.js"></script>
+    <script type="text/javascript" src="../_static/bizstyle.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="nextcloud upgrade" href="nextcloud_upgrade.html" />
+    <link rel="prev" title="How to get log listing of incoming DNS requests" href="get_logging_of_requests.html" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <!--[if lt IE 9]>
+    <script type="text/javascript" src="_static/css3-mediaqueries.js"></script>
+    <![endif]-->
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="nextcloud_upgrade.html" title="nextcloud upgrade"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="get_logging_of_requests.html" title="How to get log listing of incoming DNS requests"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">Enterprise Architecture  documentation</a> &#187;</li> 
+      </ul>
+    </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="../index.html">Table of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Installing Dropbox alternative Nextcloud with Docker</a><ul>
+<li><a class="reference internal" href="#prerequisites">Prerequisites</a></li>
+<li><a class="reference internal" href="#step-1-install-docker-and-docker-compose">Step 1. Install Docker and Docker Compose</a></li>
+<li><a class="reference internal" href="#step-2-install-nextcloud">Step 2. Install Nextcloud</a></li>
+<li><a class="reference internal" href="#step-3-configure-the-nginx-reverse-proxy-container">Step 3. Configure the Nginx reverse proxy container</a></li>
+<li><a class="reference internal" href="#step-4-configure-the-lets-encrypt-container">Step 4. Configure the Let’s Encrypt container</a></li>
+<li><a class="reference internal" href="#step-5-configure-the-mariadb-container">Step 5. Configure the MariaDB container</a></li>
+<li><a class="reference internal" href="#step-6-configure-the-nextcloud-container">Step 6. Configure the Nextcloud container</a></li>
+<li><a class="reference internal" href="#step-7-get-everything-running">Step 7. Get everything running!</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="get_logging_of_requests.html"
+                        title="previous chapter">How to get log listing of incoming DNS requests</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="nextcloud_upgrade.html"
+                        title="next chapter">nextcloud upgrade</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/doc/Installing Dropbox alternative Nextcloud with Docker.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="installing-dropbox-alternative-nextcloud-with-docker">
+<h1>Installing Dropbox alternative Nextcloud with Docker<a class="headerlink" href="#installing-dropbox-alternative-nextcloud-with-docker" title="Permalink to this headline">¶</a></h1>
+<p><a class="reference external" href="https://blog.ssdnodes.com/blog/installing-dropbox-alternative-nextcloud-with-docker/">https://blog.ssdnodes.com/blog/installing-dropbox-alternative-nextcloud-with-docker/</a></p>
+<p>Nextcloud is an open source software suite for storing and synchronizing data,
+much like Dropbox or Google Drive. With Nextcloud, you get an open system
+architecture that gives you additional functionality and full control of their
+data.</p>
+<p>With Nextcloud, you can store your files, contacts, calendars and more on your
+server, and then synchronize them across various devices. You can share your
+data with others to view and collaborate on. On top of all this, you can expand
+your Nextcloud installation with other apps from the Nextcloud App Store, or
+you can build apps and integrate them with Nextcloud.</p>
+<p>In the article, let’s look at how to install Nextcloud along with an Nginx
+reverse proxy and Let’s Encrypt SSL in a CentOS 7 dockerized environment.</p>
+<div class="section" id="prerequisites">
+<h2>Prerequisites<a class="headerlink" href="#prerequisites" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p>A VPS running CentOS 7.</p></li>
+<li><p>A working Docker installation—for information about how to install Docker,
+check out our getting started with Docker tutorial</p></li>
+</ul>
+</div>
+<div class="section" id="step-1-install-docker-and-docker-compose">
+<h2>Step 1. Install Docker and Docker Compose<a class="headerlink" href="#step-1-install-docker-and-docker-compose" title="Permalink to this headline">¶</a></h2>
+<p>The latest version of the Docker CE is not available in CentOS 7 repository.
+Therefore, we need to add the Docker CE repository with the following command:</p>
+<p>Now execute the following command to install Docker CE:</p>
+<p>Start the Docker service and enable it to start during system startup.</p>
+<p>To install the latest docker-compose using Python’s <cite>pip</cite> command, execute the
+following commands in the terminal:</p>
+</div>
+<div class="section" id="step-2-install-nextcloud">
+<h2>Step 2. Install Nextcloud<a class="headerlink" href="#step-2-install-nextcloud" title="Permalink to this headline">¶</a></h2>
+<p>Before we start defining services in the <cite>docker-compose.yml</cite> file, we create a
+network so that containers can communicate. Run the following command in the
+terminal:</p>
+<p>Since we want to containerize Nextcloud along with other containers associated
+with it, we will define and knit all the services together in the
+<cite>docker-compose.yml</cite> file incrementally.</p>
+<p>For this tutorial, we’ll define the services one by one, starting with the
+Nginx reverse proxy:</p>
+<ul class="simple">
+<li><p>Nginx reverse proxy</p></li>
+<li><p>Let’s Encrypt</p></li>
+<li><p>MariaDB</p></li>
+<li><p>Nextcloud</p></li>
+</ul>
+<p>Create the docker compose file where we will define all the services.</p>
+</div>
+<div class="section" id="step-3-configure-the-nginx-reverse-proxy-container">
+<h2>Step 3. Configure the Nginx reverse proxy container<a class="headerlink" href="#step-3-configure-the-nginx-reverse-proxy-container" title="Permalink to this headline">¶</a></h2>
+<p>In the file you just created, past the following:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">version</span><span class="p">:</span> <span class="s1">&#39;3&#39;</span>
+
+<span class="n">services</span><span class="p">:</span>
+
+<span class="n">proxy</span><span class="p">:</span>
+    <span class="n">image</span><span class="p">:</span> <span class="n">jwilder</span><span class="o">/</span><span class="n">nginx</span><span class="o">-</span><span class="n">proxy</span><span class="p">:</span><span class="n">alpine</span>
+    <span class="n">labels</span><span class="p">:</span>
+    <span class="o">-</span> <span class="s2">&quot;com.github.jrcs.letsencrypt_nginx_proxy_companion.nginx_proxy=true&quot;</span>
+    <span class="n">container_name</span><span class="p">:</span> <span class="n">nextcloud</span><span class="o">-</span><span class="n">proxy</span>
+    <span class="n">networks</span><span class="p">:</span>
+    <span class="o">-</span> <span class="n">nextcloud_network</span>
+    <span class="n">ports</span><span class="p">:</span>
+    <span class="o">-</span> <span class="mi">80</span><span class="p">:</span><span class="mi">80</span>
+    <span class="o">-</span> <span class="mi">443</span><span class="p">:</span><span class="mi">443</span>
+    <span class="n">volumes</span><span class="p">:</span>
+    <span class="o">-</span> <span class="o">./</span><span class="n">proxy</span><span class="o">/</span><span class="n">conf</span><span class="o">.</span><span class="n">d</span><span class="p">:</span><span class="o">/</span><span class="n">etc</span><span class="o">/</span><span class="n">nginx</span><span class="o">/</span><span class="n">conf</span><span class="o">.</span><span class="n">d</span><span class="p">:</span><span class="n">rw</span>
+    <span class="o">-</span> <span class="o">./</span><span class="n">proxy</span><span class="o">/</span><span class="n">vhost</span><span class="o">.</span><span class="n">d</span><span class="p">:</span><span class="o">/</span><span class="n">etc</span><span class="o">/</span><span class="n">nginx</span><span class="o">/</span><span class="n">vhost</span><span class="o">.</span><span class="n">d</span><span class="p">:</span><span class="n">rw</span>
+    <span class="o">-</span> <span class="o">./</span><span class="n">proxy</span><span class="o">/</span><span class="n">html</span><span class="p">:</span><span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="n">share</span><span class="o">/</span><span class="n">nginx</span><span class="o">/</span><span class="n">html</span><span class="p">:</span><span class="n">rw</span>
+    <span class="o">-</span> <span class="o">./</span><span class="n">proxy</span><span class="o">/</span><span class="n">certs</span><span class="p">:</span><span class="o">/</span><span class="n">etc</span><span class="o">/</span><span class="n">nginx</span><span class="o">/</span><span class="n">certs</span><span class="p">:</span><span class="n">ro</span>
+    <span class="o">-</span> <span class="o">/</span><span class="n">etc</span><span class="o">/</span><span class="n">localtime</span><span class="p">:</span><span class="o">/</span><span class="n">etc</span><span class="o">/</span><span class="n">localtime</span><span class="p">:</span><span class="n">ro</span>
+    <span class="o">-</span> <span class="o">/</span><span class="n">var</span><span class="o">/</span><span class="n">run</span><span class="o">/</span><span class="n">docker</span><span class="o">.</span><span class="n">sock</span><span class="p">:</span><span class="o">/</span><span class="n">tmp</span><span class="o">/</span><span class="n">docker</span><span class="o">.</span><span class="n">sock</span><span class="p">:</span><span class="n">ro</span>
+    <span class="n">restart</span><span class="p">:</span> <span class="n">unless</span><span class="o">-</span><span class="n">stopped</span>
+</pre></div>
+</div>
+<p>Let’s look at the configuration created in the above <cite>docker-compose.yml</cite> file
+in detail. The service for proxy uses the image from jwilder/nginx-proxy. The
+label <cite>“com.github.jrcs.letsencrypt_nginx_proxy_companion.nginx_proxy”</cite> is
+used so that the Let’s Encrypt container knows which nginx proxy container
+to use for certificate generation.</p>
+<p>Then, there is network by the name <cite>nextcloud_network</cite>, which is used by the
+containers to communicate among themselves. The Volumes section is used by
+the container to configure the Nginx virtual host and to access certificates
+generated by Let’s Encrypt companion container. The
+<cite>/etc/localtime:/etc/localtime:ro</cite> is used to duplicate the host timezone
+inside the container.</p>
+</div>
+<div class="section" id="step-4-configure-the-lets-encrypt-container">
+<h2>Step 4. Configure the Let’s Encrypt container<a class="headerlink" href="#step-4-configure-the-lets-encrypt-container" title="Permalink to this headline">¶</a></h2>
+<p>Now that you have <cite>nginx-proxy</cite> container set up, you can add the following
+to your <cite>docker-compose.yml</cite> file.</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">letsencrypt</span><span class="p">:</span>
+    <span class="nt">image</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">jrcs/letsencrypt-nginx-proxy-companion</span>
+    <span class="nt">container_name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">nextcloud-letsencrypt</span>
+    <span class="nt">depends_on</span><span class="p">:</span>
+    <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">proxy</span>
+    <span class="nt">networks</span><span class="p">:</span>
+    <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">nextcloud_network</span>
+    <span class="nt">volumes</span><span class="p">:</span>
+    <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">./proxy/certs:/etc/nginx/certs:rw</span>
+    <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">./proxy/vhost.d:/etc/nginx/vhost.d:rw</span>
+    <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">./proxy/html:/usr/share/nginx/html:rw</span>
+    <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">/etc/localtime:/etc/localtime:ro</span>
+    <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">/var/run/docker.sock:/var/run/docker.sock:ro</span>
+    <span class="nt">restart</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">unless-stopped</span>
+</pre></div>
+</div>
+<p>The Lets’ Encrypt container depends on our first service (<cite>proxy</cite>) and is a
+part of the network <cite>nextcloud_network</cite>. The <cite>restart: unless-stopped</cite> allows
+the containers to be stopped gracefully unless you manually run
+<cite>docker stop letsencrypt</cite> or <cite>docker-compose down letsencrypt</cite>.</p>
+</div>
+<div class="section" id="step-5-configure-the-mariadb-container">
+<h2>Step 5. Configure the MariaDB container<a class="headerlink" href="#step-5-configure-the-mariadb-container" title="Permalink to this headline">¶</a></h2>
+<p>For Nextcloud to work correctly, we need to connect it to a MariaDB database.
+Fortunately, we can add that to our <cite>docker-compose.yml</cite> file as well:</p>
+<p>The service section for MariaDB is pretty self-explanatory. This container is
+also part of the network <cite>nextcloud_network</cite>. We have also defined the
+environment variable for the database name, username, and password that
+Nextcloud uses to connect to the database.</p>
+</div>
+<div class="section" id="step-6-configure-the-nextcloud-container">
+<h2>Step 6. Configure the Nextcloud container<a class="headerlink" href="#step-6-configure-the-nextcloud-container" title="Permalink to this headline">¶</a></h2>
+<p>We’re finally ready to create the Nextcloud container in our
+<cite>docker-compose.yml</cite> file. Add the following to the bottom.</p>
+<p>The nextcloud service depends on the other three containers. To make
+Nextcloud’s data persistent while upgrading, and get access to backups,
+we use a named Docker volume <cite>nextcloud</cite>, similar to the way we used a
+Docker volume named <cite>db</cite> for the MariaDB data.</p>
+<p>Here, we have defined the virtual host, Let’s Encrypt host, and email
+in the environment variables <cite>VIRTUAL_HOST</cite>, <cite>LETSENCRYPT_HOST</cite>, and
+<cite>LETSENCRYPT_EMAIL</cite>, respectively. The proxy service creates the subdomain
+and encrypts it with Let’s Encrypt certificates for the container, given
+you supply valid domains and emails for those three environment variables.</p>
+<p>At last, we need defined volumes for both Nextcloud and MariaDB for
+data persistence followed by networks.</p>
+<p>After combining all the service definitions, your final <cite>docker-compose.yml</cite>
+should look like following:</p>
+</div>
+<div class="section" id="step-7-get-everything-running">
+<h2>Step 7. Get everything running!<a class="headerlink" href="#step-7-get-everything-running" title="Permalink to this headline">¶</a></h2>
+<p>Now run the <cite>docker-compose</cite> from the terminal to create the containers:</p>
+<p>To confirm all the containers are running, issue the following command:</p>
+<p>Wait a minute for the SSL certificate generation process to finish, and then
+load up the domain name you chose in your browser. Enter your chosen admin
+username and password. Choose MySQL as the database in the configure database
+section. Type in the username, password, and database name you configured
+via the <cite>MYSQL_USER</cite>, <cite>MYSQL_PASSWORD</cite>, and <cite>MYSQL_DATABASE</cite> environment
+variable from earlier. Change the hostname value from <cite>localhost</cite> to <cite>db</cite>
+and click __Finish <a href="#id1"><span class="problematic" id="id2">Setup__</span></a>. The system then redirects you to the Nextcloud
+dashboard.</p>
+<p>image:https://blog.ssdnodes.com/blog/wp-content/uploads/2018/05/201505_nextcloud-dash-700x418.png[The Nextcloud dashboard.]</p>
+<p>The containerization of Nextcloud is complete! You can now upload files and
+photos to your drive hosted on your VPS and share them with others. To
+extend the functionality of nextcloud server, you can now consider
+installing any number of the available apps, such as Bookmarks, Calendar,
+Contacts, Tasks, Notes, and more available on the Nextcloud App Store.</p>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="nextcloud_upgrade.html" title="nextcloud upgrade"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="get_logging_of_requests.html" title="How to get log listing of incoming DNS requests"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">Enterprise Architecture  documentation</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2019, Peter Preeper.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.2.1.
+    </div>
+  </body>
+</html>

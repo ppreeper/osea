@@ -1,0 +1,143 @@
+
+
+<!doctype html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>[source,bash] &#8212; Enterprise Architecture  documentation</title>
+    <link rel="stylesheet" href="../_static/bizstyle.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/language_data.js"></script>
+    <script type="text/javascript" src="../_static/bizstyle.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="&lt;no title&gt;" href="How_to_run_a_network_speed_test_from_a_headless_linux_server.html" />
+    <link rel="prev" title="&lt;no title&gt;" href="how_to_market_your_startup_with_no_budget.html" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <!--[if lt IE 9]>
+    <script type="text/javascript" src="_static/css3-mediaqueries.js"></script>
+    <![endif]-->
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="How_to_run_a_network_speed_test_from_a_headless_linux_server.html" title="&lt;no title&gt;"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="how_to_market_your_startup_with_no_budget.html" title="&lt;no title&gt;"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">Enterprise Architecture  documentation</a> &#187;</li> 
+      </ul>
+    </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="../index.html">Table of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">[source,bash]</a></li>
+<li><a class="reference internal" href="#username-all-all-all">USERNAME ALL=(ALL) ALL</a></li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="how_to_market_your_startup_with_no_budget.html"
+                        title="previous chapter">&lt;no title&gt;</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="How_to_run_a_network_speed_test_from_a_headless_linux_server.html"
+                        title="next chapter">&lt;no title&gt;</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/misc/How to quickly give users sudo privileges in Linux.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <p>= How to quickly give users sudo privileges in Linux</p>
+<ul class="simple">
+<li><p><strong>If you have users that need certain admin privileges on your Linux machines, here’s a walk-through of the process for granting full or specific rights.</strong></p></li>
+<li><p>By Jack Wallen | June 15, 2017, 8:44 AM PST</p></li>
+</ul>
+<p>How many times have you created a new user on a Linux machine, only to find out that new user doesn’t have sudo privileges. Without the ability to use sudo, that user is limited in what they can do. This, of course, is by design; you certainly don’t want every user on your system having admin privileges. However, for those users you do want to enjoy admin rights, they must be able to use the sudo command.</p>
+<p>There are a couple of ways to tackle this task; one of which is not recommended (unless you need granular control over user admin privileges). I will demonstrate both methods and will be working on the Ubuntu Server 16.04 platform, but these methods will work on any Linux distribution that makes use of sudo.</p>
+<p>== Method 1</p>
+<p>Say you want to give a user access to only one administration-level command. This method is what you want to use to give granular control over admin privileges Effectively, what you do is edit the <cite>/etc/sudoers</cite> file and add the user. However, you want to use a special tool for this: visudo. When using visudo, it will lock the sudoers file against multiple, simultaneous edits (this is important). To use this tool, you need to issue the command <cite>sudo -s</cite> and then enter your sudo password. Now enter the command visudo and the tool will open the <cite>/etc/sudoers</cite> file for editing).</p>
+<p>To add a specific user for all administrative privileges, scroll down to the bottom of the file and add the following, where <cite>USERNAME</cite> is the actual username you want to add.:</p>
+<div class="section" id="source-bash">
+<h1>[source,bash]<a class="headerlink" href="#source-bash" title="Permalink to this headline">¶</a></h1>
+</div>
+<div class="section" id="username-all-all-all">
+<h1>USERNAME ALL=(ALL) ALL<a class="headerlink" href="#username-all-all-all" title="Permalink to this headline">¶</a></h1>
+<p>Save and close the file and have the user log out and log back in. They should now have a full range of sudo privileges.</p>
+<p>But what if you only want to give that user rights to a single command? You can do that. How? Issue the command visudo (after issuing <cite>sudo -s</cite>) to open the sudoers file for editing. There are two bits of information you must add to this file:</p>
+<ul class="simple">
+<li><p>Command alias(es)</p></li>
+<li><p>User entry</p></li>
+</ul>
+<p>Both of these entries are necessary. Let’s give user willow access to the apt-get command. To this, issue the commands sudo -s followed by visudo. Locate the Cmnd alias specification section and add the following:</p>
+<p><cite>Cmnd_Alias APT_GET = /usr/bin/apt-get</cite></p>
+<p>Scroll down to the bottom of the file and add the following line:</p>
+<p><cite>willow ALL=(ALL) NOPASSWD: APT_GET</cite></p>
+<p>Save and close that file. Have the user willow log out and log back in, at which point they will be able to now use the <cite>sudo apt-get</cite> command successfully.</p>
+<p>== Method 2</p>
+<p>If you have a user you want to give all admin privileges to, the best method is to simply add that user to the admin group. You will notice this line, in the <cite>/etc/sudoers</cite> file:</p>
+<p><cite>%admin ALL=(ALL) ALL</cite></p>
+<p>This means all members of the admin group have full sudo privileges. To add your user to the admin group, you would issue the command (as a user who already has full sudo privileges):</p>
+<p><cite>sudo usermod -a -G sudo USERNAME</cite></p>
+<p>Where <cite>USERNAME</cite> is the name of the user to be added. Once the user logs out and logs back in, they will now enjoy full sudo privileges.</p>
+<p>== Use with caution</p>
+<p>Obviously, you do not want to add every user to the sudoers file or to the admin group. Use this with caution, otherwise you run the risk of jeopardizing system security. But with care, you can manage what your users can and cannot do with ease.</p>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="How_to_run_a_network_speed_test_from_a_headless_linux_server.html" title="&lt;no title&gt;"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="how_to_market_your_startup_with_no_budget.html" title="&lt;no title&gt;"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">Enterprise Architecture  documentation</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2019, Peter Preeper.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.2.1.
+    </div>
+  </body>
+</html>

@@ -1,0 +1,135 @@
+
+
+<!doctype html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>&lt;no title&gt; &#8212; Enterprise Architecture  documentation</title>
+    <link rel="stylesheet" href="../_static/bizstyle.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/language_data.js"></script>
+    <script type="text/javascript" src="../_static/bizstyle.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="With Compose, you use a YAML file to configure your application’s services. Then, with a single command, you create and start all the services from your configuration" href="Nginx_and_Lets_Encrypt_with_Docker_in_Less_Than_5_Minutes.html" />
+    <link rel="prev" title="&lt;no title&gt;" href="Most employees waste 32 days of productivity per year on bad enterprise apps.html" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <!--[if lt IE 9]>
+    <script type="text/javascript" src="_static/css3-mediaqueries.js"></script>
+    <![endif]-->
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="Nginx_and_Lets_Encrypt_with_Docker_in_Less_Than_5_Minutes.html" title="With Compose, you use a YAML file to configure your application’s services. Then, with a single command, you create and start all the services from your configuration"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="Most employees waste 32 days of productivity per year on bad enterprise apps.html" title="&lt;no title&gt;"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">Enterprise Architecture  documentation</a> &#187;</li> 
+      </ul>
+    </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="Most employees waste 32 days of productivity per year on bad enterprise apps.html"
+                        title="previous chapter">&lt;no title&gt;</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="Nginx_and_Lets_Encrypt_with_Docker_in_Less_Than_5_Minutes.html"
+                        title="next chapter">With Compose, you use a YAML file to configure your application’s services. Then, with a single command, you create and start all the services from your configuration</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/misc/netmon-setup.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <p>lxc stop lxred01:netmon ; lxc delete lxred01:netmon ; lxc launch lxred01:ubuntu lxred01:netmon ; lxc file push /usr/local/bin/update lxred01:netmon/usr/local/bin/update ; lxc exec lxred01:netmon chmod +x /usr/local/bin/update ; lxc exec lxred01:netmon /usr/local/bin/update ; lxc restart lxred01:netmon
+lxc exec lxred01:netmon mkdir /root/go ;
+lxc exec lxred01:netmon mkdir /home/ubuntu/go ;
+lxc file push ~/.ssh/id_ecdsa.pub lxred01:netmon/root/.ssh/authorized_keys ;
+lxc file push ~/.ssh/id_ecdsa.pub lxred01:netmon/home/ubuntu/.ssh/authorized_keys
+lxc file push ~/workspace/check_toner/check_toner.go lxred01:netmon/opt/check_toner.go</p>
+<p>lxc exec lxred01:netmon bash
+echo “export GOPATH=$HOME/go” &gt;&gt; /etc/bash.bashrc</p>
+<p>wget -O - <a class="reference external" href="http://packages.icinga.org/icinga.key">http://packages.icinga.org/icinga.key</a> | apt-key add -
+add-apt-repository ‘deb <a class="reference external" href="http://packages.icinga.org/ubuntu">http://packages.icinga.org/ubuntu</a> icinga-xenial main’
+update</p>
+<p>apt install icinga2 icinga2-ido-pgsql vim-icinga2 vim-nox vim-addon-manager monitoring-plugins monitoring-plugins-standard golang
+vim-addon-manager -w install icinga2</p>
+<p>sed -e “s/user=.*/user=”icinga”,/” -i /etc/icinga2/features-available/ido-pgsql.conf
+sed -e “s/password=.*/password=”icinga”,/” -i /etc/icinga2/features-available/ido-pgsql.conf
+sed -e “s/host=.*/host=”pgdb.arthomson.com”,/” -i /etc/icinga2/features-available/ido-pgsql.conf
+sed -e “s/database=.*/database=”icinga”/” -i /etc/icinga2/features-available/ido-pgsql.conf</p>
+<p>icinga2 feature enable ido-pgsql
+icinga2 feature enable command
+systemctl restart icinga2</p>
+<p>apt install icingaweb2 php-pgsql
+sed -e “s/;date.timezone.*/date.timezone=’America/Edmonton’/” -i /etc/php/7.0/apache2/php.ini
+systemctl restart apache2</p>
+<p>#to create token
+icingacli setup token create</p>
+<p>#to show created token
+icingacli setup token show</p>
+<p><a class="reference external" href="http:/">http:/</a>/&lt;server&gt;/icingaweb2/setup</p>
+<p>database</p>
+<p>cd /opt
+go get github.com/soniah/gosnmp
+go build check_toner.go
+cp check_toner /usr/lib/nagios/plugins/.</p>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="Nginx_and_Lets_Encrypt_with_Docker_in_Less_Than_5_Minutes.html" title="With Compose, you use a YAML file to configure your application’s services. Then, with a single command, you create and start all the services from your configuration"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="Most employees waste 32 days of productivity per year on bad enterprise apps.html" title="&lt;no title&gt;"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">Enterprise Architecture  documentation</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2019, Peter Preeper.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.2.1.
+    </div>
+  </body>
+</html>

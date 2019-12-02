@@ -1,0 +1,145 @@
+
+
+<!doctype html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>[source,bash] &#8212; Enterprise Architecture  documentation</title>
+    <link rel="stylesheet" href="../_static/bizstyle.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/language_data.js"></script>
+    <script type="text/javascript" src="../_static/bizstyle.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="[source,bash]" href="How to install OpenLDAP and phpLDAPadmin on Ubuntu 16.04.html" />
+    <link rel="prev" title="&lt;no title&gt;" href="how_to_install_hyperledger_fabric_on_ubuntu.html" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <!--[if lt IE 9]>
+    <script type="text/javascript" src="_static/css3-mediaqueries.js"></script>
+    <![endif]-->
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="How to install OpenLDAP and phpLDAPadmin on Ubuntu 16.04.html" title="[source,bash]"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="how_to_install_hyperledger_fabric_on_ubuntu.html" title="&lt;no title&gt;"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">Enterprise Architecture  documentation</a> &#187;</li> 
+      </ul>
+    </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="../index.html">Table of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">[source,bash]</a></li>
+<li><a class="reference internal" href="#id1">[source,bash]</a></li>
+<li><a class="reference internal" href="#sudo-snap-install-nextcloud">sudo snap install nextcloud</a></li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="how_to_install_hyperledger_fabric_on_ubuntu.html"
+                        title="previous chapter">&lt;no title&gt;</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="How to install OpenLDAP and phpLDAPadmin on Ubuntu 16.04.html"
+                        title="next chapter">[source,bash]</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/misc/How to install Nextcloud on Ubuntu Server 16.04 with snap.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <p>= How to install Nextcloud on Ubuntu Server 16.04 with snap
+By Jack Wallen | December 13, 2017, 8:00 AM PST</p>
+<p>If the installation process has been preventing you from giving Nextcloud a try, Jack Wallen shows you how to get it up and running with a single command.</p>
+<p>You’ve heard me discuss Nextcloud plenty of times, and with good reason. Nextcloud is a fantastic in-house cloud server that is ready to serve small and large businesses alike. It’s flexible, powerful, secure, and incredibly easy to manage.</p>
+<p>Through the normal process, Nextcloud is fairly easy to install—if you have a solid understanding of the Linux command line. But what if you’re new to Linux and aren’t as up to speed as you need to be to pull off such an installation? Should that be the case, you turn to snap packages. Thanks to the universal package format, server software like Nextcloud is so easy to install, anyone can pull it off as long as they know how to type a single command.</p>
+<p>But why install with snap? Outside of the incredible simplicity, with snap packages you are running the Nextcloud server in a sandbox, so it will enjoy a bit more security than it might otherwise. Also, upgrading Nextcloud, via snap, is incredibly simple as long as the latest version of the software has been converted to a snap package. Those two reasons alone should be enough to pique your interests.</p>
+<p>It should be noted that installing Nextcloud via snap will install, along with its own web and MySQL server, on port 80. If your machine has another server on port 80, you’d be best served installing Nextcloud via the manual method, using virtual hosts, or installing Nextcloud as a virtual machine with its own IP address.</p>
+<p>I’m going to walk you through the process of installing Nextcloud, via snap, on the Ubuntu Server 16.04 platform. To succeed with this installation, you’ll need a user account with sudo access.</p>
+<p>Let’s install.</p>
+<p>== Installation</p>
+<p>Before we install, I always find it good to upgrade or update the platform. To accomplish this, open a terminal window, or log into your headless server via ssh and issue the following two commands:</p>
+<div class="section" id="source-bash">
+<h1>[source,bash]<a class="headerlink" href="#source-bash" title="Permalink to this headline">¶</a></h1>
+<p>sudo apt update
+sudo apt upgrade
+—-</p>
+<p>When the above commands complete, you’re ready to move on. Do note, if the kernel upgrades, you’ll need to reboot the system. Because of this, you might want to plan this process at a time when a reboot won’t cause problems.</p>
+<p>With the upgrades taken care of install Nextcloud, via snap, with the following command:</p>
+</div>
+<div class="section" id="id1">
+<h1>[source,bash]<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h1>
+</div>
+<div class="section" id="sudo-snap-install-nextcloud">
+<h1>sudo snap install nextcloud<a class="headerlink" href="#sudo-snap-install-nextcloud" title="Permalink to this headline">¶</a></h1>
+<p>Because we’re using Ubuntu 16.04, snap will be installed out of the box, so there’s no need to install snapd.</p>
+<p>When the installation of the snap package completes, you’ll need to find out the server IP address. You can achieve that with the command ip a (<em>Figure A</em>).</p>
+<p>=== Figure A</p>
+<p>image:https://tr2.cbsistatic.com/hub/i/2017/12/13/a5ab4ebd-25c2-4241-8341-0790e6cbf432/581fa71ccbb3efff9d19f377b5f411b4/nextsnapa.jpg[Finding your server IP address.]</p>
+<p>With the IP address “in hand,” open a browser and point it to <a class="reference external" href="http://SERVER_IP">http://SERVER_IP</a>. Where SERVER_IP is the actual IP address of the server. You will be greeted by the Nextcloud admin account creation screen (<em>Figure B</em>).</p>
+<p>=== Figure B</p>
+<p>image:https://tr4.cbsistatic.com/hub/i/2017/12/13/8707eb6b-aedb-4a6f-b19e-925100f9575b/0d2bedb825b11836f6499c8806edc1fd/nextsnapb.jpg[The admin creation screen.]</p>
+<p>Type a new username and password for the admin user and click Finish setup. You will find yourself on the Nextcloud home page where you can start creating users, adding apps, and making your new in-house cloud server function exactly as you need.</p>
+<p>Wasn’t that simple?</p>
+<p>== No reason not to try</p>
+<p>With the help of Ubuntu and snap packages, you now have zero reason to not give Nextcloud a try. Set this up on a virtual machine and you have a perfect test environment. Trust me, your company will thank you for adding Nextcloud into the mix</p>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="How to install OpenLDAP and phpLDAPadmin on Ubuntu 16.04.html" title="[source,bash]"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="how_to_install_hyperledger_fabric_on_ubuntu.html" title="&lt;no title&gt;"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">Enterprise Architecture  documentation</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2019, Peter Preeper.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.2.1.
+    </div>
+  </body>
+</html>

@@ -1,0 +1,689 @@
+
+
+<!doctype html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>[source,bash] &#8212; Enterprise Architecture  documentation</title>
+    <link rel="stylesheet" href="../_static/bizstyle.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/language_data.js"></script>
+    <script type="text/javascript" src="../_static/bizstyle.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="&lt;no title&gt;" href="how_to_stop_stakeholders_from_sabotaging_projects.html" />
+    <link rel="prev" title="&lt;no title&gt;" href="How_to_run_a_network_speed_test_from_a_headless_linux_server.html" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <!--[if lt IE 9]>
+    <script type="text/javascript" src="_static/css3-mediaqueries.js"></script>
+    <![endif]-->
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="how_to_stop_stakeholders_from_sabotaging_projects.html" title="&lt;no title&gt;"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="How_to_run_a_network_speed_test_from_a_headless_linux_server.html" title="&lt;no title&gt;"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">Enterprise Architecture  documentation</a> &#187;</li> 
+      </ul>
+    </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="../index.html">Table of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">[source,bash]</a></li>
+<li><a class="reference internal" href="#id1">[source,bash]</a></li>
+<li><a class="reference internal" href="#sudo-vi-etc-ssh-sshd-config">sudo vi /etc/ssh/sshd_config</a></li>
+<li><a class="reference internal" href="#id2">[source,bash]</a></li>
+<li><a class="reference internal" href="#id3">[source,bash]</a></li>
+<li><a class="reference internal" href="#sudo-service-ssh-restart">sudo service ssh restart</a></li>
+<li><a class="reference internal" href="#id4">[source,bash]</a></li>
+<li><a class="reference internal" href="#sudo-vi-etc-apache2-mods-available-ssl-conf">sudo vi /etc/apache2/mods-available/ssl.conf</a></li>
+<li><a class="reference internal" href="#id5">[source,bash]</a></li>
+<li><a class="reference internal" href="#sslprotocol-all-sslv3">SSLProtocol all -SSLv3</a></li>
+<li><a class="reference internal" href="#id6">[source,bash]</a></li>
+<li><a class="reference internal" href="#sslprotocol-all-sslv2-sslv3">SSLProtocol all -SSLv2 -SSLv3</a></li>
+<li><a class="reference internal" href="#id7">[source,bash]</a></li>
+<li><a class="reference internal" href="#sudo-service-apache2-restart">sudo service apache2 restart</a></li>
+<li><a class="reference internal" href="#id8">[source,bash]</a></li>
+<li><a class="reference internal" href="#id9">[source,bash]</a></li>
+<li><a class="reference internal" href="#sudo-vi-etc-sysctl-conf">sudo vi /etc/sysctl.conf</a></li>
+<li><a class="reference internal" href="#id10">[source,bash]</a></li>
+<li><a class="reference internal" href="#id11">[source,bash]</a></li>
+<li><a class="reference internal" href="#sudo-sysctl-p">sudo sysctl -p</a></li>
+<li><a class="reference internal" href="#id12">[source,bash]</a></li>
+<li><a class="reference internal" href="#sudo-vi-etc-bind-named-conf-options">sudo vi /etc/bind/named.conf.options</a></li>
+<li><a class="reference internal" href="#id13">[source,bash]</a></li>
+<li><a class="reference internal" href="#id14">[source,bash]</a></li>
+<li><a class="reference internal" href="#sudo-service-bind9-restart">sudo service bind9 restart</a></li>
+<li><a class="reference internal" href="#id15">[source,bash]</a></li>
+<li><a class="reference internal" href="#sudo-vi-etc-host-conf">sudo vi /etc/host.conf</a></li>
+<li><a class="reference internal" href="#id16">[source,bash]</a></li>
+<li><a class="reference internal" href="#id17">[source,bash]</a></li>
+<li><a class="reference internal" href="#sudo-vi-etc-php5-apache2-php-ini">sudo vi /etc/php5/apache2/php.ini</a></li>
+<li><a class="reference internal" href="#id18">[source,bash]</a></li>
+<li><a class="reference internal" href="#id19">[source,bash]</a></li>
+<li><a class="reference internal" href="#id20">sudo service apache2 restart</a></li>
+<li><a class="reference internal" href="#id21">[source,bash]</a></li>
+<li><a class="reference internal" href="#sudo-vi-etc-apache2-conf-available-security-conf">sudo vi /etc/apache2/conf-available/security.conf</a></li>
+<li><a class="reference internal" href="#id22">[source,bash]</a></li>
+<li><a class="reference internal" href="#id23">[source,bash]</a></li>
+<li><a class="reference internal" href="#id24">sudo service apache2 restart</a></li>
+<li><a class="reference internal" href="#id25">[source,bash]</a></li>
+<li><a class="reference internal" href="#sudo-apt-get-install-denyhosts">sudo apt-get install denyhosts</a></li>
+<li><a class="reference internal" href="#id26">[source,bash]</a></li>
+<li><a class="reference internal" href="#sudo-vi-etc-denyhosts-conf">sudo vi /etc/denyhosts.conf</a></li>
+<li><a class="reference internal" href="#id27">[source,bash]</a></li>
+<li><a class="reference internal" href="#id28">[source,bash]</a></li>
+<li><a class="reference internal" href="#sudo-apt-get-install-fail2ban">sudo apt-get install fail2ban</a></li>
+<li><a class="reference internal" href="#id29">[source,bash]</a></li>
+<li><a class="reference internal" href="#sudo-vi-etc-fail2ban-jail-conf">sudo vi /etc/fail2ban/jail.conf</a></li>
+<li><a class="reference internal" href="#id30">[source,bash]</a></li>
+<li><a class="reference internal" href="#id31">[source,bash]</a></li>
+<li><a class="reference internal" href="#id32">[source,bash]</a></li>
+<li><a class="reference internal" href="#destemail-root-localhost">destemail = root&#64;localhost</a></li>
+<li><a class="reference internal" href="#id33">[source,bash]</a></li>
+<li><a class="reference internal" href="#action-action-s">action = %(action_)s</a></li>
+<li><a class="reference internal" href="#id34">[source,bash]</a></li>
+<li><a class="reference internal" href="#action-action-mwl-s">action = %(action_mwl)s</a></li>
+<li><a class="reference internal" href="#id35">[source,bash]</a></li>
+<li><a class="reference internal" href="#sudo-vi-etc-fail2ban-jail-local">sudo vi /etc/fail2ban/jail.local</a></li>
+<li><a class="reference internal" href="#id36">[source,bash]</a></li>
+<li><a class="reference internal" href="#sudo-service-fail2ban-restart">sudo service fail2ban restart</a></li>
+<li><a class="reference internal" href="#id37">[source,bash]</a></li>
+<li><a class="reference internal" href="#sudo-fail2ban-client-status">sudo fail2ban-client status</a></li>
+<li><a class="reference internal" href="#id38">[source,bash]</a></li>
+<li><a class="reference internal" href="#sudo-apt-get-install-rkhunter-chkrootkit">sudo apt-get install rkhunter chkrootkit</a></li>
+<li><a class="reference internal" href="#id39">[source,bash]</a></li>
+<li><a class="reference internal" href="#sudo-chkrootkit">sudo chkrootkit</a></li>
+<li><a class="reference internal" href="#id40">[source,bash]</a></li>
+<li><a class="reference internal" href="#id41">[source,bash]</a></li>
+<li><a class="reference internal" href="#sudo-apt-get-install-nmap">sudo apt-get install nmap</a></li>
+<li><a class="reference internal" href="#id42">[source,bash]</a></li>
+<li><a class="reference internal" href="#nmap-v-st-localhost">nmap -v -sT localhost</a></li>
+<li><a class="reference internal" href="#id43">[source,bash]</a></li>
+<li><a class="reference internal" href="#sudo-nmap-v-ss-localhost">sudo nmap -v -sS localhost</a></li>
+<li><a class="reference internal" href="#id44">[source,bash]</a></li>
+<li><a class="reference internal" href="#sudo-apt-get-install-logwatch-libdate-manip-perl">sudo apt-get install logwatch libdate-manip-perl</a></li>
+<li><a class="reference internal" href="#id45">[source,bash]</a></li>
+<li><a class="reference internal" href="#sudo-logwatch-less">sudo logwatch | less</a></li>
+<li><a class="reference internal" href="#id46">[source,bash]</a></li>
+<li><a class="reference internal" href="#sudo-logwatch-mailto-mail-domain-com-output-mail-format-html-range-between-7-days-and-today">sudo logwatch –mailto mail&#64;domain.com –output mail –format html –range ‘between -7 days and today’</a></li>
+<li><a class="reference internal" href="#id47">[source,bash]</a></li>
+<li><a class="reference internal" href="#sudo-apt-get-install-apparmor-apparmor-profiles">sudo apt-get install apparmor apparmor-profiles</a></li>
+<li><a class="reference internal" href="#id48">[source,bash]</a></li>
+<li><a class="reference internal" href="#sudo-apparmor-status">sudo apparmor_status</a></li>
+<li><a class="reference internal" href="#id49">[source,bash]</a></li>
+<li><a class="reference internal" href="#sudo-apt-get-install-tiger-tripwire">sudo apt-get install tiger tripwire</a></li>
+<li><a class="reference internal" href="#id50">[source,bash]</a></li>
+<li><a class="reference internal" href="#sudo-less-var-log-tiger-security-report">sudo less /var/log/tiger/security.report.*</a></li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="How_to_run_a_network_speed_test_from_a_headless_linux_server.html"
+                        title="previous chapter">&lt;no title&gt;</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="how_to_stop_stakeholders_from_sabotaging_projects.html"
+                        title="next chapter">&lt;no title&gt;</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/misc/How to secure an Ubuntu 16.04 LTS server - Part 1 The Basics.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <p>= How to secure an Ubuntu 16.04 LTS server - Part 1 The Basics
+Submitted by The Fan Club on Mon, 2016-03-28 13:50</p>
+<p>This guide is based on various community forum posts and webpages. Special thanks to all. All comments and improvements are very welcome as this is purely a personal experimental project at this point and must be considered a work in progress. This guide is intended as a relatively easy step by step guide to:</p>
+<p>Harden the security on an Ubuntu 16.04 LTS server by installing and configuring the following:</p>
+<p>. Install and configure <em>Firewall</em> - ufw
+. <em>Secure shared memory</em> - fstab
+. <em>SSH</em> - Key based login, disable root login and change port
+. Apache <em>SSL</em> - Disable SSL v3 support
+. <em>Protect su</em> by limiting access only to admin group
+. Harden network with <em>sysctl</em> settings
+. Disable Open <em>DNS</em> Recursion and Remove <em>Version</em> Info  - Bind9 DNS
+. Prevent <em>IP Spoofing</em>
+. Harden <em>PHP</em> for security
+. Restrict <em>Apache</em> Information Leakage
+. Install and configure Apache application firewall - <em>ModSecurity</em>
+. Protect from DDOS (Denial of Service) attacks with <em>ModEvasive</em>
+. Scan logs and ban suspicious hosts - <em>DenyHosts</em> and <em>Fail2Ban</em>
+. Intrusion Detection - <em>PSAD</em>
+. Check for RootKits - <em>RKHunter</em> and <em>CHKRootKit</em>
+. Scan open Ports - <em>Nmap</em>
+. Analyse system LOG files - <em>LogWatch</em>
+. <em>Apparmor</em> -  Application Armor
+. Audit your system security - <em>Tiger</em> and <em>Tripwire</em></p>
+<p>Requirements:</p>
+<ul class="simple">
+<li><p>Ubuntu 16.04 LTS or later server with a standard LAMP stack installed.</p></li>
+</ul>
+<p>== 1. Firewall - UFW</p>
+<p>A good place to start is to install a Firewall.</p>
+<p>UFW - Uncomplicated Firewall is a basic firewall that works very well and easy to configure with its Firewall configuration tool - gufw, or use  Shorewall, fwbuilder, or Firestarter.</p>
+<p>Use Firestarter GUI to configure your firewall or refer to the Ubuntu Server Guide,  UFW manual pages or the Ubuntu UFW community documentation.</p>
+<p>Install UFW and enable, open a terminal window and enter :</p>
+<p><cite>sudo apt-get install ufw</cite></p>
+<p>Allow SSH and Http services.</p>
+<div class="section" id="source-bash">
+<h1>[source,bash]<a class="headerlink" href="#source-bash" title="Permalink to this headline">¶</a></h1>
+<p>sudo ufw allow ssh
+sudo ufw allow http
+—-</p>
+<p>Enable the firewall.</p>
+<p><cite>sudo ufw enable</cite></p>
+<p>Check the status of the firewall.</p>
+<p><cite>sudo ufw status verbose</cite></p>
+<p>== 2. Secure shared memory.</p>
+<p>Shared memory can be used in an attack against a running service. Modify /etc/fstab to make it more secure.</p>
+<p>Open a Terminal Window and enter the following :</p>
+<p><cite>sudo vi /etc/fstab</cite></p>
+<p>Add the following line and save. You will need to reboot for this setting to take effect :</p>
+<p>Note : This only is works in Ubuntu 12.10 or later - For earlier Ubuntu versions replace /run/shm with /dev/shm</p>
+<p>Save and Reboot when done</p>
+<p><cite>tmpfs     /run/shm     tmpfs     defaults,noexec,nosuid     0     0</cite></p>
+<p>== 3. SSH Hardening - key based login, disable root login and change port.</p>
+<p>The best way to secure SSH is to use public/private key based login. See SSH/OpenSSH/Keys</p>
+<p>If you have to use password authentication, the easiest way to secure SSH is to disable root login and change the SSH port to something different than the standard port 22.</p>
+<p>Before disabling the root login create a new SSH user and make sure the user belongs to the admin group (see step 4. below regarding the admin group).</p>
+<p>if you change the SSH port keep the port number below 1024 as these are priviledged ports that can only be opened by root or processes running as root.</p>
+<p>If you change the SSH port also open the new port you have chosen on the firewall and close port 22.</p>
+<p>Open a Terminal Window and enter :</p>
+</div>
+<div class="section" id="id1">
+<h1>[source,bash]<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h1>
+</div>
+<div class="section" id="sudo-vi-etc-ssh-sshd-config">
+<h1>sudo vi /etc/ssh/sshd_config<a class="headerlink" href="#sudo-vi-etc-ssh-sshd-config" title="Permalink to this headline">¶</a></h1>
+<p>Change or add the following and save.</p>
+</div>
+<div class="section" id="id2">
+<h1>[source,bash]<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h1>
+<p>Port &lt;ENTER YOUR PORT&gt;
+Protocol 2
+PermitRootLogin no
+DebianBanner no
+—-</p>
+<p>Restart SSH server, open a Terminal Window and enter :</p>
+</div>
+<div class="section" id="id3">
+<h1>[source,bash]<a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h1>
+</div>
+<div class="section" id="sudo-service-ssh-restart">
+<h1>sudo service ssh restart<a class="headerlink" href="#sudo-service-ssh-restart" title="Permalink to this headline">¶</a></h1>
+<p>== 4. Apache SSL Hardening - disable SSL v2/v3 support.</p>
+<p>The SSL v2/v3 protocol has been proven to be insecure.</p>
+<p>We will disable Apache support for the protocol and force the use of the newer protocols.</p>
+<p>Open a Terminal Window and enter :</p>
+</div>
+<div class="section" id="id4">
+<h1>[source,bash]<a class="headerlink" href="#id4" title="Permalink to this headline">¶</a></h1>
+</div>
+<div class="section" id="sudo-vi-etc-apache2-mods-available-ssl-conf">
+<h1>sudo vi /etc/apache2/mods-available/ssl.conf<a class="headerlink" href="#sudo-vi-etc-apache2-mods-available-ssl-conf" title="Permalink to this headline">¶</a></h1>
+<p>Change this line from :</p>
+</div>
+<div class="section" id="id5">
+<h1>[source,bash]<a class="headerlink" href="#id5" title="Permalink to this headline">¶</a></h1>
+</div>
+<div class="section" id="sslprotocol-all-sslv3">
+<h1>SSLProtocol all -SSLv3<a class="headerlink" href="#sslprotocol-all-sslv3" title="Permalink to this headline">¶</a></h1>
+<p>To the following and save.</p>
+</div>
+<div class="section" id="id6">
+<h1>[source,bash]<a class="headerlink" href="#id6" title="Permalink to this headline">¶</a></h1>
+</div>
+<div class="section" id="sslprotocol-all-sslv2-sslv3">
+<h1>SSLProtocol all -SSLv2 -SSLv3<a class="headerlink" href="#sslprotocol-all-sslv2-sslv3" title="Permalink to this headline">¶</a></h1>
+<p>Restart the Apache server, open a Terminal Window and enter :</p>
+</div>
+<div class="section" id="id7">
+<h1>[source,bash]<a class="headerlink" href="#id7" title="Permalink to this headline">¶</a></h1>
+</div>
+<div class="section" id="sudo-service-apache2-restart">
+<h1>sudo service apache2 restart<a class="headerlink" href="#sudo-service-apache2-restart" title="Permalink to this headline">¶</a></h1>
+<p>== 5. Protect su by limiting access only to admin group.</p>
+<p>To limit the use of su by admin users only we need to create an admin group, then add users and limit the use of su to the admin group.</p>
+<p>Add a admin group to the system and add your own admin username to the group by replacing &lt;YOUR ADMIN USERNAME&gt; below with your admin username.</p>
+<p>Open a terminal window and enter:</p>
+</div>
+<div class="section" id="id8">
+<h1>[source,bash]<a class="headerlink" href="#id8" title="Permalink to this headline">¶</a></h1>
+<p>sudo groupadd admin
+sudo usermod -a -G admin &lt;YOUR ADMIN USERNAME&gt;
+sudo dpkg-statoverride –update –add root admin 4750 /bin/su
+—-</p>
+<p>== 6. Harden network with sysctl settings.</p>
+<p>The /etc/sysctl.conf file contain all the sysctl settings.</p>
+<p>Prevent source routing of incoming packets and log malformed IP’s enter the following in a terminal window:</p>
+</div>
+<div class="section" id="id9">
+<h1>[source,bash]<a class="headerlink" href="#id9" title="Permalink to this headline">¶</a></h1>
+</div>
+<div class="section" id="sudo-vi-etc-sysctl-conf">
+<h1>sudo vi /etc/sysctl.conf<a class="headerlink" href="#sudo-vi-etc-sysctl-conf" title="Permalink to this headline">¶</a></h1>
+<p>Edit the /etc/sysctl.conf file and un-comment or add the following lines :</p>
+</div>
+<div class="section" id="id10">
+<h1>[source,bash]<a class="headerlink" href="#id10" title="Permalink to this headline">¶</a></h1>
+<p>= IP Spoofing protection
+net.ipv4.conf.all.rp_filter = 1
+net.ipv4.conf.default.rp_filter = 1</p>
+<p>= Ignore ICMP broadcast requests
+net.ipv4.icmp_echo_ignore_broadcasts = 1</p>
+<p>= Disable source packet routing
+net.ipv4.conf.all.accept_source_route = 0
+net.ipv6.conf.all.accept_source_route = 0
+net.ipv4.conf.default.accept_source_route = 0
+net.ipv6.conf.default.accept_source_route = 0</p>
+<p>= Ignore send redirects
+net.ipv4.conf.all.send_redirects = 0
+net.ipv4.conf.default.send_redirects = 0</p>
+<p>= Block SYN attacks
+net.ipv4.tcp_syncookies = 1
+net.ipv4.tcp_max_syn_backlog = 2048
+net.ipv4.tcp_synack_retries = 2
+net.ipv4.tcp_syn_retries = 5</p>
+<p>= Log Martians
+net.ipv4.conf.all.log_martians = 1
+net.ipv4.icmp_ignore_bogus_error_responses = 1</p>
+<p>= Ignore ICMP redirects
+net.ipv4.conf.all.accept_redirects = 0
+net.ipv6.conf.all.accept_redirects = 0
+net.ipv4.conf.default.accept_redirects = 0
+net.ipv6.conf.default.accept_redirects = 0</p>
+<p>= Ignore Directed pings
+net.ipv4.icmp_echo_ignore_all = 1
+—-</p>
+<p>To reload sysctl with the latest changes, enter:</p>
+</div>
+<div class="section" id="id11">
+<h1>[source,bash]<a class="headerlink" href="#id11" title="Permalink to this headline">¶</a></h1>
+</div>
+<div class="section" id="sudo-sysctl-p">
+<h1>sudo sysctl -p<a class="headerlink" href="#sudo-sysctl-p" title="Permalink to this headline">¶</a></h1>
+<p>== 7. Disable Open DNS Recursion and Remove Version Info  - BIND DNS Server.</p>
+<p>Open a Terminal and enter the following :</p>
+</div>
+<div class="section" id="id12">
+<h1>[source,bash]<a class="headerlink" href="#id12" title="Permalink to this headline">¶</a></h1>
+</div>
+<div class="section" id="sudo-vi-etc-bind-named-conf-options">
+<h1>sudo vi /etc/bind/named.conf.options<a class="headerlink" href="#sudo-vi-etc-bind-named-conf-options" title="Permalink to this headline">¶</a></h1>
+<p>Add the following to the Options section :</p>
+</div>
+<div class="section" id="id13">
+<h1>[source,bash]<a class="headerlink" href="#id13" title="Permalink to this headline">¶</a></h1>
+<p>recursion no;
+version “Not Disclosed”;
+—-</p>
+<p>Restart BIND DNS server. Open a Terminal and enter the following :</p>
+</div>
+<div class="section" id="id14">
+<h1>[source,bash]<a class="headerlink" href="#id14" title="Permalink to this headline">¶</a></h1>
+</div>
+<div class="section" id="sudo-service-bind9-restart">
+<h1>sudo service bind9 restart<a class="headerlink" href="#sudo-service-bind9-restart" title="Permalink to this headline">¶</a></h1>
+<p>== 8. Prevent IP Spoofing.</p>
+<p>Open a Terminal and enter the following :</p>
+</div>
+<div class="section" id="id15">
+<h1>[source,bash]<a class="headerlink" href="#id15" title="Permalink to this headline">¶</a></h1>
+</div>
+<div class="section" id="sudo-vi-etc-host-conf">
+<h1>sudo vi /etc/host.conf<a class="headerlink" href="#sudo-vi-etc-host-conf" title="Permalink to this headline">¶</a></h1>
+<p>Add or edit the following lines :</p>
+</div>
+<div class="section" id="id16">
+<h1>[source,bash]<a class="headerlink" href="#id16" title="Permalink to this headline">¶</a></h1>
+<p>order bind,hosts
+nospoof on
+—-</p>
+<p>== 9. Harden PHP for security.</p>
+<p>Edit the php.ini file :</p>
+</div>
+<div class="section" id="id17">
+<h1>[source,bash]<a class="headerlink" href="#id17" title="Permalink to this headline">¶</a></h1>
+</div>
+<div class="section" id="sudo-vi-etc-php5-apache2-php-ini">
+<h1>sudo vi /etc/php5/apache2/php.ini<a class="headerlink" href="#sudo-vi-etc-php5-apache2-php-ini" title="Permalink to this headline">¶</a></h1>
+<p>Add or edit the following lines an save :</p>
+</div>
+<div class="section" id="id18">
+<h1>[source,bash]<a class="headerlink" href="#id18" title="Permalink to this headline">¶</a></h1>
+<p>disable_functions = exec,system,shell_exec,passthru
+register_globals = Off
+expose_php = Off
+display_errors = Off
+track_errors = Off
+html_errors = Off
+magic_quotes_gpc = Off
+mail.add_x_header = Off
+session.name = NEWSESSID
+—-</p>
+<p>Restart Apache server. Open a Terminal and enter the following :</p>
+</div>
+<div class="section" id="id19">
+<h1>[source,bash]<a class="headerlink" href="#id19" title="Permalink to this headline">¶</a></h1>
+</div>
+<div class="section" id="id20">
+<h1>sudo service apache2 restart<a class="headerlink" href="#id20" title="Permalink to this headline">¶</a></h1>
+<p>== 10. Restrict Apache Information Leakage.</p>
+<p>Edit the Apache2 configuration security file :</p>
+</div>
+<div class="section" id="id21">
+<h1>[source,bash]<a class="headerlink" href="#id21" title="Permalink to this headline">¶</a></h1>
+</div>
+<div class="section" id="sudo-vi-etc-apache2-conf-available-security-conf">
+<h1>sudo vi /etc/apache2/conf-available/security.conf<a class="headerlink" href="#sudo-vi-etc-apache2-conf-available-security-conf" title="Permalink to this headline">¶</a></h1>
+<p>Add or edit the following lines and save :</p>
+</div>
+<div class="section" id="id22">
+<h1>[source,bash]<a class="headerlink" href="#id22" title="Permalink to this headline">¶</a></h1>
+<p>ServerTokens Prod
+ServerSignature Off
+TraceEnable Off
+Header unset ETag
+Header always unset X-Powered-By
+FileETag None
+—-</p>
+<p>Restart Apache server. Open a Terminal and enter the following :</p>
+</div>
+<div class="section" id="id23">
+<h1>[source,bash]<a class="headerlink" href="#id23" title="Permalink to this headline">¶</a></h1>
+</div>
+<div class="section" id="id24">
+<h1>sudo service apache2 restart<a class="headerlink" href="#id24" title="Permalink to this headline">¶</a></h1>
+<p>== 11. Web Application Firewall - ModSecurity.</p>
+<p>See : How to install apache2 mod_security and mod_evasive on Ubuntu 12.04 LTS server</p>
+<p>== 12. Protect from DDOS (Denial of Service) attacks - ModEvasive</p>
+<p>See : How to install apache2 mod_security and mod_evasive on Ubuntu 12.04 LTS server</p>
+<p>== 13. Scan logs and ban suspicious hosts - DenyHosts and Fail2Ban.</p>
+<p>link:http://denyhosts.sourceforge.net/[DenyHosts] is a python program that automatically blocks SSH attacks by adding entries to /etc/hosts.deny. DenyHosts will also inform Linux administrators about offending hosts, attacked users and suspicious logins.</p>
+<p>Open a Terminal and enter the following :</p>
+</div>
+<div class="section" id="id25">
+<h1>[source,bash]<a class="headerlink" href="#id25" title="Permalink to this headline">¶</a></h1>
+</div>
+<div class="section" id="sudo-apt-get-install-denyhosts">
+<h1>sudo apt-get install denyhosts<a class="headerlink" href="#sudo-apt-get-install-denyhosts" title="Permalink to this headline">¶</a></h1>
+<p>After installation edit the configuration file /etc/denyhosts.conf  and change the email, and other settings as required.</p>
+<p>To edit the admin email settings open a terminal window and enter:</p>
+</div>
+<div class="section" id="id26">
+<h1>[source,bash]<a class="headerlink" href="#id26" title="Permalink to this headline">¶</a></h1>
+</div>
+<div class="section" id="sudo-vi-etc-denyhosts-conf">
+<h1>sudo vi /etc/denyhosts.conf<a class="headerlink" href="#sudo-vi-etc-denyhosts-conf" title="Permalink to this headline">¶</a></h1>
+<p>Change the following values as required on your server :</p>
+</div>
+<div class="section" id="id27">
+<h1>[source,bash]<a class="headerlink" href="#id27" title="Permalink to this headline">¶</a></h1>
+<p>ADMIN_EMAIL = <a class="reference external" href="mailto:root&#37;&#52;&#48;localhost">root<span>&#64;</span>localhost</a>
+SMTP_HOST = localhost
+SMTP_PORT = 25
+#SMTP_USERNAME=foo
+#SMTP_PASSWORD=bar
+SMTP_FROM = DenyHosts <a class="reference external" href="mailto:nobody&#37;&#52;&#48;localhost">nobody<span>&#64;</span>localhost</a>
+#SYSLOG_REPORT=YES
+[source,bash]
+—-</p>
+<p>Fail2ban is more advanced than DenyHosts as it extends the log monitoring to other services including SSH, Apache, Courier, FTP, and more.</p>
+<p>Fail2ban scans log files and bans IPs that show the malicious signs – too many password failures, seeking for exploits, etc.</p>
+<p>Generally Fail2Ban then used to update firewall rules to reject the IP addresses for a specified amount of time, although any arbitrary other action could also be configured.</p>
+<p>Out of the box Fail2Ban comes with filters for various services (apache, courier, ftp, ssh, etc).</p>
+<p>Open a Terminal and enter the following :</p>
+</div>
+<div class="section" id="id28">
+<h1>[source,bash]<a class="headerlink" href="#id28" title="Permalink to this headline">¶</a></h1>
+</div>
+<div class="section" id="sudo-apt-get-install-fail2ban">
+<h1>sudo apt-get install fail2ban<a class="headerlink" href="#sudo-apt-get-install-fail2ban" title="Permalink to this headline">¶</a></h1>
+<p>After installation edit the configuration file /etc/fail2ban/jail.local  and create the filter rules as required.</p>
+<p>To edit the settings open a terminal window and enter:</p>
+</div>
+<div class="section" id="id29">
+<h1>[source,bash]<a class="headerlink" href="#id29" title="Permalink to this headline">¶</a></h1>
+</div>
+<div class="section" id="sudo-vi-etc-fail2ban-jail-conf">
+<h1>sudo vi /etc/fail2ban/jail.conf<a class="headerlink" href="#sudo-vi-etc-fail2ban-jail-conf" title="Permalink to this headline">¶</a></h1>
+<p>Activate all the services you would like fail2ban to monitor by changing enabled = false to enabled = true</p>
+<p>For example if you would like to enable the SSH monitoring and banning jail, find the line below and change enabled from false to true. Thats it.</p>
+</div>
+<div class="section" id="id30">
+<h1>[source,bash]<a class="headerlink" href="#id30" title="Permalink to this headline">¶</a></h1>
+<p>[sshd]</p>
+<p>enabled  = true
+port     = ssh
+filter   = sshd
+logpath  = /var/log/auth.log
+maxretry = 3
+—-</p>
+<p>If you have selected a non-standard SSH port in step 3 then you need to change the port setting in fail2ban from ssh which by default is port 22, to your new port number, for example if you have chosen 1234 then port = 1234</p>
+</div>
+<div class="section" id="id31">
+<h1>[source,bash]<a class="headerlink" href="#id31" title="Permalink to this headline">¶</a></h1>
+<p>[sshd]</p>
+<p>enabled  = true
+port     = &lt;ENTER YOUR SSH PORT NUMBER HERE&gt;
+filter   = sshd
+logpath  = /var/log/auth.log
+maxretry = 3
+—-</p>
+<p>If you would like to receive emails from Fail2Ban if hosts are banned change the following line to your email address.</p>
+</div>
+<div class="section" id="id32">
+<h1>[source,bash]<a class="headerlink" href="#id32" title="Permalink to this headline">¶</a></h1>
+</div>
+<div class="section" id="destemail-root-localhost">
+<h1>destemail = <a class="reference external" href="mailto:root&#37;&#52;&#48;localhost">root<span>&#64;</span>localhost</a><a class="headerlink" href="#destemail-root-localhost" title="Permalink to this headline">¶</a></h1>
+<p>and change the following line from :</p>
+</div>
+<div class="section" id="id33">
+<h1>[source,bash]<a class="headerlink" href="#id33" title="Permalink to this headline">¶</a></h1>
+</div>
+<div class="section" id="action-action-s">
+<h1>action = %(<a href="#id51"><span class="problematic" id="id52">action_</span></a>)s<a class="headerlink" href="#action-action-s" title="Permalink to this headline">¶</a></h1>
+<p>to:</p>
+</div>
+<div class="section" id="id34">
+<h1>[source,bash]<a class="headerlink" href="#id34" title="Permalink to this headline">¶</a></h1>
+</div>
+<div class="section" id="action-action-mwl-s">
+<h1>action = %(action_mwl)s<a class="headerlink" href="#action-action-mwl-s" title="Permalink to this headline">¶</a></h1>
+<p>You can also create rule filters for the various services that you would like fail2ban to monitor that is not supplied by default.</p>
+</div>
+<div class="section" id="id35">
+<h1>[source,bash]<a class="headerlink" href="#id35" title="Permalink to this headline">¶</a></h1>
+</div>
+<div class="section" id="sudo-vi-etc-fail2ban-jail-local">
+<h1>sudo vi /etc/fail2ban/jail.local<a class="headerlink" href="#sudo-vi-etc-fail2ban-jail-local" title="Permalink to this headline">¶</a></h1>
+<p>Good instructions on how to configure fail2ban and create the various filters can be found on HowtoForge - click here for an example</p>
+<p>When done with the configuration of Fail2Ban restart the service with :</p>
+</div>
+<div class="section" id="id36">
+<h1>[source,bash]<a class="headerlink" href="#id36" title="Permalink to this headline">¶</a></h1>
+</div>
+<div class="section" id="sudo-service-fail2ban-restart">
+<h1>sudo service fail2ban restart<a class="headerlink" href="#sudo-service-fail2ban-restart" title="Permalink to this headline">¶</a></h1>
+<p>You can also check the status with.</p>
+</div>
+<div class="section" id="id37">
+<h1>[source,bash]<a class="headerlink" href="#id37" title="Permalink to this headline">¶</a></h1>
+</div>
+<div class="section" id="sudo-fail2ban-client-status">
+<h1>sudo fail2ban-client status<a class="headerlink" href="#sudo-fail2ban-client-status" title="Permalink to this headline">¶</a></h1>
+<p>== 14. Intrusion Detection - PSAD.</p>
+<p>Cipherdyne PSAD is a collection of three lightweight system daemons that run on Linux machines and analyze iptables log messages to detect port scans and other suspicious traffic.</p>
+<p>To install the latest version from the source files follow these instruction : How to install PSAD Intrusion Detection on Ubuntu 12.04 LTS server</p>
+<p>OR install the older version from the Ubuntu software repositories, open a Terminal and enter the following :</p>
+<p>sudo apt-get install psad</p>
+<p>Then for basic configuration see How to install PSAD Intrusion Detection on Ubuntu 12.04 LTS server and follow from step 2:</p>
+<p>== 15. Check for rootkits - RKHunter and CHKRootKit.</p>
+<p>Both RKHunter and CHKRootkit basically do the same thing - check your system for rootkits. No harm in using both.</p>
+<p>Open a Terminal and enter the following :</p>
+</div>
+<div class="section" id="id38">
+<h1>[source,bash]<a class="headerlink" href="#id38" title="Permalink to this headline">¶</a></h1>
+</div>
+<div class="section" id="sudo-apt-get-install-rkhunter-chkrootkit">
+<h1>sudo apt-get install rkhunter chkrootkit<a class="headerlink" href="#sudo-apt-get-install-rkhunter-chkrootkit" title="Permalink to this headline">¶</a></h1>
+<p>To run chkrootkit open a terminal window and enter :</p>
+</div>
+<div class="section" id="id39">
+<h1>[source,bash]<a class="headerlink" href="#id39" title="Permalink to this headline">¶</a></h1>
+</div>
+<div class="section" id="sudo-chkrootkit">
+<h1>sudo chkrootkit<a class="headerlink" href="#sudo-chkrootkit" title="Permalink to this headline">¶</a></h1>
+<p>To update and run RKHunter. Open a Terminal and enter the following :</p>
+</div>
+<div class="section" id="id40">
+<h1>[source,bash]<a class="headerlink" href="#id40" title="Permalink to this headline">¶</a></h1>
+<p>sudo rkhunter –update
+sudo rkhunter –propupd
+sudo rkhunter –check
+—-</p>
+<p>== 16. Scan open ports - Nmap.</p>
+<p>Nmap (“Network Mapper”) is a free and open source utility for network discovery and security auditing.</p>
+<p>Open a Terminal and enter the following :</p>
+</div>
+<div class="section" id="id41">
+<h1>[source,bash]<a class="headerlink" href="#id41" title="Permalink to this headline">¶</a></h1>
+</div>
+<div class="section" id="sudo-apt-get-install-nmap">
+<h1>sudo apt-get install nmap<a class="headerlink" href="#sudo-apt-get-install-nmap" title="Permalink to this headline">¶</a></h1>
+<p>Scan your system for open ports with :</p>
+</div>
+<div class="section" id="id42">
+<h1>[source,bash]<a class="headerlink" href="#id42" title="Permalink to this headline">¶</a></h1>
+</div>
+<div class="section" id="nmap-v-st-localhost">
+<h1>nmap -v -sT localhost<a class="headerlink" href="#nmap-v-st-localhost" title="Permalink to this headline">¶</a></h1>
+<p>SYN scanning with the following :</p>
+</div>
+<div class="section" id="id43">
+<h1>[source,bash]<a class="headerlink" href="#id43" title="Permalink to this headline">¶</a></h1>
+</div>
+<div class="section" id="sudo-nmap-v-ss-localhost">
+<h1>sudo nmap -v -sS localhost<a class="headerlink" href="#sudo-nmap-v-ss-localhost" title="Permalink to this headline">¶</a></h1>
+<p>== 17. Analyse system LOG files - LogWatch.</p>
+<p>Logwatch is a customizable log analysis system. Logwatch parses through your system’s logs and creates a report analyzing areas that you specify. Logwatch is easy to use and will work right out of the package on most systems.</p>
+<p>Open a Terminal and enter the following :</p>
+</div>
+<div class="section" id="id44">
+<h1>[source,bash]<a class="headerlink" href="#id44" title="Permalink to this headline">¶</a></h1>
+</div>
+<div class="section" id="sudo-apt-get-install-logwatch-libdate-manip-perl">
+<h1>sudo apt-get install logwatch libdate-manip-perl<a class="headerlink" href="#sudo-apt-get-install-logwatch-libdate-manip-perl" title="Permalink to this headline">¶</a></h1>
+<p>To view logwatch output use less :</p>
+</div>
+<div class="section" id="id45">
+<h1>[source,bash]<a class="headerlink" href="#id45" title="Permalink to this headline">¶</a></h1>
+</div>
+<div class="section" id="sudo-logwatch-less">
+<h1>sudo logwatch | less<a class="headerlink" href="#sudo-logwatch-less" title="Permalink to this headline">¶</a></h1>
+<p>To email a logwatch report for the past 7 days to an email address, enter the following and replace <a class="reference external" href="mailto:mail&#37;&#52;&#48;domain&#46;com">mail<span>&#64;</span>domain<span>&#46;</span>com</a> with the required email. :</p>
+</div>
+<div class="section" id="id46">
+<h1>[source,bash]<a class="headerlink" href="#id46" title="Permalink to this headline">¶</a></h1>
+</div>
+<div class="section" id="sudo-logwatch-mailto-mail-domain-com-output-mail-format-html-range-between-7-days-and-today">
+<h1>sudo logwatch –mailto <a class="reference external" href="mailto:mail&#37;&#52;&#48;domain&#46;com">mail<span>&#64;</span>domain<span>&#46;</span>com</a> –output mail –format html –range ‘between -7 days and today’<a class="headerlink" href="#sudo-logwatch-mailto-mail-domain-com-output-mail-format-html-range-between-7-days-and-today" title="Permalink to this headline">¶</a></h1>
+<p>== 18. Apparmor - Application Armor.</p>
+<p>More information can be found here. Ubuntu Server Guide - Apparmor</p>
+<p>It is installed by default since Ubuntu 7.04.</p>
+<p>Open a Terminal and enter the following :</p>
+</div>
+<div class="section" id="id47">
+<h1>[source,bash]<a class="headerlink" href="#id47" title="Permalink to this headline">¶</a></h1>
+</div>
+<div class="section" id="sudo-apt-get-install-apparmor-apparmor-profiles">
+<h1>sudo apt-get install apparmor apparmor-profiles<a class="headerlink" href="#sudo-apt-get-install-apparmor-apparmor-profiles" title="Permalink to this headline">¶</a></h1>
+<p>Check to see if things are running :</p>
+</div>
+<div class="section" id="id48">
+<h1>[source,bash]<a class="headerlink" href="#id48" title="Permalink to this headline">¶</a></h1>
+</div>
+<div class="section" id="sudo-apparmor-status">
+<h1>sudo apparmor_status<a class="headerlink" href="#sudo-apparmor-status" title="Permalink to this headline">¶</a></h1>
+<p>== 19. Audit your system security - Tiger and Tripwire.</p>
+<p>Tiger is a security tool that can be use both as a security audit and intrusion detection system.</p>
+<p>Tripwire is a host-based intrusion detection system (HIDS) that checks file and folder integrity.</p>
+<p>Open a Terminal and enter the following :</p>
+</div>
+<div class="section" id="id49">
+<h1>[source,bash]<a class="headerlink" href="#id49" title="Permalink to this headline">¶</a></h1>
+</div>
+<div class="section" id="sudo-apt-get-install-tiger-tripwire">
+<h1>sudo apt-get install tiger tripwire<a class="headerlink" href="#sudo-apt-get-install-tiger-tripwire" title="Permalink to this headline">¶</a></h1>
+<p>To setup Tripwire good installation guides can be found on Digital Ocean here and on Unixmen here</p>
+<p>To run tiger enter :</p>
+<p>sudo tiger</p>
+<p>All Tiger output can be found in the /var/log/tiger</p>
+<p>To view the tiger security reports, open a Terminal and enter the following :</p>
+</div>
+<div class="section" id="id50">
+<h1>[source,bash]<a class="headerlink" href="#id50" title="Permalink to this headline">¶</a></h1>
+</div>
+<div class="section" id="sudo-less-var-log-tiger-security-report">
+<h1>sudo less /var/log/tiger/security.report.*<a class="headerlink" href="#sudo-less-var-log-tiger-security-report" title="Permalink to this headline">¶</a></h1>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="how_to_stop_stakeholders_from_sabotaging_projects.html" title="&lt;no title&gt;"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="How_to_run_a_network_speed_test_from_a_headless_linux_server.html" title="&lt;no title&gt;"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">Enterprise Architecture  documentation</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2019, Peter Preeper.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.2.1.
+    </div>
+  </body>
+</html>
