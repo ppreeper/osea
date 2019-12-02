@@ -1,0 +1,111 @@
+
+
+<!doctype html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>10 common backup mistakes &#8212; Enterprise Architecture  documentation</title>
+    <link rel="stylesheet" href="../_static/bizstyle.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/language_data.js"></script>
+    <script type="text/javascript" src="../_static/bizstyle.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <!--[if lt IE 9]>
+    <script type="text/javascript" src="_static/css3-mediaqueries.js"></script>
+    <![endif]-->
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="nav-item nav-item-0"><a href="../index.html">Enterprise Architecture  documentation</a> &#187;</li> 
+      </ul>
+    </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/backup/10_common_backup_mistakes.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="common-backup-mistakes">
+<h1>10 common backup mistakes<a class="headerlink" href="#common-backup-mistakes" title="Permalink to this headline">¶</a></h1>
+<p>author:Brien Posey</p>
+<p>All of us in IT have been taught from Day One that performing regular backups is critical to an organization’s well being. Yet even seasoned pros sometimes make certain mistakes. Here are a few of the common mistakes I’ve encountered.</p>
+<p>== Mistake 1: Not making system state backups often enough</p>
+<p>In Windows environments, system state backups have a shelf life. For domain controllers, the shelf life is equal to the maximum tombstone age (60 days by default). After that, the backup becomes null and void. Even for non domain controllers, the age of the backup is an issue.</p>
+<p>Each computer on a Windows network has a corresponding computer account in the Active Directory. Like a user account, the computer account has an associated password. The difference is that the password is assigned, and periodically changed, by Windows. If you try to restore a system state backup that is too old, the computer account password that is stored in the backup will no longer match the password that is bound to the computer account in the Active Directory, so the machine won’t be able to participate in the domain. There are workarounds, but it is usually easier to just make frequent system state backups of your servers.</p>
+<p>== Mistake 2: Failing to adequately test backups</p>
+<p>We all know that we should test our backups once in a while, but testing often seems to be one of those tasks that either falls by the wayside or that isn’t done thoroughly. Remember that making the backup is only the first step if you can’t restore from them, you’re dead in the water. You need to ensure that those backups will work if and when you need them.</p>
+<p>== Mistake 3: Not using an application-aware backup application</p>
+<p>For some applications, a file-level backup is insufficient. A classic example of this is Microsoft Exchange, which requires an Exchange-aware backup application. Failure to use such a backup application causes the data that has been backed up to be in an inconsistent (and often unrestorable) state. It is therefore important to know which applications reside on your servers and to make note of any special application-specific backup requirements.</p>
+<p>== Mistake 4: Shipping backup tapes offsite too quickly</p>
+<p>One of the companies I used to work for used a courier service to ship backup tapes offsite. Each morning at 8:00, the previous night’s backup tapes were transported to an offsite storage facility. One morning, we had a server failure at about 9:30. Unfortunately, we couldn’t perform an immediate restoration because the tape had been shipped offsite. It was almost 4:00 before the tape could be located and returned to us. By that time, the server had been down all day. While you should keep backups off site, consider waiting until the end of the business day to remove the previous night’s tapes from the building.</p>
+<p>== Mistake 5: Having a single point of failure</p>
+<p>Always remember that your backups are your safety net. If a server fails, your backups are the primary (and sometimes the only) mechanism for returning the server to a functional state. Because backups are so critically important, you should construct your backup architecture in a way that avoids (at least as much as possible) having a single point of failure. If possible, have a backup for your backups. You never want to find yourself in a situation in which you did not get a backup the night before and you are just praying that the server doesn’t fail that day because you have nothing to fall back on.</p>
+<p>== Mistake 6: Forgetting to plan for the future</p>
+<p>Years ago, I managed the IT department for a large organization. While I was on vacation, some of my staff decided to surprise me by cleaning out a storage room that had become badly cluttered. In doing so, they threw out some obsolete computer equipment.</p>
+<p>While this initially seemed harmless, some of the old equipment was in the storage room for a reason. Each quarter, the organization made a special backup that was kept as a permanent archive. Over time, though, backup technology changed. Although the company had decided at one point to switch to a newer tape format, I had kept the organization’s old tape drives and an old computer that had a copy of the backup software installed on it, just in case we should ever have to read any of the data from an archive tape. The lesson to be learned is that although change is inevitable, you should always make sure that you have the necessary hardware and software to read your oldest backup tapes.</p>
+<p>== Mistake 7: Not considering the consequences of using backup security mechanisms</p>
+<p>For most organizations, IT security is a high priority. But sometimes, security can be a bad thing. I have seen real-world situations in which a backup could not be restored because nobody knew the password that had been used on the backup tape. I also once saw a situation in which an organization used hardware-level encryption and then upgraded to a new tape drive that didn’t support the previously used encryption (which meant that old backups could not be restored).</p>
+<p>There is no denying that it is important to secure your backups, but it is equally important to consider the consequences of your security measures. If you find yourself having to restore a backup after a major system failure, the last thing you need is an ill-conceived security mechanism standing in the way of the recovery.</p>
+<p>== Mistake 8: Backing up only data</p>
+<p>I once had someone tell me that I should be backing up only my data, as opposed to performing full backups that included the server’s operating system and applications. His rationale was that data-only backups complete more quickly and consume fewer tapes. While these are valid points, I completely disagree with the overall philosophy.</p>
+<p>If an organization has a server failure and needs to perform a full recovery, it is usually possible to reinstall the operating system and the applications and then restore any data. However, time is of the essence when trying to recover from a crash. It is much faster to restore everything from backup than it is to manually install an operating system and a set of applications. More important, it is often difficult to manually configure a server so that it matches its pervious configuration. Backing up the entire server ensures that its configuration will be exactly as it was before the crash.</p>
+<p>== Mistake 9: Relying solely on a disk-to-disk backup solution</p>
+<p>Disk-to-disk backup solutions offer many advantages over traditional tape backups. Even so, a disk-to-disk backup solution should not be an organization’s only backup, because the backup server is prone to the same risks as the servers it protects. A hurricane, lightning strike, fire, or flood could wipe out your backup server along with your other servers. For this reason, it is important to dump the contents of your disk based backups to tape on a frequent basis.</p>
+<p>== Mistake 10: Using a tape rotation scheme that’s too short</p>
+<p>One organization I worked for used a two-week tape rotation. This seemed to work fairly well, but we found out the hard way that two weeks just weren’t enough. The organization had an Exchange server fail because of corruption within the information store. When we tried to restore a backup, we found that we had backed up corrupt data. The corruption had existed for some time and had grown progressively worse. Every one of the backup tapes contained corrupt data, so the server could not be restored. This is a perfect argument for periodically testing your backups, but it also underscores the importance of using a long rotation scheme or at least keeping some of your backup tapes as long-term archives.</p>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="nav-item nav-item-0"><a href="../index.html">Enterprise Architecture  documentation</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2019, Peter Preeper.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.2.1.
+    </div>
+  </body>
+</html>
