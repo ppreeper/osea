@@ -2,49 +2,92 @@ Backup site
 ===========
 
 From Wikipedia, the free encyclopedia
-A backup site is a location where an organization can easily relocate following a disaster, such as fire, flood, terrorist threat or other disruptive event. This is an integral part of the disaster recovery plan and wider business continuity planning of an organization.
 
-A backup site can be another location operated by the organization, or contracted via a company that specializes in disaster recovery services. In some cases, one organization will have an agreement with a second organization to operate a joint backup site.
+A backup site is a location where an organization can easily relocate
+following a disaster, such as fire, flood, terrorist threat or other
+disruptive event. This is an integral part of the disaster recovery plan
+and wider business continuity planning of an organization.
 
-There are three types of backup sites, including cold sites, warm sites, and hot sites. The differences between the types are determined by the costs and effort required to implement each. Another term used to describe a backup site is a work area recovery site.
+A backup site can be another location operated by the organization, or
+contracted via a company that specializes in disaster recovery services.
+In some cases, one organization will have an agreement with a second
+organization to operate a joint backup site.
 
-Contents  [hide] 
-1 Cold Sites
-2 Hot Sites
-3 Warm Sites
-4 Alternate Sites
-5 Choosing
-6 See also
-7 References
-[edit]Cold Sites
+There are three types of backup sites, including cold sites, warm sites,
+and hot sites. The differences between the types are determined by the costs
+and effort required to implement each. Another term used to describe a
+backup site is a work area recovery site.
 
-A cold site is the most inexpensive type of backup site for an organization to operate. It does not include backed up copies of data and information from the original location of the organization, nor does it include hardware already set up. The lack of hardware contributes to the minimal start-up costs of the cold site, but requires additional time following the disaster to have the operation running at a capacity close to that prior to the disaster.
+Cold Sites
+-----------
 
-[edit]Hot Sites
+A cold site is the most inexpensive type of backup site for an organization
+to operate. It does not include backed up copies of data and information from
+the original location of the organization, nor does it include hardware
+already set up. The lack of hardware contributes to the minimal start-up
+costs of the cold site, but requires additional time following the disaster
+to have the operation running at a capacity close to that prior to the
+disaster.
 
-A hot site is a duplicate of the original site of the organization, with full computer systems as well as near-complete backups of user data. Real time synchronization between the two sites may be used to completely mirror the data environment of the original site using wide area network links and specialized software. Following a disruption to the original site, the hot site exists so that the organization can relocate with minimal losses to normal operations. Ideally, a hot site will be up and running within a matter of hours or even less. Personnel may still have to be moved to the hot site so it is possible that the hot site may be operational from a data processing perspective before staff has relocated. The capacity of the hot site may or may not match the capacity of the original site depending on the organization's requirements. This type of backup site is the most expensive to operate. Hot sites are popular with organizations that operate real time processes such as financial institutions, government agencies and eCommerce providers.
+Hot Sites
+----------
 
-[edit]Warm Sites
+A hot site is a duplicate of the original site of the organization, with full
+computer systems as well as near-complete backups of user data. Real time
+synchronization between the two sites may be used to completely mirror the
+data environment of the original site using wide area network links and
+specialized software. Following a disruption to the original site, the hot
+site exists so that the organization can relocate with minimal losses to
+normal operations. Ideally, a hot site will be up and running within a matter
+of hours or even less. Personnel may still have to be moved to the hot site
+so it is possible that the hot site may be operational from a data processing
+perspective before staff has relocated. The capacity of the hot site may
+or may not match the capacity of the original site depending on the
+organization's requirements. This type of backup site is the most expensive
+to operate. Hot sites are popular with organizations that operate real
+time processes such as financial institutions, government agencies and
+eCommerce providers.
 
-A warm site is a compromise between hot and cold. These sites will have hardware and connectivity already established, though on a smaller scale than the original production site or even a hot site. Warm sites will have backups on hand, but they may not be complete and may be between several days and a week old. An example would be backup tapes sent to the warm site by courier.
+Warm Sites
+-----------
 
-[edit]Alternate Sites
+A warm site is a compromise between hot and cold. These sites will have
+hardware and connectivity already established, though on a smaller scale
+than the original production site or even a hot site. Warm sites will have
+backups on hand, but they may not be complete and may be between several
+days and a week old. An example would be backup tapes sent to the warm
+site by courier.
 
-An alternate site is another option beyond the standard three choices. It is sometimes referred to as Off-site Data Protection.
+Alternate Sites
+----------------
 
-[edit]Choosing
+An alternate site is another option beyond the standard three choices. It
+is sometimes referred to as Off-site Data Protection.
 
-Choosing the type is mainly decided by an organizations cost vs. benefit strategy. Hot sites are traditionally more expensive than cold sites since much of the equipment the company needs has already been purchased and thus the operational costs are higher. However if the same organization loses a substantial amount of revenue for each day they are inactive then it may be worth the cost. Another advantage of a hot site is that it can be used for operations prior to a disaster happening.
+Choosing
+---------
 
-The advantages of a cold site are simple--cost. It requires much fewer resources to operate a cold site because no equipment has been bought prior to the disaster. The downside with a cold site is the potential cost that must be incurred in order to make the cold site effective. The costs of purchasing equipment on very short notice may be higher and the disaster may make the equipment difficult to obtain.
+Choosing the type is mainly decided by an organizations cost vs. benefit
+strategy. Hot sites are traditionally more expensive than cold sites since
+much of the equipment the company needs has already been purchased and thus
+the operational costs are higher. However if the same organization loses
+a substantial amount of revenue for each day they are inactive then it may
+be worth the cost. Another advantage of a hot site is that it can be used
+for operations prior to a disaster happening.
 
-When contracting services from a commercial provider of backup site capability organizations should take note of contractual usage provision and invocation procedures, providers may sign up more than one organization for a given site or facility, often depending on various service levels. This is a reasonable proposition as it is unlikely that all organizations using the service are likely to need it at the same time and it allows the provider to offer the service at an affordable cost. However, in a large scale incident that affects a wide area it is likely that these facilities will become over subscribed.
+The advantages of a cold site are simple--cost. It requires much fewer
+resources to operate a cold site because no equipment has been bought
+prior to the disaster. The downside with a cold site is the potential cost
+that must be incurred in order to make the cold site effective. The costs
+of purchasing equipment on very short notice may be higher and the disaster
+may make the equipment difficult to obtain.
 
-[edit]See also
-
-Off-site Data Protection
-Backup
-[edit]References
-
-Records Management Services (2004, July 15). Vital Records: How Do You Protect And Store Vital Records? Retrieved from the UW Records Management Web site: http://f2.washington.edu/fm/recmgt/managing/vitalrecords/store
-Haag, Cummings, McCubbrey, Pinsonneult, and Donovan. (2004). Information Management Systems, For The Information Age. McGraw-Hill Ryerson.
+When contracting services from a commercial provider of backup site
+capability organizations should take note of contractual usage provision
+and invocation procedures, providers may sign up more than one organization
+for a given site or facility, often depending on various service levels.
+This is a reasonable proposition as it is unlikely that all organizations
+using the service are likely to need it at the same time and it allows the
+provider to offer the service at an affordable cost. However, in a large
+scale incident that affects a wide area it is likely that these facilities
+will become over subscribed.
