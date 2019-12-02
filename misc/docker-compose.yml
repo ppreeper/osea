@@ -1,0 +1,36 @@
+version: '2'
+
+services:
+    drone-server:
+        image: drone/drone:0.8
+        ports:
+            - 80:80
+            - 443:443
+            - 9000:9000
+        volumes:
+            - /var/lib/drone:/var/lib/drone/
+            - /etc/certs/star_arthomson_com.pkey:/etc/certs/star_arthomson_com.pkey
+            - /etc/certs/star_arthomson_com.pem:/etc/certs/star_arthomson_com.pem
+        restart: always
+        environment:
+            - DRONE_OPEN=true
+            - DRONE_ADMIN=peterp
+            - DRONE_HOST=https://drone.arthomson.com
+            - DRONE_SERVER_CERT=/etc/certs/star_arthomson_com.pem
+            - DRONE_SERVER_KEY=/etc/certs/star_arthomson_com.pkey
+            - DRONE_GOGS=true
+            - DRONE_GOGS_URL=https://git.arthomson.com
+            - DRONE_GOGS_SKIP_VERIFY=false
+            - DRONE_SECRET=db9a08bb-29ab-45d3-8cec-46bb8164a66f
+
+    drone-agent:
+        image: drone/agent:0.8
+        command: agent
+        restart: always
+        depends_on:
+            - drone-server
+        volumes:
+            - /var/run/docker.sock:/var/run/docker.sock
+        environment:
+            - DRONE_SERVER=drone-server:9000
+            - DRONE_SECRET=db9a08bb-29ab-45d3-8cec-46bb8164a66f
